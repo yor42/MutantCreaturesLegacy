@@ -1,0 +1,41 @@
+package chumbanotz.mutantbeasts.client.model;
+
+import chumbanotz.mutantbeasts.entity.CreeperMinionEntity;
+import net.minecraft.client.model.ModelCreeper;
+import net.minecraft.entity.Entity;
+
+public class CreeperMinionModel extends ModelCreeper {
+    public CreeperMinionModel() {
+        this(0.0F);
+    }
+
+    public CreeperMinionModel(float scale) {
+        super(scale);
+    }
+
+    public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn) {
+        super.setRotationAngles(limbSwing * 3.0F, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entityIn);
+        this.head.rotationPointY = 6.0F;
+        this.body.rotationPointY = 6.0F;
+        this.leg1.setRotationPoint(-2.0F, 18.0F, 4.0F);
+        this.leg2.setRotationPoint(2.0F, 18.0F, 4.0F);
+        this.leg3.setRotationPoint(-2.0F, 18.0F, -4.0F);
+        this.leg4.setRotationPoint(2.0F, 18.0F, -4.0F);
+        if (entityIn instanceof CreeperMinionEntity && ((CreeperMinionEntity) entityIn).isSitting()) {
+            this.head.rotationPointY += 6.0F;
+            this.body.rotationPointY += 6.0F;
+            this.leg1.rotationPointY += 4.0F;
+            this.leg1.rotationPointZ -= 2.0F;
+            this.leg2.rotationPointY += 4.0F;
+            this.leg2.rotationPointZ -= 2.0F;
+            this.leg3.rotationPointY += 4.0F;
+            this.leg3.rotationPointZ += 2.0F;
+            this.leg4.rotationPointY += 4.0F;
+            this.leg4.rotationPointZ += 2.0F;
+            this.leg1.rotateAngleX = 1.5707964F;
+            this.leg2.rotateAngleX = 1.5707964F;
+            this.leg3.rotateAngleX = -1.5707964F;
+            this.leg4.rotateAngleX = -1.5707964F;
+        }
+    }
+}
