@@ -1,5 +1,6 @@
 package chumbanotz.mutantbeasts.entity;
 
+import chumbanotz.mutantbeasts.entity.mutant.MutantSkeletonEntity;
 import chumbanotz.mutantbeasts.item.MBItems;
 import chumbanotz.mutantbeasts.util.EntityUtil;
 import io.netty.buffer.ByteBuf;
@@ -18,32 +19,33 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
-public class BodyPartEntity extends Entity implements IEntityAdditionalSpawnData {
+public class BodyPartEntity
+extends Entity
+implements IEntityAdditionalSpawnData {
+    private int part;
     private final boolean yawPositive;
     private final boolean pitchPositive;
-    private int part;
     private double velocityX;
-
     private double velocityY;
-
     private double velocityZ;
-
     private int despawnTimer;
 
     public BodyPartEntity(World world) {
         super(world);
-        this.prevRotationYaw = this.rotationYaw = this.rand.nextFloat() * 360.0F;
-        this.prevRotationPitch = this.rotationPitch = this.rand.nextFloat() * 360.0F;
+        this.prevRotationYaw = this.rotationYaw = this.rand.nextFloat() * 360.0f;
+        this.prevRotationPitch = this.rotationPitch = this.rand.nextFloat() * 360.0f;
         this.yawPositive = this.rand.nextBoolean();
         this.pitchPositive = this.rand.nextBoolean();
-        setSize(0.7F, 0.7F);
+        this.setSize(0.7f, 0.7f);
     }
 
     public BodyPartEntity(World world, EntityLiving owner, int bodyPart) {
         this(world);
-        setPosition(owner.posX, owner.posY + (3.2F * (0.25F + this.rand.nextFloat() * 0.5F)), owner.posZ);
+        this.setPosition(owner.posX, owner.posY + (double)(3.2f * (0.25f + this.rand.nextFloat() * 0.5f)), owner.posZ);
         this.part = bodyPart;
-        if (owner.isBurning()) setFire(EntityUtil.getFire(owner) / 20);
+        if (owner.isBurning()) {
+            this.setFire(EntityUtil.getFire(owner) / 20);
+        }
     }
 
     protected void entityInit() {
@@ -54,7 +56,7 @@ public class BodyPartEntity extends Entity implements IEntityAdditionalSpawnData
     }
 
     public ItemStack getPickedResult(RayTraceResult target) {
-        return new ItemStack(getItemByPart());
+        return new ItemStack(this.getItemByPart());
     }
 
     protected boolean canTriggerWalking() {
@@ -66,7 +68,7 @@ public class BodyPartEntity extends Entity implements IEntityAdditionalSpawnData
     }
 
     public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
-        setPosition(x, y, z);
+        this.setPosition(x, y, z);
         this.motionX = this.velocityX;
         this.motionY = this.velocityY;
         this.motionZ = this.velocityZ;
@@ -86,58 +88,77 @@ public class BodyPartEntity extends Entity implements IEntityAdditionalSpawnData
         this.prevPosX = this.posX;
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
-        if (!hasNoGravity()) this.motionY -= 0.045D;
-        move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
-        this.motionX *= 0.96D;
-        this.motionY *= 0.96D;
-        this.motionZ *= 0.96D;
+        if (!this.hasNoGravity()) {
+            this.motionY -= 0.045;
+        }
+        this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+        this.motionX *= 0.96;
+        this.motionY *= 0.96;
+        this.motionZ *= 0.96;
         if (this.onGround) {
-            this.motionX *= 0.7D;
-            this.motionY *= 0.7D;
-            this.motionZ *= 0.7D;
+            this.motionX *= 0.7;
+            this.motionY *= 0.7;
+            this.motionZ *= 0.7;
         }
         if (!this.onGround && !this.isInWeb) {
-            this.rotationYaw += 10.0F * (this.yawPositive ? 1 : -1);
-            this.rotationPitch += 15.0F * (this.pitchPositive ? 1 : -1);
-            for (Entity entity : this.world.getEntitiesInAABBexcluding(this, getEntityBoundingBox(), this::canHarm)) {
-                if (isBurning()) entity.setFire(EntityUtil.getFire(this) / 20);
-                entity.attackEntityFrom(DamageSource.causeThrownDamage(this, this), 4.0F + this.rand.nextInt(4));
+            this.rotationYaw += 10.0f * (float)(this.yawPositive ? 1 : -1);
+            this.rotationPitch += 15.0f * (float)(this.pitchPositive ? 1 : -1);
+            for (Entity entity : this.world.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox(), this::canHarm)) {
+                if (this.isBurning()) {
+                    entity.setFire(EntityUtil.getFire(this) / 20);
+                }
+                entity.attackEntityFrom(DamageSource.causeThrownDamage((Entity)this, (Entity)this), 4.0f + (float)this.rand.nextInt(4));
             }
-            if (this.despawnTimer > 0) this.despawnTimer--;
+            if (this.despawnTimer > 0) {
+                --this.despawnTimer;
+            }
         } else {
-            this.despawnTimer++;
+            ++this.despawnTimer;
         }
-        if (!this.world.isRemote && this.despawnTimer >= 6000) setDead();
+        if (!this.world.isRemote && this.despawnTimer >= 6000) {
+            this.setDead();
+        }
     }
 
     public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
-        if (!this.world.isRemote && this.world.getGameRules().getBoolean("doEntityDrops"))
-            dropItem(getItemByPart(), 1).setNoPickupDelay();
+        if (!this.world.isRemote && this.world.getGameRules().getBoolean("doEntityDrops")) {
+            this.dropItem(this.getItemByPart(), 1).setNoPickupDelay();
+        }
         player.swingArm(hand);
-        setDead();
+        this.setDead();
         return true;
     }
 
     private boolean canHarm(Entity entity) {
-        return (entity.canBeCollidedWith() && !(entity instanceof chumbanotz.mutantbeasts.entity.mutant.MutantSkeletonEntity));
+        return entity.canBeCollidedWith() && !(entity instanceof MutantSkeletonEntity);
     }
 
     public Item getItemByPart() {
-        if (this.part == 0) return MBItems.MUTANT_SKELETON_PELVIS;
-        if (this.part >= 1 && this.part < 19) return MBItems.MUTANT_SKELETON_RIB;
-        if (this.part == 19) return MBItems.MUTANT_SKELETON_SKULL;
-        if (this.part >= 21 && this.part < 29) return MBItems.MUTANT_SKELETON_LIMB;
-        if (this.part == 29 || this.part == 30) return MBItems.MUTANT_SKELETON_SHOULDER_PAD;
+        if (this.part == 0) {
+            return MBItems.MUTANT_SKELETON_PELVIS;
+        }
+        if (this.part >= 1 && this.part < 19) {
+            return MBItems.MUTANT_SKELETON_RIB;
+        }
+        if (this.part == 19) {
+            return MBItems.MUTANT_SKELETON_SKULL;
+        }
+        if (this.part >= 21 && this.part < 29) {
+            return MBItems.MUTANT_SKELETON_LIMB;
+        }
+        if (this.part == 29 || this.part == 30) {
+            return MBItems.MUTANT_SKELETON_SHOULDER_PAD;
+        }
         return Items.AIR;
     }
 
     public String getName() {
-        return hasCustomName() ? getCustomNameTag() : I18n.translateToLocal(getItemByPart().getTranslationKey() + ".name");
+        return this.hasCustomName() ? this.getCustomNameTag() : I18n.translateToLocal((String)(this.getItemByPart().getTranslationKey() + ".name"));
     }
 
     protected void writeEntityToNBT(NBTTagCompound compound) {
-        compound.setByte("Part", (byte) this.part);
-        compound.setShort("DespawnTimer", (short) this.despawnTimer);
+        compound.setByte("Part", (byte)this.part);
+        compound.setShort("DespawnTimer", (short)this.despawnTimer);
     }
 
     protected void readEntityFromNBT(NBTTagCompound compound) {

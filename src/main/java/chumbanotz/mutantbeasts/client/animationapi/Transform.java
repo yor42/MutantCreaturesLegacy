@@ -2,15 +2,10 @@ package chumbanotz.mutantbeasts.client.animationapi;
 
 public class Transform {
     private float rotationX;
-
     private float rotationY;
-
     private float rotationZ;
-
     private float offsetX;
-
     private float offsetY;
-
     private float offsetZ;
 
     public float getRotationX() {

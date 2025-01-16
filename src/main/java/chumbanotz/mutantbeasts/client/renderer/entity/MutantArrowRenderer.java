@@ -7,11 +7,12 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
-public class MutantArrowRenderer extends Render<MutantArrowEntity> {
+public class MutantArrowRenderer
+extends Render<MutantArrowEntity> {
     private static final ResourceLocation TEXTURE = MutantBeasts.getEntityTexture("mutant_arrow");
-
     private final MutantArrowModel arrowModel = new MutantArrowModel();
 
     public MutantArrowRenderer(RenderManager renderManager) {
@@ -28,25 +29,25 @@ public class MutantArrowRenderer extends Render<MutantArrowEntity> {
         GlStateManager.enableNormalize();
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        GlStateManager.translate((float) x, (float) y, (float) z);
-        bindEntityTexture(entity);
-        float ageInTicks = entity.ticksExisted + partialTicks;
-        for (int i = 0; i < entity.getClones(); i++) {
+        GlStateManager.translate((float)x, (float)y, (float)z);
+        this.bindEntityTexture(entity);
+        float ageInTicks = (float)entity.ticksExisted + partialTicks;
+        for (int i = 0; i < entity.getClones(); ++i) {
             GlStateManager.pushMatrix();
-            float scale = entity.getSpeed() - i * 0.08F;
-            double x1 = (entity.getTargetX() - entity.posX) * ageInTicks * scale;
-            double y1 = (entity.getTargetY() - entity.posY) * ageInTicks * scale;
-            double z1 = (entity.getTargetZ() - entity.posZ) * ageInTicks * scale;
-            GlStateManager.translate((float) x1, (float) y1, (float) z1);
-            GlStateManager.rotate(entity.rotationYaw, 0.0F, 1.0F, 0.0F);
-            GlStateManager.rotate(entity.rotationPitch, 1.0F, 0.0F, 0.0F);
-            GlStateManager.scale(1.2F, 1.2F, 1.2F);
-            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F - i * 0.08F);
-            this.arrowModel.render(entity, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
+            float scale = entity.getSpeed() - (float)i * 0.08f;
+            double x1 = (entity.getTargetX() - entity.posX) * (double)ageInTicks * (double)scale;
+            double y1 = (entity.getTargetY() - entity.posY) * (double)ageInTicks * (double)scale;
+            double z1 = (entity.getTargetZ() - entity.posZ) * (double)ageInTicks * (double)scale;
+            GlStateManager.translate((float)x1, (float)y1, (float)z1);
+            GlStateManager.rotate(entity.rotationYaw, 0.0f, 1.0f, 0.0f);
+            GlStateManager.rotate(entity.rotationPitch, 1.0f, 0.0f, 0.0f);
+            GlStateManager.scale(1.2f, 1.2f, 1.2f);
+            GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f - (float)i * 0.08f);
+            this.arrowModel.render(entity, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0625f);
             GlStateManager.popMatrix();
         }
         GlStateManager.disableBlend();
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         GlStateManager.popMatrix();
     }
 

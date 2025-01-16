@@ -1,4 +1,4 @@
-package chumbanotz.mutantbeasts.handler;
+package chumbanotz.mutantbeasts;
 
 import chumbanotz.mutantbeasts.entity.EndersoulFragmentEntity;
 import chumbanotz.mutantbeasts.entity.mutant.MutantCreeperEntity;
@@ -6,10 +6,11 @@ import chumbanotz.mutantbeasts.entity.mutant.MutantZombieEntity;
 import chumbanotz.mutantbeasts.entity.mutant.SpiderPigEntity;
 import chumbanotz.mutantbeasts.item.HulkHammerItem;
 import chumbanotz.mutantbeasts.item.MBItems;
-import chumbanotz.mutantbeasts.mutantbeasts.Tags;
 import chumbanotz.mutantbeasts.util.EntityUtil;
 import chumbanotz.mutantbeasts.util.MBParticles;
 import chumbanotz.mutantbeasts.util.SeismicWave;
+import java.util.List;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -17,7 +18,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.ai.EntityAITempt;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.entity.passive.EntityPig;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Enchantments;
@@ -26,6 +29,7 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumAction;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemArrow;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
@@ -47,24 +51,25 @@ import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-import java.util.List;
-
-@EventBusSubscriber(modid = Tags.MOD_ID)
+@Mod.EventBusSubscriber(modid="mutantbeasts")
 public class EventHandler {
     @SubscribeEvent
     public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (!(event.getWorld()).isRemote && event.getEntity() instanceof EntityCreature) {
-            EntityCreature creature = (EntityCreature) event.getEntity();
-            if (creature instanceof net.minecraft.entity.passive.EntityOcelot)
-                creature.tasks.addTask(2, new EntityAIAvoidEntity(creature, MutantCreeperEntity.class, 16.0F, 0.8D, 1.33D));
-            if (creature instanceof net.minecraft.entity.passive.EntityVillager)
-                creature.tasks.addTask(1, new EntityAIAvoidEntity(creature, MutantZombieEntity.class, 12.0F, 0.8D, 0.8D));
-            if (creature.getClass() == EntityPig.class)
-                creature.tasks.addTask(2, new EntityAITempt(creature, 1.0D, Items.FERMENTED_SPIDER_EYE, false));
+        if (!event.getWorld().isRemote && event.getEntity() instanceof EntityCreature) {
+            EntityCreature creature = (EntityCreature)event.getEntity();
+            if (creature instanceof EntityOcelot) {
+                creature.tasks.addTask(2, new EntityAIAvoidEntity(creature, MutantCreeperEntity.class, 16.0f, 0.8, 1.33));
+            }
+            if (creature instanceof EntityVillager) {
+                creature.tasks.addTask(1, new EntityAIAvoidEntity(creature, MutantZombieEntity.class, 12.0f, 0.8, 0.8));
+            }
+            if (creature.getClass() == EntityPig.class) {
+                creature.tasks.addTask(2, new EntityAITempt(creature, 1.0, Items.FERMENTED_SPIDER_EYE, false));
+            }
         }
     }
 
@@ -72,7 +77,9 @@ public class EventHandler {
     public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
         ItemStack stack = event.getEntityPlayer().getHeldItem(event.getHand());
         if (event.getTarget().getClass() == EntityPig.class && !((EntityPig) event.getTarget()).isPotionActive(MobEffects.UNLUCK) && stack.getItem() == Items.FERMENTED_SPIDER_EYE) {
-            if (!event.getEntityPlayer().isCreative()) stack.shrink(1);
+            if (!event.getEntityPlayer().isCreative()) {
+                stack.shrink(1);
+            }
             ((EntityPig) event.getTarget()).addPotionEffect(new PotionEffect(MobEffects.UNLUCK, 600, 13));
             event.setCancellationResult(EnumActionResult.SUCCESS);
         }
@@ -80,14 +87,16 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void onLivingDrops(LivingDropsEvent event) {
-        if (SpiderPigEntity.isPigOrSpider(event.getEntityLiving()) && event.getSource().getTrueSource() instanceof SpiderPigEntity)
+        if (SpiderPigEntity.isPigOrSpider(event.getEntityLiving()) && event.getSource().getTrueSource() instanceof SpiderPigEntity) {
             event.setCanceled(true);
+        }
     }
 
     @SubscribeEvent
     public static void onLivingUseItem(LivingEntityUseItemEvent.Tick event) {
-        if (event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem() == MBItems.MUTANT_SKELETON_CHESTPLATE && event.getItem().getItemUseAction() == EnumAction.BOW && event.getDuration() > 4)
+        if (event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem() == MBItems.MUTANT_SKELETON_CHESTPLATE && event.getItem().getItemUseAction() == EnumAction.BOW && event.getDuration() > 4) {
             event.setDuration(event.getDuration() - 3);
+        }
     }
 
     @SubscribeEvent
@@ -95,82 +104,103 @@ public class EventHandler {
         if (!event.player.world.isRemote && !HulkHammerItem.WAVES.isEmpty() && HulkHammerItem.WAVES.containsKey(event.player.getUniqueID())) {
             EntityPlayer player = event.player;
             List<SeismicWave> waveList = HulkHammerItem.WAVES.get(player.getUniqueID());
-            while (waveList.size() > 16) waveList.remove(0);
+            while (waveList.size() > 16) {
+                waveList.remove(0);
+            }
             SeismicWave wave = waveList.remove(0);
             wave.affectBlocks(player.world, player);
-            AxisAlignedBB box = new AxisAlignedBB(wave.getX(), (wave.getY() + 1), wave.getZ(), (wave.getX() + 1), (wave.getY() + 2), (wave.getZ() + 1));
+            AxisAlignedBB box = new AxisAlignedBB(wave.getX(), wave.getY() + 1, wave.getZ(), wave.getX() + 1, wave.getY() + 2, wave.getZ() + 1);
             for (Entity entity : player.world.getEntitiesWithinAABBExcludingEntity(player, box)) {
-                if (entity.canBeCollidedWith() && player.getRidingEntity() != entity && entity.attackEntityFrom(DamageSource.causePlayerDamage(player), (6 + player.getRNG().nextInt(3)))) {
-                    if (entity instanceof EntityLivingBase)
-                        EnchantmentHelper.applyThornEnchantments((EntityLivingBase) entity, player);
-                    EnchantmentHelper.applyArthropodEnchantments(player, entity);
+                if (!entity.canBeCollidedWith() || player.getRidingEntity() == entity || !entity.attackEntityFrom(DamageSource.causePlayerDamage(player), 6 + player.getRNG().nextInt(3))) continue;
+                if (entity instanceof EntityLivingBase) {
+                    EnchantmentHelper.applyThornEnchantments((EntityLivingBase) entity, player);
                 }
+                EnchantmentHelper.applyArthropodEnchantments(player, entity);
             }
-            if (waveList.isEmpty()) HulkHammerItem.WAVES.remove(player.getUniqueID());
+            if (waveList.isEmpty()) {
+                HulkHammerItem.WAVES.remove(player.getUniqueID());
+            }
         }
     }
 
     @SubscribeEvent
     public static void onPlayerShootArrow(ArrowLooseEvent event) {
-        if (!(event.getWorld()).isRemote && event.getEntityPlayer().getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == MBItems.MUTANT_SKELETON_SKULL && event.hasAmmo()) {
+        if (!event.getWorld().isRemote && event.getEntityPlayer().getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == MBItems.MUTANT_SKELETON_SKULL && event.hasAmmo()) {
+            int k;
+            int j;
+            boolean inAir;
             event.setCanceled(true);
             EntityPlayer player = event.getEntityPlayer();
             World world = event.getWorld();
             ItemStack bow = event.getBow();
-            ItemStack arrowStack = findAmmo(player);
-            boolean inAir = (!player.onGround && !player.isInWater() && !player.isInLava());
-            if (arrowStack.isEmpty()) arrowStack = new ItemStack(Items.ARROW);
+            ItemStack arrowStack = EventHandler.findAmmo(player);
+            boolean bl = inAir = !player.onGround && !player.isInWater() && !player.isInLava();
+            if (arrowStack.isEmpty()) {
+                arrowStack = new ItemStack(Items.ARROW);
+            }
             float velocity = ItemBow.getArrowVelocity(event.getCharge());
-            boolean infiniteArrow = (player.capabilities.isCreativeMode || (arrowStack.getItem() instanceof ItemArrow && ((ItemArrow) arrowStack.getItem()).isInfinite(arrowStack, bow, player)));
-            ItemArrow itemarrow = (arrowStack.getItem() instanceof ItemArrow) ? (ItemArrow) arrowStack.getItem() : (ItemArrow) Items.ARROW;
+            boolean infiniteArrow = player.capabilities.isCreativeMode || arrowStack.getItem() instanceof ItemArrow && ((ItemArrow) arrowStack.getItem()).isInfinite(arrowStack, bow, player);
+            ItemArrow itemarrow = (ItemArrow) (arrowStack.getItem() instanceof ItemArrow ? arrowStack.getItem() : Items.ARROW);
             EntityArrow entityarrow = itemarrow.createArrow(world, arrowStack, player);
-            entityarrow.shoot(player, player.rotationPitch, player.rotationYaw, 0.0F, velocity * 2.0F, 1.0F);
-            if (velocity == 1.0F && inAir) entityarrow.setIsCritical(true);
-            int j = EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER, bow);
-            if (j > 0) entityarrow.setDamage(entityarrow.getDamage() + j * 0.5D + 0.5D);
-            int k = EnchantmentHelper.getEnchantmentLevel(Enchantments.PUNCH, bow);
-            if (k > 0) entityarrow.setKnockbackStrength(k);
-            if (EnchantmentHelper.getEnchantmentLevel(Enchantments.FLAME, bow) > 0) entityarrow.setFire(100);
-            entityarrow.setDamage(entityarrow.getDamage() * (inAir ? 2.0D : 0.5D));
+            entityarrow.shoot(player, player.rotationPitch, player.rotationYaw, 0.0f, velocity * 2.0f, 1.0f);
+            if (velocity == 1.0f && inAir) {
+                entityarrow.setIsCritical(true);
+            }
+            if ((j = EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER, bow)) > 0) {
+                entityarrow.setDamage(entityarrow.getDamage() + (double)j * 0.5 + 0.5);
+            }
+            if ((k = EnchantmentHelper.getEnchantmentLevel(Enchantments.PUNCH, bow)) > 0) {
+                entityarrow.setKnockbackStrength(k);
+            }
+            if (EnchantmentHelper.getEnchantmentLevel(Enchantments.FLAME, bow) > 0) {
+                entityarrow.setFire(100);
+            }
+            entityarrow.setDamage(entityarrow.getDamage() * (inAir ? 2.0 : 0.5));
             bow.damageItem(1, player);
-            if (infiniteArrow || (player.capabilities.isCreativeMode && (arrowStack.getItem() == Items.SPECTRAL_ARROW || arrowStack.getItem() == Items.TIPPED_ARROW)))
+            if (infiniteArrow || player.capabilities.isCreativeMode && (arrowStack.getItem() == Items.SPECTRAL_ARROW || arrowStack.getItem() == Items.TIPPED_ARROW)) {
                 entityarrow.pickupStatus = EntityArrow.PickupStatus.CREATIVE_ONLY;
+            }
             world.spawnEntity(entityarrow);
-            world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F / (player.getRNG().nextFloat() * 0.4F + 1.2F) + velocity * 0.5F);
+            world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.PLAYERS, 1.0f, 1.0f / (player.getRNG().nextFloat() * 0.4f + 1.2f) + velocity * 0.5f);
             if (!infiniteArrow && !player.capabilities.isCreativeMode) {
                 arrowStack.shrink(1);
-                if (arrowStack.isEmpty()) player.inventory.deleteStack(arrowStack);
+                if (arrowStack.isEmpty()) {
+                    player.inventory.deleteStack(arrowStack);
+                }
             }
             player.addStat(StatList.getObjectUseStats(bow.getItem()));
         }
     }
 
     private static ItemStack findAmmo(EntityPlayer player) {
-        if (player.getHeldItem(EnumHand.OFF_HAND).getItem() instanceof ItemArrow)
+        if (player.getHeldItem(EnumHand.OFF_HAND).getItem() instanceof ItemArrow) {
             return player.getHeldItem(EnumHand.OFF_HAND);
-        if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemArrow)
+        }
+        if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemArrow) {
             return player.getHeldItem(EnumHand.MAIN_HAND);
-        for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+        }
+        for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
             ItemStack itemstack = player.inventory.getStackInSlot(i);
-            if (itemstack.getItem() instanceof ItemArrow) return itemstack;
+            if (!(itemstack.getItem() instanceof ItemArrow)) continue;
+            return itemstack;
         }
         return ItemStack.EMPTY;
     }
 
     @SubscribeEvent
     public static void onPlayerToss(ItemTossEvent event) {
-        World world = (event.getPlayer()).world;
+        World world = event.getPlayer().world;
         EntityPlayer player = event.getPlayer();
         if (!world.isRemote) {
+            boolean isHand;
             ItemStack stack = event.getEntityItem().getItem();
-            boolean isHand = (stack.getItem() == MBItems.ENDERSOUL_HAND && stack.isItemDamaged());
+            boolean bl = isHand = stack.getItem() == MBItems.ENDERSOUL_HAND && stack.isItemDamaged();
             if (stack.getItem() == Items.ENDER_EYE || isHand) {
                 int count = 0;
-                for (EndersoulFragmentEntity orb : world.getEntitiesWithinAABB(EndersoulFragmentEntity.class, player.getEntityBoundingBox().grow(8.0D))) {
-                    if (orb.isEntityAlive() && orb.getOwner() == player) {
-                        count++;
-                        orb.setDead();
-                    }
+                for (EndersoulFragmentEntity orb : world.getEntitiesWithinAABB(EndersoulFragmentEntity.class, player.getEntityBoundingBox().grow(8.0))) {
+                    if (!orb.isEntityAlive() || orb.getOwner() != player) continue;
+                    ++count;
+                    orb.setDead();
                 }
                 if (count > 0) {
                     EntityUtil.sendParticlePacket(player, MBParticles.ENDERSOUL, 256);
@@ -190,11 +220,13 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void onExplosionDetonate(ExplosionEvent.Detonate event) {
-        event.getAffectedEntities().removeIf(entity -> (entity instanceof EntityItem && ((EntityItem) entity).getItem().getItem() == MBItems.CREEPER_SHARD));
+        event.getAffectedEntities().removeIf(entity -> entity instanceof EntityItem && ((EntityItem) entity).getItem().getItem() == MBItems.CREEPER_SHARD);
     }
 
     @SubscribeEvent
     public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.getModID().equals(Tags.MOD_ID)) ConfigManager.sync(Tags.MOD_ID, Config.Type.INSTANCE);
+        if (event.getModID().equals("mutantbeasts")) {
+            ConfigManager.sync("mutantbeasts", Config.Type.INSTANCE);
+        }
     }
 }

@@ -3,12 +3,13 @@ package chumbanotz.mutantbeasts.util;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
-public interface IProxy extends IGuiHandler {
-    void preInit();
+public interface IProxy
+extends IGuiHandler {
+    public void preInit();
 
-    void init();
+    public void init();
 
-    World getWorldClient();
+    public World getWorldClient();
 
-    Object getMutantSkeletonArmorModel();
+    public Object getMutantSkeletonArmorModel();
 }

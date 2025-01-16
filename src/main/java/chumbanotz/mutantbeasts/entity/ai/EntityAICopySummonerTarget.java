@@ -6,20 +6,22 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITarget;
 import net.minecraft.util.math.BlockPos;
 
-public class EntityAICopySummonerTarget extends EntityAITarget {
+public class EntityAICopySummonerTarget
+extends EntityAITarget {
     private MutantZombieEntity summoner;
 
     public EntityAICopySummonerTarget(EntityCreature creature, MutantZombieEntity summoner) {
         super(creature, false);
         this.summoner = summoner;
-        setMutexBits(1);
+        this.setMutexBits(1);
     }
 
     public boolean shouldExecute() {
-        if (this.summoner == null)
+        if (this.summoner == null) {
             return false;
+        }
         this.taskOwner.setHomePosAndDistance(new BlockPos(this.summoner), 8);
-        return (this.summoner.getAttackTarget() != null);
+        return this.summoner.getAttackTarget() != null;
     }
 
     public void startExecuting() {
@@ -29,15 +31,17 @@ public class EntityAICopySummonerTarget extends EntityAITarget {
     }
 
     public boolean shouldContinueExecuting() {
-        if (!super.shouldContinueExecuting())
+        if (!super.shouldContinueExecuting()) {
             return false;
+        }
         EntityLivingBase attackTarget = this.summoner.getAttackTarget();
-        return attackTarget == null || attackTarget == this.target || this.taskOwner.getDistanceSq(attackTarget) >= this.taskOwner.getDistanceSq(this.target);
+        return attackTarget == null || attackTarget == this.target || !(this.taskOwner.getDistanceSq(attackTarget) < this.taskOwner.getDistanceSq(this.target));
     }
 
     public void updateTask() {
-        if (this.taskOwner.ticksExisted % 3 == 0)
+        if (this.taskOwner.ticksExisted % 3 == 0) {
             this.taskOwner.setHomePosAndDistance(new BlockPos(this.summoner), 16);
+        }
     }
 
     public void resetTask() {

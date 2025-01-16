@@ -15,18 +15,17 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 
-public class MutantSnowGolemRenderer extends RenderLiving<MutantSnowGolemEntity> {
+public class MutantSnowGolemRenderer
+extends RenderLiving<MutantSnowGolemEntity> {
     private static final ResourceLocation TEXTURE = MutantBeasts.getEntityTexture("mutant_snow_golem/mutant_snow_golem");
-
     private static final ResourceLocation PUMPKIN_TEXTURE = MutantBeasts.getEntityTexture("mutant_snow_golem/pumpkin");
-
     private static final ResourceLocation GLOW_TEXTURE = MutantBeasts.getEntityTexture("mutant_snow_golem/glow");
 
     public MutantSnowGolemRenderer(RenderManager manager) {
-        super(manager, new MutantSnowGolemModel(), 0.7F);
-        addLayer(new PumpkinLayer());
-        addLayer(new GlowLayer());
-        addLayer(new HeldBlockLayer());
+        super(manager, new MutantSnowGolemModel(), 0.7f);
+        this.addLayer(new PumpkinLayer());
+        this.addLayer(new GlowLayer());
+        this.addLayer(new HeldBlockLayer());
     }
 
     public void renderName(MutantSnowGolemEntity entity, double x, double y, double z) {
@@ -34,46 +33,70 @@ public class MutantSnowGolemRenderer extends RenderLiving<MutantSnowGolemEntity>
         if (entity.getOwner() != null) {
             ITextComponent textComponent = entity.getOwner().getDisplayName();
             textComponent.getStyle().setItalic(true);
-            if (canRenderName(entity)) y += ((getFontRendererFromRenderManager()).FONT_HEIGHT * 1.15F * 0.025F);
-            renderEntityName(entity, x, y, z, textComponent.getFormattedText(), NAME_TAG_RANGE);
+            if (this.canRenderName(entity)) {
+                y += (float)this.getFontRendererFromRenderManager().FONT_HEIGHT * 1.15f * 0.025f;
+            }
+            super.renderEntityName(entity, x, y, z, textComponent.getFormattedText(), NAME_TAG_RANGE);
         }
     }
 
     public MutantSnowGolemModel getMainModel() {
-        return (MutantSnowGolemModel) super.getMainModel();
+        return (MutantSnowGolemModel)super.getMainModel();
     }
 
     protected ResourceLocation getEntityTexture(MutantSnowGolemEntity entity) {
         return TEXTURE;
     }
 
-    class PumpkinLayer implements LayerRenderer<MutantSnowGolemEntity> {
+    class HeldBlockLayer
+    implements LayerRenderer<MutantSnowGolemEntity> {
+        HeldBlockLayer() {
+        }
+
         public void doRenderLayer(MutantSnowGolemEntity entityIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-            if (entityIn.isPumpkinEquipped() && !entityIn.isInvisible()) {
-                MutantSnowGolemRenderer.this.bindTexture(MutantSnowGolemRenderer.PUMPKIN_TEXTURE);
-                MutantSnowGolemRenderer.this.getMainModel().render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+            if (entityIn.isEntityAlive() && entityIn.isThrowing() && entityIn.getThrowingTick() < 7) {
+                GlStateManager.enableRescaleNormal();
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(0.4f, 0.0f, 0.0f);
+                MutantSnowGolemRenderer.this.getMainModel().postRenderArm(0.0625f);
+                GlStateManager.translate(0.0f, 0.9f, 0.0f);
+                GlStateManager.scale(-0.8f, -0.8f, 0.8f);
+                int i = entityIn.getBrightnessForRender();
+                int j = i % 65536;
+                int k = i / 65536;
+                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j, (float)k);
+                GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+                MutantSnowGolemRenderer.this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+                GlStateManager.translate(-0.5f, -0.5f, 0.5f);
+                Minecraft.getMinecraft().getBlockRendererDispatcher().renderBlockBrightness(Blocks.ICE.getDefaultState(), 1.0f);
+                GlStateManager.popMatrix();
+                GlStateManager.disableRescaleNormal();
             }
         }
 
         public boolean shouldCombineTextures() {
-            return true;
+            return false;
         }
     }
 
-    class GlowLayer implements LayerRenderer<MutantSnowGolemEntity> {
+    class GlowLayer
+    implements LayerRenderer<MutantSnowGolemEntity> {
+        GlowLayer() {
+        }
+
         public void doRenderLayer(MutantSnowGolemEntity entityIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
             if (entityIn.isPumpkinEquipped()) {
-                MutantSnowGolemRenderer.this.bindTexture(MutantSnowGolemRenderer.GLOW_TEXTURE);
+                MutantSnowGolemRenderer.this.bindTexture(GLOW_TEXTURE);
                 GlStateManager.disableLighting();
-                GlStateManager.depthMask(!entityIn.isInvisible());
-                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 61680.0F, 0.0F);
-                float f1 = MathHelper.cos(ageInTicks * 0.1F);
-                float f2 = MathHelper.cos(ageInTicks * 0.15F);
-                GlStateManager.color(1.0F, 0.8F + 0.05F * f2, 0.15F + 0.2F * f1, 1.0F);
-                (Minecraft.getMinecraft()).entityRenderer.setupFogColor(true);
+                GlStateManager.depthMask((!entityIn.isInvisible() ? 1 : 0) != 0);
+                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 61680.0f, 0.0f);
+                float f1 = MathHelper.cos(ageInTicks * 0.1f);
+                float f2 = MathHelper.cos(ageInTicks * 0.15f);
+                GlStateManager.color(1.0f, 0.8f + 0.05f * f2, 0.15f + 0.2f * f1, 1.0f);
+                Minecraft.getMinecraft().entityRenderer.setupFogColor(true);
                 MutantSnowGolemRenderer.this.mainModel.render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
-                (Minecraft.getMinecraft()).entityRenderer.setupFogColor(false);
-                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+                Minecraft.getMinecraft().entityRenderer.setupFogColor(false);
+                GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
                 MutantSnowGolemRenderer.this.setLightmap(entityIn);
                 GlStateManager.depthMask(true);
                 GlStateManager.enableLighting();
@@ -85,30 +108,20 @@ public class MutantSnowGolemRenderer extends RenderLiving<MutantSnowGolemEntity>
         }
     }
 
-    class HeldBlockLayer implements LayerRenderer<MutantSnowGolemEntity> {
+    class PumpkinLayer
+    implements LayerRenderer<MutantSnowGolemEntity> {
+        PumpkinLayer() {
+        }
+
         public void doRenderLayer(MutantSnowGolemEntity entityIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
-            if (entityIn.isEntityAlive() && entityIn.isThrowing() && entityIn.getThrowingTick() < 7) {
-                GlStateManager.enableRescaleNormal();
-                GlStateManager.pushMatrix();
-                GlStateManager.translate(0.4F, 0.0F, 0.0F);
-                MutantSnowGolemRenderer.this.getMainModel().postRenderArm(0.0625F);
-                GlStateManager.translate(0.0F, 0.9F, 0.0F);
-                GlStateManager.scale(-0.8F, -0.8F, 0.8F);
-                int i = entityIn.getBrightnessForRender();
-                int j = i % 65536;
-                int k = i / 65536;
-                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j, k);
-                GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-                MutantSnowGolemRenderer.this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-                GlStateManager.translate(-0.5F, -0.5F, 0.5F);
-                Minecraft.getMinecraft().getBlockRendererDispatcher().renderBlockBrightness(Blocks.ICE.getDefaultState(), 1.0F);
-                GlStateManager.popMatrix();
-                GlStateManager.disableRescaleNormal();
+            if (entityIn.isPumpkinEquipped() && !entityIn.isInvisible()) {
+                MutantSnowGolemRenderer.this.bindTexture(PUMPKIN_TEXTURE);
+                MutantSnowGolemRenderer.this.getMainModel().render(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
             }
         }
 
         public boolean shouldCombineTextures() {
-            return false;
+            return true;
         }
     }
 }

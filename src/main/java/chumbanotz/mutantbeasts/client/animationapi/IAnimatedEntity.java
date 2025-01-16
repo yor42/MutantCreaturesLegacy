@@ -3,22 +3,23 @@ package chumbanotz.mutantbeasts.client.animationapi;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
-public interface IAnimatedEntity extends IEntityAdditionalSpawnData {
-    int getAnimationID();
+public interface IAnimatedEntity
+extends IEntityAdditionalSpawnData {
+    public int getAnimationID();
 
-    void setAnimationID(int paramInt);
+    public void setAnimationID(int var1);
 
-    int getAnimationTick();
+    public int getAnimationTick();
 
-    void setAnimationTick(int paramInt);
+    public void setAnimationTick(int var1);
 
-    default void writeSpawnData(ByteBuf buffer) {
-        buffer.writeInt(getAnimationID());
-        buffer.writeInt(getAnimationTick());
+    default public void writeSpawnData(ByteBuf buffer) {
+        buffer.writeInt(this.getAnimationID());
+        buffer.writeInt(this.getAnimationTick());
     }
 
-    default void readSpawnData(ByteBuf additionalData) {
-        setAnimationID(additionalData.readInt());
-        setAnimationTick(additionalData.readInt());
+    default public void readSpawnData(ByteBuf additionalData) {
+        this.setAnimationID(additionalData.readInt());
+        this.setAnimationTick(additionalData.readInt());
     }
 }

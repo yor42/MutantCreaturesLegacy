@@ -21,9 +21,10 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class CreeperShardItem extends Item {
+public class CreeperShardItem
+extends Item {
     public boolean hasEffect(ItemStack stack) {
-        return (super.hasEffect(stack) || stack.getItemDamage() == 0);
+        return super.hasEffect(stack) || stack.getItemDamage() == 0;
     }
 
     public EnumRarity getRarity(ItemStack stack) {
@@ -35,15 +36,16 @@ public class CreeperShardItem extends Item {
     }
 
     public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
-        EntityPlayer player = (EntityPlayer) attacker;
+        EntityPlayer player = (EntityPlayer)attacker;
         int damage = stack.getItemDamage();
         if (damage > 0) {
             stack.setItemDamage(damage - 1);
-            if (!player.isCreative() && player.getRNG().nextInt(4) == 0)
+            if (!player.isCreative() && player.getRNG().nextInt(4) == 0) {
                 player.addPotionEffect(new PotionEffect(MobEffects.POISON, 80 + player.getRNG().nextInt(40)));
+            }
         }
-        target.knockBack(player, 0.9F, player.posX - target.posX, player.posZ - target.posZ);
-        player.world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.NEUTRAL, 0.3F, 0.8F + player.getRNG().nextFloat() * 0.4F);
+        target.knockBack(player, 0.9f, player.posX - target.posX, player.posZ - target.posZ);
+        player.world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.NEUTRAL, 0.3f, 0.8f + player.getRNG().nextFloat() * 0.4f);
         return true;
     }
 
@@ -52,24 +54,27 @@ public class CreeperShardItem extends Item {
         int maxDmg = stack.getMaxDamage();
         int dmg = stack.getItemDamage();
         if (!worldIn.isRemote) {
-            float damage = 5.0F * (maxDmg - dmg) / 32.0F;
-            if (dmg == 0)
-                damage += 2.0F;
-            MutatedExplosion.create(worldIn, playerIn, playerIn.posX, playerIn.posY + 1.0D, playerIn.posZ, damage, false, playerIn.isAllowEdit());
+            float damage = 5.0f * (float)(maxDmg - dmg) / 32.0f;
+            if (dmg == 0) {
+                damage += 2.0f;
+            }
+            MutatedExplosion.create(worldIn, playerIn, playerIn.posX, playerIn.posY + 1.0, playerIn.posZ, damage, false, playerIn.isAllowEdit());
         }
-        if (!playerIn.capabilities.isCreativeMode)
+        if (!playerIn.capabilities.isCreativeMode) {
             stack.setItemDamage(maxDmg);
+        }
         playerIn.swingArm(handIn);
         playerIn.getCooldownTracker().setCooldown(this, (maxDmg - dmg) * 2);
-        playerIn.addStat(StatList.getObjectUseStats(this));
+        playerIn.addStat(StatList.getObjectUseStats((Item)this));
         return new ActionResult(EnumActionResult.SUCCESS, stack);
     }
 
+    @Override
     public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
-        Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
+        Multimap multimap = super.getAttributeModifiers(slot, stack);
         if (slot == EntityEquipmentSlot.MAINHAND) {
-            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 2.0D, 0));
-            multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2.0D, 0));
+            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 2.0, 0));
+            multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2.0, 0));
         }
         return multimap;
     }

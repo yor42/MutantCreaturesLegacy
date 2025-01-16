@@ -3,7 +3,8 @@ package chumbanotz.mutantbeasts.client.animationapi;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 
-public class JointModelRenderer extends ModelRenderer {
+public class JointModelRenderer
+extends ModelRenderer {
     private final ModelRenderer model;
 
     public JointModelRenderer(ModelBase model, int x, int y) {
@@ -13,12 +14,16 @@ public class JointModelRenderer extends ModelRenderer {
     }
 
     public ModelRenderer setTextureOffset(int x, int y) {
-        if (this.model != null) this.model.setTextureOffset(x, y);
+        if (this.model != null) {
+            this.model.setTextureOffset(x, y);
+        }
         return this;
     }
 
     public ModelRenderer setTextureSize(int w, int h) {
-        if (this.model != null) this.model.setTextureSize(w, h);
+        if (this.model != null) {
+            this.model.setTextureSize(w, h);
+        }
         return this;
     }
 

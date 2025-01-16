@@ -9,9 +9,9 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class TeleportPacket implements IMessage {
+public class TeleportPacket
+implements IMessage {
     private int entityId;
-
     private BlockPos blockPos;
 
     public TeleportPacket() {
@@ -29,14 +29,16 @@ public class TeleportPacket implements IMessage {
 
     public void fromBytes(ByteBuf buffer) {
         this.entityId = buffer.readInt();
-        this.blockPos = BlockPos.fromLong(buffer.readLong());
+        this.blockPos = BlockPos.fromLong((long)buffer.readLong());
     }
 
-    public static class Handler implements IMessageHandler<TeleportPacket, IMessage> {
+    public static class Handler
+    implements IMessageHandler<TeleportPacket, IMessage> {
         public IMessage onMessage(TeleportPacket packet, MessageContext ctx) {
             Entity entity = MutantBeasts.PROXY.getWorldClient().getEntityByID(packet.entityId);
-            if (entity instanceof MutantEndermanEntity && packet.blockPos != null)
-                ((MutantEndermanEntity) entity).setTeleportPosition(packet.blockPos);
+            if (entity instanceof MutantEndermanEntity && packet.blockPos != null) {
+                ((MutantEndermanEntity)entity).setTeleportPosition(packet.blockPos);
+            }
             return null;
         }
     }

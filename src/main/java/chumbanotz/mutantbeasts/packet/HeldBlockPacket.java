@@ -8,11 +8,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class HeldBlockPacket implements IMessage {
+public class HeldBlockPacket
+implements IMessage {
     private int entityId;
-
     private int blockId;
-
     private byte blockIndex;
 
     public HeldBlockPacket() {
@@ -21,7 +20,7 @@ public class HeldBlockPacket implements IMessage {
     public HeldBlockPacket(MutantEndermanEntity enderman, int blockId, int blockIndex) {
         this.entityId = enderman.getEntityId();
         this.blockId = blockId;
-        this.blockIndex = (byte) blockIndex;
+        this.blockIndex = (byte)blockIndex;
     }
 
     public void toBytes(ByteBuf buffer) {
@@ -36,11 +35,13 @@ public class HeldBlockPacket implements IMessage {
         this.blockIndex = buffer.readByte();
     }
 
-    public static class Handler implements IMessageHandler<HeldBlockPacket, IMessage> {
+    public static class Handler
+    implements IMessageHandler<HeldBlockPacket, IMessage> {
         public IMessage onMessage(HeldBlockPacket packet, MessageContext ctx) {
             Entity entity = MutantBeasts.PROXY.getWorldClient().getEntityByID(packet.entityId);
-            if (entity instanceof MutantEndermanEntity && packet.blockIndex > 0 && packet.blockId != -1)
-                ((MutantEndermanEntity) entity).sendHoldBlock(packet.blockIndex, packet.blockId);
+            if (entity instanceof MutantEndermanEntity && packet.blockIndex > 0 && packet.blockId != -1) {
+                ((MutantEndermanEntity)entity).sendHoldBlock(packet.blockIndex, packet.blockId);
+            }
             return null;
         }
     }
