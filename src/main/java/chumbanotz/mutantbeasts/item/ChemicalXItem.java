@@ -36,10 +36,6 @@ extends Item {
         }.dispense(source, stack));
     }
 
-    public boolean hasEffect(ItemStack stack) {
-        return true;
-    }
-
     public EnumRarity getRarity(ItemStack stack) {
         return EnumRarity.EPIC;
     }
