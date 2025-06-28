@@ -45,6 +45,10 @@ public class MBConfig {
         @Config.RangeInt(min = 1)
         public int globalSpawnRate = 10;
 
+        @Config.Name("Mutant Creeper Armor")
+        @Config.Comment("The amount of armor the Mutant Creeper has")
+        public double mutantCreeperArmor = 0.0D;
+
         @Config.Name("Mutant Creeper Attack Damage")
         @Config.Comment("The amount of damage dealt by the Mutant Creeper")
         public double mutantCreeperAttackDamage = 5.0D;
