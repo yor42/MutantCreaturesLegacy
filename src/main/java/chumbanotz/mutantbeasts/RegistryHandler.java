@@ -98,17 +98,17 @@ public class RegistryHandler {
     @SubscribeEvent
     public static void onEntityEntryRegistry(RegistryEvent.Register<EntityEntry> event) {
         event.getRegistry().registerAll(RegistryHandler.createEntry("body_part", BodyPartEntity.class).tracker(64, 10, true).build(), RegistryHandler.createEntry("chemical_x", ChemicalXEntity.class).tracker(160, 10, true).build(), RegistryHandler.createEntityEntry("endersoul_clone", EndersoulCloneEntity.class, 15027455, 15027455).build(), RegistryHandler.createEntry("creeper_minion", CreeperMinionEntity.class, 894731, 0xB7B7B7).build(), RegistryHandler.createEntry("creeper_minion_egg", CreeperMinionEggEntity.class).tracker(160, 20, true).build(), RegistryHandler.createEntry("endersoul_fragment", EndersoulFragmentEntity.class).tracker(64, 10, true).build(), RegistryHandler.createEntry("mutant_arrow", MutantArrowEntity.class).tracker(80, 3, true).build(), RegistryHandler.createEntry("mutant_creeper", MutantCreeperEntity.class, 5349438, 11013646).build(), RegistryHandler.createEntry("mutant_enderman", MutantEndermanEntity.class, 0x161616, 8860812).build(), RegistryHandler.createEntry("mutant_skeleton", MutantSkeletonEntity.class, 0xC1C1C1, 6310217).build(), RegistryHandler.createEntry("mutant_snow_golem", MutantSnowGolemEntity.class, 0xE5FFFF, 16753434).build(), RegistryHandler.createEntry("mutant_zombie", MutantZombieEntity.class, 7969893, 44975).build(), RegistryHandler.createEntry("skull_spirit", SkullSpiritEntity.class).tracker(160, 20, false).build(), RegistryHandler.createEntry("spider_pig", SpiderPigEntity.class, 3419431, 15771042).build(), RegistryHandler.createEntry("throwable_block", ThrowableBlockEntity.class).tracker(64, 100, true).build());
-        if (MBConfig.mutantCreeperSpawnRate > 0) {
-            RegistryHandler.copySpawnsForMutant(MutantCreeperEntity.class, EntityCreeper.class, EnumCreatureType.MONSTER, MBConfig.mutantCreeperSpawnRate);
+        if (MBConfig.ENTITIES.mutantCreeperSpawnRate > 0) {
+            RegistryHandler.copySpawnsForMutant(MutantCreeperEntity.class, EntityCreeper.class, EnumCreatureType.MONSTER, MBConfig.ENTITIES.mutantCreeperSpawnRate);
         }
-        if (MBConfig.mutantEndermanSpawnRate > 0) {
-            RegistryHandler.copySpawnsForMutant(MutantEndermanEntity.class, EntityEnderman.class, EnumCreatureType.MONSTER, MBConfig.mutantEndermanSpawnRate);
+        if (MBConfig.ENTITIES.mutantEndermanSpawnRate > 0) {
+            RegistryHandler.copySpawnsForMutant(MutantEndermanEntity.class, EntityEnderman.class, EnumCreatureType.MONSTER, MBConfig.ENTITIES.mutantEndermanSpawnRate);
         }
-        if (MBConfig.mutantSkeletonSpawnRate > 0) {
-            RegistryHandler.copySpawnsForMutant(MutantSkeletonEntity.class, EntitySkeleton.class, EnumCreatureType.MONSTER, MBConfig.mutantSkeletonSpawnRate);
+        if (MBConfig.ENTITIES.mutantSkeletonSpawnRate > 0) {
+            RegistryHandler.copySpawnsForMutant(MutantSkeletonEntity.class, EntitySkeleton.class, EnumCreatureType.MONSTER, MBConfig.ENTITIES.mutantSkeletonSpawnRate);
         }
-        if (MBConfig.mutantZombieSpawnRate > 0) {
-            RegistryHandler.copySpawnsForMutant(MutantZombieEntity.class, EntityZombie.class, EnumCreatureType.MONSTER, MBConfig.mutantZombieSpawnRate);
+        if (MBConfig.ENTITIES.mutantZombieSpawnRate > 0) {
+            RegistryHandler.copySpawnsForMutant(MutantZombieEntity.class, EntityZombie.class, EnumCreatureType.MONSTER, MBConfig.ENTITIES.mutantZombieSpawnRate);
         }
     }
 

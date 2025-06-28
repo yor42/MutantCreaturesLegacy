@@ -61,7 +61,7 @@ public class EntityUtil {
     }
 
     public static boolean getRandomSpawnChance(Random rand) {
-        int i = Math.max(1, MBConfig.globalSpawnRate);
+        int i = Math.max(1, MBConfig.ENTITIES.globalSpawnRate);
         i = Math.min(20, i);
         return (rand.nextInt(50 / i) == 0);
     }

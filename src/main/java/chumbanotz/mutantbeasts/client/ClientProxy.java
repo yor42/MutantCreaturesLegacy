@@ -66,7 +66,7 @@ implements IProxy {
         MBItems.ENDERSOUL_HAND.setTileEntityItemStackRenderer(new MBTileEntityItemStackRenderer());
         Minecraft.getMinecraft().effectRenderer.registerParticle(MBParticles.ENDERSOUL.getParticleID(), new EndersoulParticle.Factory());
         Minecraft.getMinecraft().effectRenderer.registerParticle(MBParticles.SKULL_SPIRIT.getParticleID(), new SkullSpiritParticle.Factory());
-        if (MBConfig.creeperMinionOnShoulder) {
+        if (MBConfig.ENTITIES.creeperMinionOnShoulder) {
             for (RenderPlayer renderPlayer : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()) {
                 List playerLayerRenderers = ObfuscationReflectionHelper.getPrivateValue(RenderLivingBase.class, renderPlayer, "field_177097_h");
                 playerLayerRenderers.removeIf(LayerEntityOnShoulder.class::isInstance);

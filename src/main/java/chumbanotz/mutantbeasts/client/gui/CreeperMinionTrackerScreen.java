@@ -44,7 +44,7 @@ extends GuiScreen {
                 button.enabled = false;
             }
         }
-        if (!MBConfig.creeperMinionOnShoulder) {
+        if (!MBConfig.ENTITIES.creeperMinionOnShoulder) {
             this.buttonList.get(2).enabled = false;
         }
         Keyboard.enableRepeatEvents(true);
@@ -63,7 +63,7 @@ extends GuiScreen {
     }
 
     private String canRideOnShoulder() {
-        if (MBConfig.creeperMinionOnShoulder) {
+        if (MBConfig.ENTITIES.creeperMinionOnShoulder) {
             return CreeperMinionTrackerScreen.format("can_ride_on_shoulder") + I18n.format(this.canRideOnShoulder ? "options.on" : "options.off", new Object[0]);
         }
         return CreeperMinionTrackerScreen.format("disabled");

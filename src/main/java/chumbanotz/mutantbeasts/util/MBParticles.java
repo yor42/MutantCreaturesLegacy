@@ -7,8 +7,8 @@ import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class MBParticles {
-    public static final EnumParticleTypes ENDERSOUL = MBParticles.addEnumParticleType("mutantbeasts:endersoul", MBConfig.endersoulParticleID, true);
-    public static final EnumParticleTypes SKULL_SPIRIT = MBParticles.addEnumParticleType("mutantbeasts:skull_spirit", MBConfig.skullSpiritParticleID, true);
+    public static final EnumParticleTypes ENDERSOUL = MBParticles.addEnumParticleType("mutantbeasts:endersoul", MBConfig.GENERAL.endersoulParticleID, true);
+    public static final EnumParticleTypes SKULL_SPIRIT = MBParticles.addEnumParticleType("mutantbeasts:skull_spirit", MBConfig.GENERAL.skullSpiritParticleID, true);
 
     public static void register() {
         Map PARTICLES = ObfuscationReflectionHelper.getPrivateValue(EnumParticleTypes.class, null, "field_179365_U");

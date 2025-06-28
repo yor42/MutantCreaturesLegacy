@@ -93,7 +93,7 @@ extends EntityShoulderRiding {
         this.tasks.addTask(8, new EntityAILandOnOwnersShoulder(this){
 
             public boolean shouldExecute() {
-                return MBConfig.creeperMinionOnShoulder && CreeperMinionEntity.this.isTamed() && CreeperMinionEntity.this.getOwner() instanceof EntityPlayer && super.shouldExecute();
+                return MBConfig.ENTITIES.creeperMinionOnShoulder && CreeperMinionEntity.this.isTamed() && CreeperMinionEntity.this.getOwner() instanceof EntityPlayer && super.shouldExecute();
             }
         });
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0f));

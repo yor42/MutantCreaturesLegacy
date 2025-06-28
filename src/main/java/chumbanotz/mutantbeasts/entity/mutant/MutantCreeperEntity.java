@@ -1,5 +1,6 @@
 package chumbanotz.mutantbeasts.entity.mutant;
 
+import chumbanotz.mutantbeasts.MBConfig;
 import chumbanotz.mutantbeasts.entity.CreeperMinionEggEntity;
 import chumbanotz.mutantbeasts.entity.CreeperMinionEntity;
 import chumbanotz.mutantbeasts.entity.ai.EntityAIAvoidDamage;
@@ -83,11 +84,12 @@ implements IEntityAdditionalSpawnData {
 
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(120.0);
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5.0);
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26);
-        this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0);
-        this.getEntityAttribute(SWIM_SPEED).setBaseValue(4.5);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(MBConfig.ENTITIES.mutantCreeperMaxHealth);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(MBConfig.ENTITIES.mutantCreeperAttackDamage);
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(MBConfig.ENTITIES.mutantCreeperFollowRange);
+        this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(MBConfig.ENTITIES.mutantCreeperKnockbackResistance);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(MBConfig.ENTITIES.mutantCreeperMovementSpeed);
+        this.getEntityAttribute(SWIM_SPEED).setBaseValue(MBConfig.ENTITIES.mutantCreeperSwimSpeed);
     }
 
     protected void entityInit() {
@@ -138,7 +140,7 @@ implements IEntityAdditionalSpawnData {
     protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos) {
         super.updateFallState(y, onGroundIn, state, pos);
         if (!this.world.isRemote && this.isJumpAttacking() && (onGroundIn || state.getMaterial().isLiquid() || state.getMaterial() == Material.WEB)) {
-            MutatedExplosion.create(this, this.getPowered() ? 6.0f : 4.0f, false, true);
+            MutatedExplosion.create(this, this.getPowered() ? 6.0f : 4.0f, false, MBConfig.ENTITIES.mutantCreeperDestroysTerrain);
             this.setJumpAttacking(false);
         }
     }
@@ -261,7 +263,7 @@ implements IEntityAdditionalSpawnData {
         this.posZ += (double)(this.rand.nextFloat() * 0.2f) - (double)0.1f;
         if (this.deathTime >= 100) {
             if (!this.world.isRemote) {
-                MutatedExplosion.create(this, explosionPower, this.isBurning(), true);
+                MutatedExplosion.create(this, explosionPower, this.isBurning(), MBConfig.ENTITIES.mutantCreeperDestroysTerrain);
                 EntityUtil.spawnLingeringCloud(this);
                 EntityUtil.dropExperience(this, this.recentlyHit, this::getExperiencePoints, this.attackingPlayer);
                 super.onDeath(this.deathCause != null ? this.deathCause : DamageSource.GENERIC);
