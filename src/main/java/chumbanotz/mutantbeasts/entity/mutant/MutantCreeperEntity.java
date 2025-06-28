@@ -11,8 +11,10 @@ import chumbanotz.mutantbeasts.util.EntityUtil;
 import chumbanotz.mutantbeasts.util.MBSoundEvents;
 import chumbanotz.mutantbeasts.util.MutatedExplosion;
 import io.netty.buffer.ByteBuf;
+
 import java.lang.invoke.LambdaMetafactory;
 import java.util.function.Function;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -46,10 +48,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
-public class MutantCreeperEntity
-extends EntityCreeper
-implements IEntityAdditionalSpawnData {
-    private static final DataParameter<Byte> STATUS = EntityDataManager.createKey(MutantCreeperEntity.class, (DataSerializer)DataSerializers.BYTE);
+public class MutantCreeperEntity extends EntityCreeper implements IEntityAdditionalSpawnData {
+    private static final DataParameter<Byte> STATUS = EntityDataManager.createKey(MutantCreeperEntity.class, (DataSerializer) DataSerializers.BYTE);
     public static final int MAX_CHARGE_TIME = 100;
     public static final int MAX_DEATH_TIME = 100;
     private int chargeTime;
@@ -93,9 +93,10 @@ implements IEntityAdditionalSpawnData {
         this.getEntityAttribute(SWIM_SPEED).setBaseValue(MBConfig.ENTITIES.mutantCreeperSwimSpeed);
     }
 
+    @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataManager.register(STATUS, (byte)0);
+        this.dataManager.register(STATUS, (byte) 0);
     }
 
     public boolean getPowered() {
@@ -106,7 +107,7 @@ implements IEntityAdditionalSpawnData {
         this.isImmuneToFire = powered;
         this.experienceValue = powered ? 40 : 30;
         byte b0 = this.dataManager.get(STATUS);
-        this.dataManager.set(STATUS, powered ? (byte)(b0 | 1) : (byte)(b0 & 0xFFFFFFFE));
+        this.dataManager.set(STATUS, powered ? (byte) (b0 | 1) : (byte) (b0 & 0xFFFFFFFE));
     }
 
     public boolean isJumpAttacking() {
@@ -115,7 +116,7 @@ implements IEntityAdditionalSpawnData {
 
     private void setJumpAttacking(boolean jumping) {
         byte b0 = this.dataManager.get(STATUS);
-        this.dataManager.set(STATUS, jumping ? (byte)(b0 | 2) : (byte)(b0 & 0xFFFFFFFD));
+        this.dataManager.set(STATUS, jumping ? (byte) (b0 | 2) : (byte) (b0 & 0xFFFFFFFD));
     }
 
     public boolean isCharging() {
@@ -124,20 +125,24 @@ implements IEntityAdditionalSpawnData {
 
     private void setCharging(boolean flag) {
         byte b0 = this.dataManager.get(STATUS);
-        this.dataManager.set(STATUS, flag ? (byte)(b0 | 4) : (byte)(b0 & 0xFFFFFFFB));
+        this.dataManager.set(STATUS, flag ? (byte) (b0 | 4) : (byte) (b0 & 0xFFFFFFFB));
     }
 
+    @Override
     public float getEyeHeight() {
         return 2.6f;
     }
 
+    @Override
     protected PathNavigate createNavigator(World worldIn) {
         return new MBGroundPathNavigator(this, worldIn);
     }
 
+    @Override
     public void fall(float distance, float damageMultiplier) {
     }
 
+    @Override
     protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos) {
         super.updateFallState(y, onGroundIn, state, pos);
         if (!this.world.isRemote && this.isJumpAttacking() && (onGroundIn || state.getMaterial().isLiquid() || state.getMaterial() == Material.WEB)) {
@@ -146,14 +151,15 @@ implements IEntityAdditionalSpawnData {
         }
     }
 
+    @Override
     public boolean attackEntityAsMob(Entity entityIn) {
-        boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), (float)this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue());
+        boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue());
         double x = entityIn.posX - this.posX;
         double y = entityIn.posY - this.posY;
         double z = entityIn.posZ - this.posZ;
         double d = Math.sqrt(x * x + y * y + z * z);
         entityIn.motionX = x / d * 0.5;
-        entityIn.motionY = y / d * (double)0.05f + (double)0.15f;
+        entityIn.motionY = y / d * (double) 0.05f + (double) 0.15f;
         entityIn.motionZ = z / d * 0.5;
         entityIn.velocityChanged = true;
         if (flag) {
@@ -163,6 +169,7 @@ implements IEntityAdditionalSpawnData {
         return flag;
     }
 
+    @Override
     public boolean attackEntityFrom(DamageSource source, float amount) {
         boolean flag;
         if (this.isEntityInvulnerable(source)) {
@@ -172,7 +179,7 @@ implements IEntityAdditionalSpawnData {
             float healAmount = amount / 2.0f;
             if (this.isEntityAlive() && this.getHealth() < this.getMaxHealth() && !(source.getTrueSource() instanceof MutantCreeperEntity)) {
                 this.heal(healAmount);
-                EntityUtil.sendParticlePacket(this, EnumParticleTypes.HEART, (int)(healAmount / 2.0f));
+                EntityUtil.sendParticlePacket(this, EnumParticleTypes.HEART, (int) (healAmount / 2.0f));
             }
             return false;
         }
@@ -183,18 +190,22 @@ implements IEntityAdditionalSpawnData {
         return flag;
     }
 
+    @Override
     public void onStruckByLightning(EntityLightningBolt lightningBolt) {
         this.setPowered(true);
     }
 
+    @Override
     protected boolean processInteract(EntityPlayer player, EnumHand hand) {
         return false;
     }
 
+    @Override
     public int getMaxSpawnedInChunk() {
         return 1;
     }
 
+    @Override
     public void handleStatusUpdate(byte id) {
         if (id == 6) {
             EntityUtil.spawnParticleAtEntity(this, EnumParticleTypes.HEART, 15);
@@ -203,6 +214,7 @@ implements IEntityAdditionalSpawnData {
         }
     }
 
+    @Override
     public void onUpdate() {
         super.onUpdate();
         this.lastFlashTick = this.flashTick;
@@ -216,36 +228,42 @@ implements IEntityAdditionalSpawnData {
         }
     }
 
+    @Override
     protected boolean canBeRidden(Entity entityIn) {
         return super.canBeRidden(entityIn) && entityIn instanceof EntityLivingBase;
     }
 
+    @Override
     public boolean isPushedByWater() {
         return false;
     }
 
+    @Override
     public float getCreeperFlashIntensity(float partialTick) {
         if (this.deathTime > 0) {
-            return (float)this.deathTime / 100.0f * 255.0f;
+            return (float) this.deathTime / 100.0f * 255.0f;
         }
         if (this.isCharging()) {
             return (this.ticksExisted % 20 < 10 ? 0.6f : 0.0f) * 255.0f;
         }
-        return ((float)this.lastFlashTick + (float)(this.flashTick - this.lastFlashTick) * partialTick) / 28.0f;
+        return ((float) this.lastFlashTick + (float) (this.flashTick - this.lastFlashTick) * partialTick) / 28.0f;
     }
 
+    // TODO: Be sure it can drop loot
+    @Override
     public void onDeath(DamageSource cause) {
         if (!this.world.isRemote) {
             this.deathCause = cause;
             this.setCharging(false);
             this.playSound(MBSoundEvents.ENTITY_MUTANT_CREEPER_DEATH, 2.0f, 1.0f);
-            this.world.setEntityState(this, (byte)3);
+            this.world.setEntityState(this, (byte) 3);
             if (this.recentlyHit > 0) {
                 this.recentlyHit += 100;
             }
         }
     }
 
+    @Override
     protected void onDeathUpdate() {
         ++this.deathTime;
         float explosionPower = this.getPowered() ? 12.0f : 8.0f;
@@ -255,20 +273,20 @@ implements IEntityAdditionalSpawnData {
             double y = this.posY - entity.posY;
             double z = this.posZ - entity.posZ;
             double d = Math.sqrt(x * x + y * y + z * z);
-            float f2 = (float)this.deathTime / 100.0f;
-            entity.motionX += x / d * (double)f2 * 0.09;
-            entity.motionY += y / d * (double)f2 * 0.09;
-            entity.motionZ += z / d * (double)f2 * 0.09;
+            float f2 = (float) this.deathTime / 100.0f;
+            entity.motionX += x / d * (double) f2 * 0.09;
+            entity.motionY += y / d * (double) f2 * 0.09;
+            entity.motionZ += z / d * (double) f2 * 0.09;
         }
-        this.posX += (double)(this.rand.nextFloat() * 0.2f) - (double)0.1f;
-        this.posZ += (double)(this.rand.nextFloat() * 0.2f) - (double)0.1f;
+        this.posX += (double) (this.rand.nextFloat() * 0.2f) - (double) 0.1f;
+        this.posZ += (double) (this.rand.nextFloat() * 0.2f) - (double) 0.1f;
         if (this.deathTime >= 100) {
             if (!this.world.isRemote) {
                 MutatedExplosion.create(this, explosionPower, this.isBurning(), MBConfig.ENTITIES.mutantCreeperDestroysTerrain);
                 EntityUtil.spawnLingeringCloud(this);
                 EntityUtil.dropExperience(this, this.recentlyHit, this::getExperiencePoints, this.attackingPlayer);
                 super.onDeath(this.deathCause != null ? this.deathCause : DamageSource.GENERIC);
-                if (this.world.getGameRules().getBoolean("doMobLoot") && this.attackingPlayer != null) {
+                if (this.world.getGameRules().getBoolean("doMobLoot") && this.attackingPlayer != null && MBConfig.ENTITIES.mutantCreeperSpawnsEgg) {
                     this.world.spawnEntity(new CreeperMinionEggEntity(this, this.attackingPlayer));
                 }
             }
@@ -276,51 +294,62 @@ implements IEntityAdditionalSpawnData {
         }
     }
 
+    @Override
     public boolean ableToCauseSkullDrop() {
         return this.world.getGameRules().getBoolean("doMobLoot");
     }
 
     @Deprecated
+    @Override
     public boolean hasIgnited() {
         return false;
     }
 
     @Deprecated
+    @Override
     public int getCreeperState() {
         return -1;
     }
 
+    @Override
     protected void handleJumpWater() {
         this.motionY += 0.04f;
     }
 
+    @Override
     protected void handleJumpLava() {
         this.handleJumpWater();
     }
 
+    @Override
     public float getExplosionResistance(Explosion explosionIn, World worldIn, BlockPos pos, IBlockState blockStateIn) {
         float f = super.getExplosionResistance(explosionIn, worldIn, pos, blockStateIn);
         return this.getPowered() && blockStateIn.getBlockHardness(worldIn, pos) > -1.0f && ForgeEventFactory.onEntityDestroyBlock(this, pos, blockStateIn) ? Math.min(0.8f, f) : f;
     }
 
+    @Override
     public void playLivingSound() {
         if (this.getAttackTarget() == null) {
             super.playLivingSound();
         }
     }
 
+    @Override
     protected SoundEvent getAmbientSound() {
         return MBSoundEvents.ENTITY_MUTANT_CREEPER_AMBIENT;
     }
 
+    @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
         return MBSoundEvents.ENTITY_MUTANT_CREEPER_HURT;
     }
 
+    @Override
     protected SoundEvent getDeathSound() {
         return MBSoundEvents.ENTITY_MUTANT_CREEPER_HURT;
     }
 
+    @Override
     public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
         compound.setBoolean("JumpAttacking", this.isJumpAttacking());
@@ -328,7 +357,7 @@ implements IEntityAdditionalSpawnData {
         compound.setInteger("ChargeTime", this.chargeTime);
         compound.setInteger("ChargeHits", this.chargeHits);
         compound.setBoolean("SummonLightning", this.summonLightning);
-        compound.setShort("DeathTime", (short)this.deathTime);
+        compound.setShort("DeathTime", (short) this.deathTime);
         if (this.getPowered()) {
             compound.setBoolean("Powered", true);
         }
@@ -337,6 +366,7 @@ implements IEntityAdditionalSpawnData {
         }
     }
 
+    @Override
     public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
         this.setPowered(compound.getBoolean("Powered"));
@@ -345,30 +375,33 @@ implements IEntityAdditionalSpawnData {
         this.chargeTime = compound.getInteger("ChargeTime");
         this.chargeHits = compound.getInteger("ChargeHits");
         this.summonLightning = compound.getBoolean("SummonLightning");
-        this.deathTime = ((EntityCreeper)this).deathTime;
+        this.deathTime = ((EntityCreeper) this).deathTime;
     }
 
+    @Override
     public void writeSpawnData(ByteBuf buffer) {
         buffer.writeInt(this.flashTick);
         buffer.writeInt(this.deathTime);
     }
 
+    @Override
     public void readSpawnData(ByteBuf additionalData) {
         this.flashTick = additionalData.readInt();
         this.deathTime = additionalData.readInt();
     }
 
+    @Override
     protected ResourceLocation getLootTable() {
         return EntityUtil.getLootTable(this);
     }
 
     class JumpAttackGoal
-    extends EntityAIBase {
+            extends EntityAIBase {
         JumpAttackGoal() {
         }
 
         public boolean shouldExecute() {
-            return MutantCreeperEntity.this.onGround && MutantCreeperEntity.this.getAttackTarget() != null && !MutantCreeperEntity.this.isCharging() && (double)MutantCreeperEntity.this.getDistance(MutantCreeperEntity.this.getAttackTarget()) <= 1024.0 && MutantCreeperEntity.this.rand.nextFloat() * 100.0f < 0.9f;
+            return MutantCreeperEntity.this.onGround && MutantCreeperEntity.this.getAttackTarget() != null && !MutantCreeperEntity.this.isCharging() && (double) MutantCreeperEntity.this.getDistance(MutantCreeperEntity.this.getAttackTarget()) <= 1024.0 && MutantCreeperEntity.this.rand.nextFloat() * 100.0f < 0.9f;
         }
 
         public boolean shouldContinueExecuting() {
@@ -389,7 +422,7 @@ implements IEntityAdditionalSpawnData {
     }
 
     class ChargeAttackGoal
-    extends EntityAIBase {
+            extends EntityAIBase {
         public ChargeAttackGoal() {
             this.setMutexBits(3);
         }
@@ -426,7 +459,7 @@ implements IEntityAdditionalSpawnData {
         public void resetTask() {
             if (MutantCreeperEntity.this.chargeTime >= 100) {
                 MutantCreeperEntity.this.heal(MutantCreeperEntity.this.getMaxHealth() / 4.0f);
-                MutantCreeperEntity.this.world.setEntityState(MutantCreeperEntity.this, (byte)6);
+                MutantCreeperEntity.this.world.setEntityState(MutantCreeperEntity.this, (byte) 6);
             }
             MutantCreeperEntity.this.chargeTime = 0;
             MutantCreeperEntity.this.chargeHits = 4 + MutantCreeperEntity.this.rand.nextInt(3);
@@ -436,7 +469,7 @@ implements IEntityAdditionalSpawnData {
     }
 
     class SpawnMinionsGoal
-    extends EntityAIBase {
+            extends EntityAIBase {
         SpawnMinionsGoal() {
         }
 
@@ -445,17 +478,17 @@ implements IEntityAdditionalSpawnData {
         }
 
         public void startExecuting() {
-            for (int i = (int)Math.ceil(MutantCreeperEntity.this.getHealth() / MutantCreeperEntity.this.getMaxHealth() * 4.0f); i > 0; --i) {
+            for (int i = (int) Math.ceil(MutantCreeperEntity.this.getHealth() / MutantCreeperEntity.this.getMaxHealth() * 4.0f); i > 0; --i) {
                 CreeperMinionEntity creeper = new CreeperMinionEntity(MutantCreeperEntity.this.world);
-                double x = MutantCreeperEntity.this.posX + (double)(MutantCreeperEntity.this.rand.nextFloat() - MutantCreeperEntity.this.rand.nextFloat());
-                double y = MutantCreeperEntity.this.posY + (double)(MutantCreeperEntity.this.rand.nextFloat() * 0.5f);
-                double z = MutantCreeperEntity.this.posZ + (double)(MutantCreeperEntity.this.rand.nextFloat() - MutantCreeperEntity.this.rand.nextFloat());
+                double x = MutantCreeperEntity.this.posX + (double) (MutantCreeperEntity.this.rand.nextFloat() - MutantCreeperEntity.this.rand.nextFloat());
+                double y = MutantCreeperEntity.this.posY + (double) (MutantCreeperEntity.this.rand.nextFloat() * 0.5f);
+                double z = MutantCreeperEntity.this.posZ + (double) (MutantCreeperEntity.this.rand.nextFloat() - MutantCreeperEntity.this.rand.nextFloat());
                 double xx = MutantCreeperEntity.this.getAttackTarget().posX - MutantCreeperEntity.this.posX;
                 double yy = MutantCreeperEntity.this.getAttackTarget().posY - MutantCreeperEntity.this.posY;
                 double zz = MutantCreeperEntity.this.getAttackTarget().posZ - MutantCreeperEntity.this.posZ;
-                creeper.motionX = xx * (double)0.15f + (double)(MutantCreeperEntity.this.rand.nextFloat() * 0.05f);
-                creeper.motionY = yy * (double)0.15f + (double)(MutantCreeperEntity.this.rand.nextFloat() * 0.05f);
-                creeper.motionZ = zz * (double)0.15f + (double)(MutantCreeperEntity.this.rand.nextFloat() * 0.05f);
+                creeper.motionX = xx * (double) 0.15f + (double) (MutantCreeperEntity.this.rand.nextFloat() * 0.05f);
+                creeper.motionY = yy * (double) 0.15f + (double) (MutantCreeperEntity.this.rand.nextFloat() * 0.05f);
+                creeper.motionZ = zz * (double) 0.15f + (double) (MutantCreeperEntity.this.rand.nextFloat() * 0.05f);
                 creeper.setLocationAndAngles(x, y, z, MutantCreeperEntity.this.rotationYaw, 0.0f);
                 creeper.setOwnerId(MutantCreeperEntity.this.entityUniqueID);
                 if (MutantCreeperEntity.this.getPowered()) {

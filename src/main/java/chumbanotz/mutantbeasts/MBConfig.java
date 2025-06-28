@@ -53,6 +53,11 @@ public class MBConfig {
         @Config.Comment("The amount of damage dealt by the Mutant Creeper")
         public double mutantCreeperAttackDamage = 5.0D;
 
+        @Config.Name("Mutant Creeper Egg Spawn")
+        @Config.Comment("Allows Mutant Creepers to spawn a creeper egg on death")
+        @Config.RequiresMcRestart
+        public boolean mutantCreeperSpawnsEgg = true;
+
         @Config.Name("Mutant Creeper Explosions Destroy Terrain")
         @Config.Comment("Allows Mutant Creepers to destroy terrain when exploding")
         @Config.RequiresMcRestart
