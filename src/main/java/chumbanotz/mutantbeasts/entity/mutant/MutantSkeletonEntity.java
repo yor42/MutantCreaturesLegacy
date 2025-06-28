@@ -1,5 +1,6 @@
 package chumbanotz.mutantbeasts.entity.mutant;
 
+import chumbanotz.mutantbeasts.MBConfig;
 import chumbanotz.mutantbeasts.client.animationapi.IAnimatedEntity;
 import chumbanotz.mutantbeasts.entity.BodyPartEntity;
 import chumbanotz.mutantbeasts.entity.ai.EntityAIAvoidDamage;
@@ -9,9 +10,11 @@ import chumbanotz.mutantbeasts.entity.projectile.MutantArrowEntity;
 import chumbanotz.mutantbeasts.pathfinding.MBGroundPathNavigator;
 import chumbanotz.mutantbeasts.util.EntityUtil;
 import chumbanotz.mutantbeasts.util.MBSoundEvents;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -37,9 +40,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class MutantSkeletonEntity
-extends EntityMob
-implements IAnimatedEntity {
+public class MutantSkeletonEntity extends EntityMob implements IAnimatedEntity {
     public static final byte MELEE_ATTACK = 1;
     public static final byte SHOOT_ATTACK = 2;
     public static final byte MULTI_SHOT_ATTACK = 3;
@@ -77,12 +78,13 @@ implements IAnimatedEntity {
 
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(150.0);
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(4.0);
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.27);
-        this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0);
-        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(50.0);
-        this.getEntityAttribute(SWIM_SPEED).setBaseValue(5.0);
+        this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(MBConfig.ENTITIES.mutantSkeletonArmor);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(MBConfig.ENTITIES.mutantSkeletonAttackDamage);
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(MBConfig.ENTITIES.mutantSkeletonFollowRange);
+        this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(MBConfig.ENTITIES.mutantSkeletonKnockbackResistance);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(MBConfig.ENTITIES.mutantSkeletonMaxHealth);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(MBConfig.ENTITIES.mutantSkeletonMovementSpeed);
+        this.getEntityAttribute(SWIM_SPEED).setBaseValue(MBConfig.ENTITIES.mutantSkeletonSwimSpeed);
     }
 
     public EnumCreatureAttribute getCreatureAttribute() {
@@ -166,7 +168,7 @@ implements IAnimatedEntity {
         super.onDeath(cause);
         if (!this.world.isRemote) {
             for (EntityLivingBase entityLivingBase : this.world.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().grow(3.0, 2.0, 3.0))) {
-                entityLivingBase.attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase)this), 7.0f);
+                entityLivingBase.attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) this), 7.0f);
             }
             for (int i = 0; i < 18; ++i) {
                 int j = i;
@@ -210,9 +212,9 @@ implements IAnimatedEntity {
                     ++j;
                 }
                 BodyPartEntity part = new BodyPartEntity(this.world, this, j);
-                part.motionX += (double)(this.rand.nextFloat() * 0.8f * 2.0f - 0.8f);
-                part.motionY += (double)(this.rand.nextFloat() * 0.25f + 0.1f);
-                part.motionZ += (double)(this.rand.nextFloat() * 0.8f * 2.0f - 0.8f);
+                part.motionX += (double) (this.rand.nextFloat() * 0.8f * 2.0f - 0.8f);
+                part.motionY += (double) (this.rand.nextFloat() * 0.25f + 0.1f);
+                part.motionZ += (double) (this.rand.nextFloat() * 0.8f * 2.0f - 0.8f);
                 this.world.spawnEntity(part);
             }
         }
@@ -220,7 +222,7 @@ implements IAnimatedEntity {
     }
 
     protected void handleJumpWater() {
-        this.motionY += (double)0.04f;
+        this.motionY += (double) 0.04f;
     }
 
     protected void handleJumpLava() {
@@ -250,11 +252,11 @@ implements IAnimatedEntity {
     private void setAttackID(int id) {
         this.attackID = id;
         this.attackTick = 0;
-        this.world.setEntityState(this, (byte)(-id));
+        this.world.setEntityState(this, (byte) (-id));
     }
 
     class MultiShotGoal
-    extends EntityAIBase {
+            extends EntityAIBase {
         private EntityLivingBase attackTarget;
         private final List<MutantArrowEntity> shots = new ArrayList<MutantArrowEntity>();
 
@@ -289,9 +291,9 @@ implements IAnimatedEntity {
                     scale *= 5.0f;
                 }
                 MutantSkeletonEntity.this.isInWeb = false;
-                MutantSkeletonEntity.this.motionX = x * (double)scale;
+                MutantSkeletonEntity.this.motionX = x * (double) scale;
                 MutantSkeletonEntity.this.motionY = 1.1f;
-                MutantSkeletonEntity.this.motionZ = z * (double)scale;
+                MutantSkeletonEntity.this.motionZ = z * (double) scale;
             }
             if (MutantSkeletonEntity.this.attackTick >= 24 && MutantSkeletonEntity.this.attackTick < 28) {
                 if (!this.shots.isEmpty()) {
@@ -323,7 +325,7 @@ implements IAnimatedEntity {
     }
 
     class ShootGoal
-    extends EntityAIBase {
+            extends EntityAIBase {
         private EntityLivingBase attackTarget;
 
         public ShootGoal() {
@@ -349,9 +351,9 @@ implements IAnimatedEntity {
             if (MutantSkeletonEntity.this.attackTick == 26 && this.attackTarget.isEntityAlive()) {
                 MutantArrowEntity arrowEntity = new MutantArrowEntity(MutantSkeletonEntity.this.world, MutantSkeletonEntity.this, this.attackTarget);
                 if (MutantSkeletonEntity.this.hurtTime > 0) {
-                    arrowEntity.randomize((float)MutantSkeletonEntity.this.hurtTime / 2.0f);
+                    arrowEntity.randomize((float) MutantSkeletonEntity.this.hurtTime / 2.0f);
                 } else if (!MutantSkeletonEntity.this.getEntitySenses().canSee(this.attackTarget)) {
-                    arrowEntity.randomize((float)MutantSkeletonEntity.this.getDistanceSq(this.attackTarget));
+                    arrowEntity.randomize((float) MutantSkeletonEntity.this.getDistanceSq(this.attackTarget));
                 }
                 if (MutantSkeletonEntity.this.rand.nextInt(4) == 0) {
                     arrowEntity.setPotionEffect(new PotionEffect(MobEffects.POISON, 80 + MutantSkeletonEntity.this.rand.nextInt(60), 0));
@@ -374,7 +376,7 @@ implements IAnimatedEntity {
     }
 
     class ConstrictRibsAttackGoal
-    extends EntityAIBase {
+            extends EntityAIBase {
         private EntityLivingBase attackTarget;
 
         public ConstrictRibsAttackGoal() {
@@ -400,11 +402,11 @@ implements IAnimatedEntity {
                 this.attackTarget.dismountRidingEntity();
             }
             if (MutantSkeletonEntity.this.attackTick == 6) {
-                float damage = (float)MutantSkeletonEntity.this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
-                this.attackTarget.attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase)MutantSkeletonEntity.this), damage > 0.0f ? damage + 5.0f : 0.0f);
-                this.attackTarget.motionX = (1.0f + MutantSkeletonEntity.this.getRNG().nextFloat() * 0.4f) * (float)(MutantSkeletonEntity.this.getRNG().nextBoolean() ? 1 : -1);
+                float damage = (float) MutantSkeletonEntity.this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
+                this.attackTarget.attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) MutantSkeletonEntity.this), damage > 0.0f ? damage + 5.0f : 0.0f);
+                this.attackTarget.motionX = (1.0f + MutantSkeletonEntity.this.getRNG().nextFloat() * 0.4f) * (float) (MutantSkeletonEntity.this.getRNG().nextBoolean() ? 1 : -1);
                 this.attackTarget.motionY = 0.4f + MutantSkeletonEntity.this.getRNG().nextFloat() * 0.8f;
-                this.attackTarget.motionZ = (1.0f + MutantSkeletonEntity.this.getRNG().nextFloat() * 0.4f) * (float)(MutantSkeletonEntity.this.getRNG().nextBoolean() ? 1 : -1);
+                this.attackTarget.motionZ = (1.0f + MutantSkeletonEntity.this.getRNG().nextFloat() * 0.4f) * (float) (MutantSkeletonEntity.this.getRNG().nextBoolean() ? 1 : -1);
                 MutantSkeletonEntity.this.playSound(SoundEvents.ENTITY_GENERIC_EXPLODE, 0.5f, 0.8f + MutantSkeletonEntity.this.rand.nextFloat() * 0.4f);
                 EntityUtil.sendPlayerVelocityPacket(this.attackTarget);
                 EntityUtil.disableShield(this.attackTarget, 100);
@@ -418,7 +420,7 @@ implements IAnimatedEntity {
     }
 
     class MeleeGoal
-    extends EntityAIBase {
+            extends EntityAIBase {
         public MeleeGoal() {
             this.setMutexBits(3);
         }
@@ -441,20 +443,21 @@ implements IAnimatedEntity {
                 MutantSkeletonEntity.this.getLookHelper().setLookPositionWithEntity(MutantSkeletonEntity.this.getAttackTarget(), 30.0f, 30.0f);
             }
             if (MutantSkeletonEntity.this.attackTick == 3) {
-                DamageSource damageSource = DamageSource.causeMobDamage((EntityLivingBase)MutantSkeletonEntity.this);
+                DamageSource damageSource = DamageSource.causeMobDamage((EntityLivingBase) MutantSkeletonEntity.this);
                 for (Entity entity : MutantSkeletonEntity.this.world.getEntitiesWithinAABBExcludingEntity(MutantSkeletonEntity.this, MutantSkeletonEntity.this.getEntityBoundingBox().grow(4.0))) {
                     if (!entity.canBeCollidedWith() || entity instanceof MutantSkeletonEntity) continue;
                     double dist = MutantSkeletonEntity.this.getDistance(entity);
                     double x = MutantSkeletonEntity.this.posX - entity.posX;
                     double z = MutantSkeletonEntity.this.posZ - entity.posZ;
-                    if (!(dist <= (double)(2.3f + MutantSkeletonEntity.this.rand.nextFloat() * 0.3f)) || !(EntityUtil.getHeadAngle(MutantSkeletonEntity.this, x, z) < 60.0f)) continue;
-                    float power = 1.8f + (float)MutantSkeletonEntity.this.rand.nextInt(5) * 0.15f;
-                    if (!entity.attackEntityFrom(damageSource, (float)MutantSkeletonEntity.this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue())) {
+                    if (!(dist <= (double) (2.3f + MutantSkeletonEntity.this.rand.nextFloat() * 0.3f)) || !(EntityUtil.getHeadAngle(MutantSkeletonEntity.this, x, z) < 60.0f))
+                        continue;
+                    float power = 1.8f + (float) MutantSkeletonEntity.this.rand.nextInt(5) * 0.15f;
+                    if (!entity.attackEntityFrom(damageSource, (float) MutantSkeletonEntity.this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue())) {
                         EntityUtil.knockBackBlockingPlayer(entity);
                     }
-                    entity.motionX = -x / dist * (double)power;
-                    entity.motionY = Math.max((double)0.28f, entity.motionY);
-                    entity.motionZ = -z / dist * (double)power;
+                    entity.motionX = -x / dist * (double) power;
+                    entity.motionY = Math.max((double) 0.28f, entity.motionY);
+                    entity.motionZ = -z / dist * (double) power;
                 }
                 MutantSkeletonEntity.this.playSound(SoundEvents.ENTITY_PLAYER_ATTACK_KNOCKBACK, 1.0f, 1.0f / (MutantSkeletonEntity.this.rand.nextFloat() * 0.4f + 1.2f));
             }

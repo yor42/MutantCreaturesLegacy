@@ -1,5 +1,6 @@
 package chumbanotz.mutantbeasts.entity.mutant;
 
+import chumbanotz.mutantbeasts.MBConfig;
 import chumbanotz.mutantbeasts.entity.ai.EntityAIAvoidDamage;
 import chumbanotz.mutantbeasts.entity.ai.EntityAIHurtByNearestTarget;
 import chumbanotz.mutantbeasts.entity.ai.MBEntityAIAttackMelee;
@@ -46,11 +47,9 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MutantZombieEntity
-extends EntityMob
-implements IEntityAdditionalSpawnData {
-    private static final DataParameter<Integer> LIVES = EntityDataManager.createKey(MutantZombieEntity.class, (DataSerializer)DataSerializers.VARINT);
-    private static final DataParameter<Byte> THROW_ATTACK_STATE = EntityDataManager.createKey(MutantZombieEntity.class, (DataSerializer)DataSerializers.BYTE);
+public class MutantZombieEntity extends EntityMob implements IEntityAdditionalSpawnData {
+    private static final DataParameter<Integer> LIVES = EntityDataManager.createKey(MutantZombieEntity.class, (DataSerializer) DataSerializers.VARINT);
+    private static final DataParameter<Byte> THROW_ATTACK_STATE = EntityDataManager.createKey(MutantZombieEntity.class, (DataSerializer) DataSerializers.BYTE);
     public static final int MAX_DEATH_TIME = 140;
     public static final int MAX_VANISH_TIME = 100;
     public static final byte MELEE_ATTACK = 1;
@@ -92,13 +91,13 @@ implements IEntityAdditionalSpawnData {
 
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(150.0);
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(12.0);
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26);
-        this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0);
-        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0);
-        this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(3.0);
-        this.getEntityAttribute(SWIM_SPEED).setBaseValue(4.0);
+        this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(MBConfig.ENTITIES.mutantZombieArmor);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(MBConfig.ENTITIES.mutantZombieAttackDamage);
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(MBConfig.ENTITIES.mutantZombieFollowRange);
+        this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(MBConfig.ENTITIES.mutantZombieKnockbackResistance);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(MBConfig.ENTITIES.mutantZombieMaxHealth);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(MBConfig.ENTITIES.mutantZombieMovementSpeed);
+        this.getEntityAttribute(SWIM_SPEED).setBaseValue(MBConfig.ENTITIES.mutantZombieSwimSpeed);
     }
 
     public boolean getCanSpawnHere() {
@@ -108,7 +107,7 @@ implements IEntityAdditionalSpawnData {
     protected void entityInit() {
         super.entityInit();
         this.dataManager.register(LIVES, 3);
-        this.dataManager.register(THROW_ATTACK_STATE, (byte)0);
+        this.dataManager.register(THROW_ATTACK_STATE, (byte) 0);
     }
 
     public EnumCreatureAttribute getCreatureAttribute() {
@@ -137,7 +136,7 @@ implements IEntityAdditionalSpawnData {
 
     private void setThrowAttackHit(boolean hit) {
         byte b0 = this.dataManager.get(THROW_ATTACK_STATE);
-        this.dataManager.set(THROW_ATTACK_STATE, hit ? (byte)(b0 | 1) : (byte)(b0 & 0xFFFFFFFE));
+        this.dataManager.set(THROW_ATTACK_STATE, hit ? (byte) (b0 | 1) : (byte) (b0 & 0xFFFFFFFE));
     }
 
     public boolean getThrowAttackFinish() {
@@ -146,7 +145,7 @@ implements IEntityAdditionalSpawnData {
 
     private void setThrowAttackFinished(boolean finished) {
         byte b0 = this.dataManager.get(THROW_ATTACK_STATE);
-        this.dataManager.set(THROW_ATTACK_STATE, finished ? (byte)(b0 | 2) : (byte)(b0 & 0xFFFFFFFD));
+        this.dataManager.set(THROW_ATTACK_STATE, finished ? (byte) (b0 | 2) : (byte) (b0 & 0xFFFFFFFD));
     }
 
     public int getAttackID() {
@@ -160,7 +159,7 @@ implements IEntityAdditionalSpawnData {
     private void setAttackID(int attackID) {
         this.attackID = attackID;
         this.attackTick = 0;
-        this.world.setEntityState(this, (byte)(-attackID));
+        this.world.setEntityState(this, (byte) (-attackID));
     }
 
     public float getEyeHeight() {
@@ -172,7 +171,7 @@ implements IEntityAdditionalSpawnData {
     }
 
     public int getMaxFallHeight() {
-        return this.getAttackTarget() != null ? (int)this.getDistance(this.getAttackTarget()) : 3;
+        return this.getAttackTarget() != null ? (int) this.getDistance(this.getAttackTarget()) : 3;
     }
 
     public boolean canBePushed() {
@@ -313,10 +312,10 @@ implements IEntityAdditionalSpawnData {
             DamageSource source = DamageSource.causeMobDamage(this).setDamageIsAbsolute();
             for (Entity entity : this.world.getEntitiesWithinAABBExcludingEntity(this, box)) {
                 if (!entity.canBeCollidedWith() || this.isOnSameTeam(entity)) continue;
-                if (entity.attackEntityFrom(source, wave.isFirst() ? (float)(9 + this.rand.nextInt(4)) : (float)(6 + this.rand.nextInt(3)))) {
+                if (entity.attackEntityFrom(source, wave.isFirst() ? (float) (9 + this.rand.nextInt(4)) : (float) (6 + this.rand.nextInt(3)))) {
                     this.applyEnchantments(this, entity);
                     if (entity instanceof EntityLivingBase && this.rand.nextInt(5) == 0) {
-                        ((EntityLivingBase)entity).addPotionEffect(new PotionEffect(MobEffects.HUNGER, 160, 1));
+                        ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.HUNGER, 160, 1));
                     }
                 }
                 double x = entity.posX - this.posX;
@@ -345,7 +344,7 @@ implements IEntityAdditionalSpawnData {
         if (!this.world.isRemote) {
             this.deathCause = cause;
             this.setLastAttackedEntity(this.getRevengeTarget());
-            this.world.setEntityState(this, (byte)3);
+            this.world.setEntityState(this, (byte) 3);
             if (this.recentlyHit > 0) {
                 this.recentlyHit += 140;
             }
@@ -362,7 +361,7 @@ implements IEntityAdditionalSpawnData {
             --this.vanishTime;
         }
         if (this.getLives() <= 0) {
-            ((EntityMob)this).deathTime = this.deathTime;
+            ((EntityMob) this).deathTime = this.deathTime;
         }
         if (this.deathTime >= 140) {
             this.deathTime = 0;
@@ -415,7 +414,7 @@ implements IEntityAdditionalSpawnData {
             return true;
         }
         if (ZombieResurrection.canBeResurrected(entityIn.getClass()) || entityIn.getClass() == this.getClass()) {
-            return this.getAttackTarget() != entityIn && ((EntityMob)entityIn).getAttackTarget() != this && this.getTeam() == null && entityIn.getTeam() == null;
+            return this.getAttackTarget() != entityIn && ((EntityMob) entityIn).getAttackTarget() != this && this.getTeam() == null && entityIn.getTeam() == null;
         }
         return false;
     }
@@ -431,8 +430,8 @@ implements IEntityAdditionalSpawnData {
     public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
         compound.setInteger("Lives", this.getLives());
-        compound.setShort("DeathTime", (short)this.deathTime);
-        compound.setShort("VanishTime", (short)this.vanishTime);
+        compound.setShort("DeathTime", (short) this.deathTime);
+        compound.setShort("VanishTime", (short) this.vanishTime);
         if (!this.resurrections.isEmpty()) {
             NBTTagList nbtTagList = new NBTTagList();
             for (ZombieResurrection resurrection : this.resurrections) {
@@ -446,7 +445,7 @@ implements IEntityAdditionalSpawnData {
 
     public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
-        this.deathTime = ((EntityMob)this).deathTime;
+        this.deathTime = ((EntityMob) this).deathTime;
         if (compound.hasKey("Lives")) {
             this.setLives(compound.getInteger("Lives"));
         }
@@ -499,7 +498,7 @@ implements IEntityAdditionalSpawnData {
     }
 
     class ThrowAttackGoal
-    extends EntityAIBase {
+            extends EntityAIBase {
         private EntityLivingBase attackTarget;
         private int hit = -1;
         private int finish = -1;
@@ -519,9 +518,9 @@ implements IEntityAdditionalSpawnData {
             double x = this.attackTarget.posX - MutantZombieEntity.this.posX;
             double z = this.attackTarget.posZ - MutantZombieEntity.this.posZ;
             double d = Math.max(Math.sqrt(x * x + z * z), 0.001);
-            this.attackTarget.motionX = x / d * (double)0.8f;
+            this.attackTarget.motionX = x / d * (double) 0.8f;
             this.attackTarget.motionY = 1.6f;
-            this.attackTarget.motionZ = z / d * (double)0.8f;
+            this.attackTarget.motionZ = z / d * (double) 0.8f;
             EntityUtil.sendPlayerVelocityPacket(this.attackTarget);
         }
 
@@ -538,24 +537,24 @@ implements IEntityAdditionalSpawnData {
                 double y = this.attackTarget.posY - MutantZombieEntity.this.posY;
                 double z = this.attackTarget.posZ - MutantZombieEntity.this.posZ;
                 double d0 = Math.max(Math.sqrt(x * x + y * y + z * z), 0.001);
-                MutantZombieEntity.this.motionX = x / d0 * (double)3.4f;
-                MutantZombieEntity.this.motionY = y / d0 * (double)1.4f;
-                MutantZombieEntity.this.motionZ = z / d0 * (double)3.4f;
+                MutantZombieEntity.this.motionX = x / d0 * (double) 3.4f;
+                MutantZombieEntity.this.motionY = y / d0 * (double) 1.4f;
+                MutantZombieEntity.this.motionZ = z / d0 * (double) 3.4f;
             } else if (MutantZombieEntity.this.attackTick > 15) {
                 double d1 = MutantZombieEntity.this.width * 2.0f * MutantZombieEntity.this.width * 2.0f;
                 double distSq = MutantZombieEntity.this.getDistanceSq(this.attackTarget.posX, this.attackTarget.getEntityBoundingBox().minY, this.attackTarget.posZ);
                 if (distSq < d1 && this.hit == -1) {
                     this.hit = 0;
                     MutantZombieEntity.this.setThrowAttackHit(true);
-                    if (!this.attackTarget.attackEntityFrom(DamageSource.causeMobDamage(MutantZombieEntity.this), (float)MutantZombieEntity.this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue())) {
+                    if (!this.attackTarget.attackEntityFrom(DamageSource.causeMobDamage(MutantZombieEntity.this), (float) MutantZombieEntity.this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue())) {
                         EntityUtil.disableShield(this.attackTarget, 150);
                     }
                     double x = this.attackTarget.posX - MutantZombieEntity.this.posX;
                     double z = this.attackTarget.posZ - MutantZombieEntity.this.posZ;
                     double d0 = Math.max(Math.sqrt(x * x + z * z), 0.001);
-                    this.attackTarget.motionX = x / d0 * (double)0.6f;
+                    this.attackTarget.motionX = x / d0 * (double) 0.6f;
                     this.attackTarget.motionY = -1.2f;
-                    this.attackTarget.motionZ = z / d0 * (double)0.6f;
+                    this.attackTarget.motionZ = z / d0 * (double) 0.6f;
                     EntityUtil.sendPlayerVelocityPacket(this.attackTarget);
                     this.attackTarget.hurtResistantTime = 10;
                     MutantZombieEntity.this.playSound(MBSoundEvents.ENTITY_MUTANT_ZOMBIE_GRUNT, 0.3f, 0.8f + MutantZombieEntity.this.rand.nextFloat() * 0.4f);
@@ -584,7 +583,7 @@ implements IEntityAdditionalSpawnData {
     }
 
     class RoarGoal
-    extends EntityAIBase {
+            extends EntityAIBase {
         public RoarGoal() {
             this.setMutexBits(3);
         }
@@ -611,13 +610,14 @@ implements IEntityAdditionalSpawnData {
             if (MutantZombieEntity.this.attackTick == 10) {
                 MutantZombieEntity.this.playSound(MBSoundEvents.ENTITY_MUTANT_ZOMBIE_ROAR, 3.0f, 0.7f + MutantZombieEntity.this.rand.nextFloat() * 0.2f);
                 for (Entity entity : MutantZombieEntity.this.world.getEntitiesWithinAABBExcludingEntity(MutantZombieEntity.this, MutantZombieEntity.this.getEntityBoundingBox().grow(12.0, 8.0, 12.0))) {
-                    if (!entity.canBeCollidedWith() || MutantZombieEntity.this.isOnSameTeam(entity) || !(MutantZombieEntity.this.getDistanceSq(entity) <= 196.0)) continue;
+                    if (!entity.canBeCollidedWith() || MutantZombieEntity.this.isOnSameTeam(entity) || !(MutantZombieEntity.this.getDistanceSq(entity) <= 196.0))
+                        continue;
                     double x = entity.posX - MutantZombieEntity.this.posX;
                     double z = entity.posZ - MutantZombieEntity.this.posZ;
                     double d = Math.sqrt(x * x + z * z);
-                    entity.motionX = x / d * (double)0.7f;
+                    entity.motionX = x / d * (double) 0.7f;
                     entity.motionY = 0.3f;
-                    entity.motionZ = z / d * (double)0.7f;
+                    entity.motionZ = z / d * (double) 0.7f;
                     entity.attackEntityFrom(DamageSource.causeMobDamage(MutantZombieEntity.this).setDamageBypassesArmor().setDamageIsAbsolute(), 2 + MutantZombieEntity.this.rand.nextInt(2));
                     EntityUtil.sendPlayerVelocityPacket(entity);
                 }
@@ -639,7 +639,7 @@ implements IEntityAdditionalSpawnData {
     }
 
     class MeleeGoal
-    extends EntityAIBase {
+            extends EntityAIBase {
         private EntityLivingBase attackTarget;
         private double dirX = -1.0;
         private double dirZ = -1.0;

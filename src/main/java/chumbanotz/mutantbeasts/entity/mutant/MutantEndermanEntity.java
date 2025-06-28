@@ -1,5 +1,6 @@
 package chumbanotz.mutantbeasts.entity.mutant;
 
+import chumbanotz.mutantbeasts.MBConfig;
 import chumbanotz.mutantbeasts.entity.EndersoulCloneEntity;
 import chumbanotz.mutantbeasts.entity.EndersoulFragmentEntity;
 import chumbanotz.mutantbeasts.entity.ai.EntityAIAvoidDamage;
@@ -54,11 +55,9 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MutantEndermanEntity
-extends EntityMob
-implements IEntityAdditionalSpawnData {
-    private static final DataParameter<Byte> ACTIVE_ARM = EntityDataManager.createKey(MutantEndermanEntity.class, (DataSerializer)DataSerializers.BYTE);
-    private static final DataParameter<Boolean> CLONE = EntityDataManager.createKey(MutantEndermanEntity.class, (DataSerializer)DataSerializers.BOOLEAN);
+public class MutantEndermanEntity extends EntityMob implements IEntityAdditionalSpawnData {
+    private static final DataParameter<Byte> ACTIVE_ARM = EntityDataManager.createKey(MutantEndermanEntity.class, (DataSerializer) DataSerializers.BYTE);
+    private static final DataParameter<Boolean> CLONE = EntityDataManager.createKey(MutantEndermanEntity.class, (DataSerializer) DataSerializers.BOOLEAN);
     public static final int MAX_DEATH_TIME = 280;
     public static final byte MELEE_ATTACK = 1;
     public static final byte THROW_ATTACK = 2;
@@ -107,21 +106,23 @@ implements IEntityAdditionalSpawnData {
         this.tasks.addTask(6, new EntityAILookIdle(this));
         this.targetTasks.addTask(0, new EntityAIHurtByNearestTarget(this));
         this.targetTasks.addTask(1, new FindTargetGoal(this));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityEndermite.class, 10, true, true, e -> ((EntityEndermite)e).isSpawnedByPlayer()));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityEndermite.class, 10, true, true, e -> ((EntityEndermite) e).isSpawnedByPlayer()));
     }
 
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(200.0);
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(7.0);
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3);
-        this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0);
-        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(96.0);
+        this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(MBConfig.ENTITIES.mutantEndermanArmor);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(MBConfig.ENTITIES.mutantEndermanAttackDamage);
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(MBConfig.ENTITIES.mutantEndermanFollowRange);
+        this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(MBConfig.ENTITIES.mutantEndermanKnockbackResistance);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(MBConfig.ENTITIES.mutantEndermanMaxHealth);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(MBConfig.ENTITIES.mutantEndermanMovementSpeed);
+        this.getEntityAttribute(SWIM_SPEED).setBaseValue(MBConfig.ENTITIES.mutantEndermanSwimSpeed);
     }
 
     protected void entityInit() {
         super.entityInit();
-        this.dataManager.register(ACTIVE_ARM, (byte)0);
+        this.dataManager.register(ACTIVE_ARM, (byte) 0);
         this.dataManager.register(CLONE, false);
     }
 
@@ -144,7 +145,7 @@ implements IEntityAdditionalSpawnData {
     }
 
     private void setActiveArm(int armID) {
-        this.dataManager.set(ACTIVE_ARM, (byte)armID);
+        this.dataManager.set(ACTIVE_ARM, (byte) armID);
     }
 
     public boolean isClone() {
@@ -168,7 +169,7 @@ implements IEntityAdditionalSpawnData {
         this.attackID = attackID;
         this.attackTick = 0;
         if (!this.world.isRemote) {
-            this.world.setEntityState(this, (byte)(-attackID));
+            this.world.setEntityState(this, (byte) (-attackID));
         }
     }
 
@@ -213,7 +214,7 @@ implements IEntityAdditionalSpawnData {
     }
 
     public float getArmScale(float partialTicks) {
-        return ((float)this.prevArmScale + (float)(this.armScale - this.prevArmScale) * partialTicks) / 10.0f;
+        return ((float) this.prevArmScale + (float) (this.armScale - this.prevArmScale) * partialTicks) / 10.0f;
     }
 
     private void updateTargetTick() {
@@ -279,7 +280,7 @@ implements IEntityAdditionalSpawnData {
                 if (this.attackTick == 40) {
                     entity.attackEntityFrom(DamageSource.causeMobDamage(this).setDamageBypassesArmor().setMagicDamage(), 4.0f);
                     if (entity instanceof EntityLiving) {
-                        EntityLiving living = (EntityLiving)entity;
+                        EntityLiving living = (EntityLiving) entity;
                         living.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 120, 3));
                         if (this.rand.nextInt(2) != 0) {
                             living.addPotionEffect(new PotionEffect(MobEffects.POISON, 120 + this.rand.nextInt(180), this.rand.nextInt(2)));
@@ -326,8 +327,8 @@ implements IEntityAdditionalSpawnData {
         this.updateTargetTick();
         this.updateScreamEntities();
         if (this.world.isRemote && !this.isClone()) {
-            double h = this.attackID != 8 ? (double)this.height : (double)(this.height + 1.0f);
-            double w = this.attackID != 8 ? (double)this.width : (double)(this.width * 1.5f);
+            double h = this.attackID != 8 ? (double) this.height : (double) (this.height + 1.0f);
+            double w = this.attackID != 8 ? (double) this.width : (double) (this.width * 1.5f);
             for (int i = 0; i < 3; ++i) {
                 double x = this.posX + (this.rand.nextDouble() - 0.5) * w;
                 double y = this.posY + this.rand.nextDouble() * h - 0.25;
@@ -468,7 +469,7 @@ implements IEntityAdditionalSpawnData {
             boolean flag = super.attackEntityAsMob(entityIn);
             if (!this.world.isRemote && this.rand.nextInt(2) == 0) {
                 double x = entityIn.posX + (this.rand.nextDouble() - 0.5) * 24.0;
-                double y = entityIn.posY + (double)this.rand.nextInt(5) + 4.0;
+                double y = entityIn.posY + (double) this.rand.nextInt(5) + 4.0;
                 double z = entityIn.posZ + (this.rand.nextDouble() - 0.5) * 24.0;
                 this.teleportTo(x, y, z);
             }
@@ -505,7 +506,7 @@ implements IEntityAdditionalSpawnData {
             }
             if (this.teleportByChance(betterDodge ? 3 : 6, entity) && source != DamageSource.OUT_OF_WORLD) {
                 if (entity != null && entity instanceof EntityLivingBase) {
-                    this.setRevengeTarget((EntityLivingBase)entity);
+                    this.setRevengeTarget((EntityLivingBase) entity);
                 }
                 return false;
             }
@@ -534,7 +535,7 @@ implements IEntityAdditionalSpawnData {
         }
         double radius = 24.0;
         double x = this.posX + (this.rand.nextDouble() - 0.5) * 2.0 * radius;
-        double y = this.posY + (double)this.rand.nextInt((int)radius * 2) - radius;
+        double y = this.posY + (double) this.rand.nextInt((int) radius * 2) - radius;
         double z = this.posZ + (this.rand.nextDouble() - 0.5) * 2.0 * radius;
         return this.teleportTo(x, y, z);
     }
@@ -553,10 +554,10 @@ implements IEntityAdditionalSpawnData {
             y = entity.posY + this.rand.nextDouble() * radius;
             z = entity.posZ + (this.rand.nextDouble() - 0.5) * 2.0 * radius;
         } else {
-            Vec3d vec = new Vec3d(this.posX - entity.posX, this.getEntityBoundingBox().minY + (double)this.height / 2.0 - entity.posY + (double)entity.getEyeHeight(), this.posZ - entity.posZ);
+            Vec3d vec = new Vec3d(this.posX - entity.posX, this.getEntityBoundingBox().minY + (double) this.height / 2.0 - entity.posY + (double) entity.getEyeHeight(), this.posZ - entity.posZ);
             vec = vec.normalize();
             x = this.posX + (this.rand.nextDouble() - 0.5) * 8.0 - vec.x * radius;
-            y = this.posY + (double)this.rand.nextInt(8) - vec.y * radius;
+            y = this.posY + (double) this.rand.nextInt(8) - vec.y * radius;
             z = this.posZ + (this.rand.nextDouble() - 0.5) * 8.0 - vec.z * radius;
         }
         return this.teleportTo(x, y, z);
@@ -571,7 +572,7 @@ implements IEntityAdditionalSpawnData {
             if (flag) {
                 this.dismountRidingEntity();
                 if (!this.isSilent()) {
-                    this.world.playSound(null, this.prevPosX, this.prevPosY + (double)this.height / 2.0, this.prevPosZ, MBSoundEvents.ENTITY_ENDERSOUL_CLONE_TELEPORT, this.getSoundCategory(), 1.0f, 1.0f);
+                    this.world.playSound(null, this.prevPosX, this.prevPosY + (double) this.height / 2.0, this.prevPosZ, MBSoundEvents.ENTITY_ENDERSOUL_CLONE_TELEPORT, this.getSoundCategory(), 1.0f, 1.0f);
                     this.playSound(MBSoundEvents.ENTITY_ENDERSOUL_CLONE_TELEPORT, 1.0f, 1.0f);
                 }
             }
@@ -603,9 +604,9 @@ implements IEntityAdditionalSpawnData {
             float f1 = (this.rand.nextFloat() - 0.5f) * 1.8f;
             float f2 = (this.rand.nextFloat() - 0.5f) * 1.8f;
             boolean useCurrentPos = this.attackID != 4 || i < temp / 2;
-            double tempX = (useCurrentPos ? this.posX : (double)this.getTeleportPosition().getX()) + (this.rand.nextDouble() - 0.5) * (double)this.width;
-            double tempY = (useCurrentPos ? this.posY : (double)this.getTeleportPosition().getY()) + (this.rand.nextDouble() - 0.5) * (double)this.height + 1.5;
-            double tempZ = (useCurrentPos ? this.posZ : (double)this.getTeleportPosition().getZ()) + (this.rand.nextDouble() - 0.5) * (double)this.width;
+            double tempX = (useCurrentPos ? this.posX : (double) this.getTeleportPosition().getX()) + (this.rand.nextDouble() - 0.5) * (double) this.width;
+            double tempY = (useCurrentPos ? this.posY : (double) this.getTeleportPosition().getY()) + (this.rand.nextDouble() - 0.5) * (double) this.height + 1.5;
+            double tempZ = (useCurrentPos ? this.posZ : (double) this.getTeleportPosition().getZ()) + (this.rand.nextDouble() - 0.5) * (double) this.width;
             this.world.spawnParticle(MBParticles.ENDERSOUL, tempX, tempY, tempZ, f, f1, f2);
         }
     }
@@ -621,7 +622,7 @@ implements IEntityAdditionalSpawnData {
         }
         for (Entity entity : attacker.world.getEntitiesInAABBexcluding(attacker, attacker.getEntityBoundingBox().grow(radius), EndersoulFragmentEntity.IS_VALID_TARGET)) {
             if (entity instanceof EntityLivingBase && entity.attackEntityFrom(damageSource, 4.0f) && attacker.getRNG().nextInt(3) == 0) {
-                ((EntityLivingBase)entity).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, duration));
+                ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, duration));
             }
             double x = entity.posX - attacker.posX;
             double z = entity.posZ - attacker.posZ;
@@ -630,9 +631,9 @@ implements IEntityAdditionalSpawnData {
             if (Double.isNaN(signX) || Double.isNaN(signZ)) {
                 return;
             }
-            entity.motionX = (radius * signX * 2.0 - x) * (double)0.2f;
+            entity.motionX = (radius * signX * 2.0 - x) * (double) 0.2f;
             entity.motionY = 0.2f;
-            entity.motionZ = (radius * signZ * 2.0 - z) * (double)0.2f;
+            entity.motionZ = (radius * signZ * 2.0 - z) * (double) 0.2f;
         }
     }
 
@@ -681,7 +682,7 @@ implements IEntityAdditionalSpawnData {
             if (this.deathTime < 80 && this.capturedEntities == null) {
                 this.capturedEntities = this.world.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox().grow(10.0, 8.0, 10.0), EndersoulFragmentEntity.IS_VALID_TARGET);
             }
-            if (!this.world.isRemote && this.rand.nextInt(3) != 0) {
+            if (!this.world.isRemote && this.rand.nextInt(3) != 0 && MBConfig.ENTITIES.mutantEndermanSpawnsFragments) {
                 EndersoulFragmentEntity orb = new EndersoulFragmentEntity(this.world);
                 orb.setPosition(this.posX, this.posY + 3.8, this.posZ);
                 orb.motionX = (this.rand.nextFloat() - 0.5f) * 1.5f;
@@ -705,8 +706,8 @@ implements IEntityAdditionalSpawnData {
                 double x = this.posX - entity.posX;
                 double z = this.posZ - entity.posZ;
                 double d = Math.sqrt(x * x + z * z);
-                entity.motionX = (double)0.8f * x / d;
-                entity.motionZ = (double)0.8f * z / d;
+                entity.motionX = (double) 0.8f * x / d;
+                entity.motionZ = (double) 0.8f * z / d;
                 if (!(this.posY + 4.0 > entity.posY)) continue;
                 entity.motionY = Math.max(entity.motionY, 0.4f);
             }
@@ -740,18 +741,18 @@ implements IEntityAdditionalSpawnData {
         super.writeEntityToNBT(compound);
         compound.setInteger("ScreamDelay", this.screamDelayTick);
         compound.setInteger("BlockFrenzy", this.blockFrenzy);
-        compound.setShort("DeathTime", (short)this.deathTime);
+        compound.setShort("DeathTime", (short) this.deathTime);
     }
 
     public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
         this.screamDelayTick = compound.getInteger("ScreamDelay");
         this.blockFrenzy = compound.getInteger("BlockFrenzy");
-        this.deathTime = ((EntityMob)this).deathTime;
+        this.deathTime = ((EntityMob) this).deathTime;
         if (this.deathTime > 0) {
             this.attackID = 8;
             this.attackTick = this.deathTime;
-            ((EntityMob)this).deathTime = 0;
+            ((EntityMob) this).deathTime = 0;
         }
     }
 
@@ -809,17 +810,17 @@ implements IEntityAdditionalSpawnData {
 
     private boolean isBeingLookedAtBy(EntityLivingBase target) {
         if (target instanceof EntityLiving) {
-            return ((EntityLiving)target).getAttackTarget() == this && target.canEntityBeSeen(this);
+            return ((EntityLiving) target).getAttackTarget() == this && target.canEntityBeSeen(this);
         }
         Vec3d playerVec = target.getLook(1.0f).normalize();
-        Vec3d targetVec = new Vec3d(this.posX - target.posX, this.getEntityBoundingBox().minY + (double)this.getEyeHeight() - (target.posY + (double)target.getEyeHeight()), this.posZ - target.posZ);
+        Vec3d targetVec = new Vec3d(this.posX - target.posX, this.getEntityBoundingBox().minY + (double) this.getEyeHeight() - (target.posY + (double) target.getEyeHeight()), this.posZ - target.posZ);
         double length = targetVec.length();
         double d = playerVec.dotProduct(targetVec = targetVec.normalize());
         return d > 1.0 - 0.08 / length && target.canEntityBeSeen(this);
     }
 
     public class ThrowBlockGoal
-    extends EntityAIBase {
+            extends EntityAIBase {
         public boolean shouldExecute() {
             if (MutantEndermanEntity.this.attackID != 0) {
                 return false;
@@ -858,7 +859,7 @@ implements IEntityAdditionalSpawnData {
     }
 
     class TeleSmashGoal
-    extends EntityAIBase {
+            extends EntityAIBase {
         private EntityLivingBase attackTarget;
 
         public TeleSmashGoal() {
@@ -889,9 +890,9 @@ implements IEntityAdditionalSpawnData {
                 this.attackTarget.dismountRidingEntity();
             }
             if (MutantEndermanEntity.this.attackTick == 18) {
-                double x = this.attackTarget.posX + (double)((this.attackTarget.getRNG().nextFloat() - 0.5f) * 14.0f);
-                double y = this.attackTarget.posY + (double)this.attackTarget.getRNG().nextFloat() + (this.attackTarget instanceof EntityPlayer ? 13.0 : 7.0);
-                double z = this.attackTarget.posZ + (double)((this.attackTarget.getRNG().nextFloat() - 0.5f) * 14.0f);
+                double x = this.attackTarget.posX + (double) ((this.attackTarget.getRNG().nextFloat() - 0.5f) * 14.0f);
+                double y = this.attackTarget.posY + (double) this.attackTarget.getRNG().nextFloat() + (this.attackTarget instanceof EntityPlayer ? 13.0 : 7.0);
+                double z = this.attackTarget.posZ + (double) ((this.attackTarget.getRNG().nextFloat() - 0.5f) * 14.0f);
                 EntityUtil.sendParticlePacket(this.attackTarget, MBParticles.ENDERSOUL, 256);
                 this.attackTarget.setPositionAndUpdate(x, y, z);
                 this.attackTarget.world.playSound(null, x, y, z, SoundEvents.ENTITY_GENERIC_EXPLODE, this.attackTarget.getSoundCategory(), 1.2f, 0.9f + this.attackTarget.getRNG().nextFloat() * 0.2f);
@@ -906,7 +907,7 @@ implements IEntityAdditionalSpawnData {
     }
 
     class TeleportGoal
-    extends EntityAIBase {
+            extends EntityAIBase {
         public TeleportGoal() {
             this.setMutexBits(3);
         }
@@ -923,7 +924,7 @@ implements IEntityAdditionalSpawnData {
             }
             MutantEndermanEntity.this.playSound(MBSoundEvents.ENTITY_MUTANT_ENDERMAN_TELEPORT, 1.0f, 1.0f);
             MutantEndermanEntity.teleportAttack(MutantEndermanEntity.this);
-            MutantEndermanEntity.this.setPosition((double)MutantEndermanEntity.this.getTeleportPosition().getX() + 0.5, MutantEndermanEntity.this.getTeleportPosition().getY(), (double)MutantEndermanEntity.this.getTeleportPosition().getZ() + 0.5);
+            MutantEndermanEntity.this.setPosition((double) MutantEndermanEntity.this.getTeleportPosition().getX() + 0.5, MutantEndermanEntity.this.getTeleportPosition().getY(), (double) MutantEndermanEntity.this.getTeleportPosition().getZ() + 0.5);
             MutantEndermanEntity.this.playSound(MBSoundEvents.ENTITY_MUTANT_ENDERMAN_TELEPORT, 1.0f, 1.0f);
             MutantEndermanEntity.teleportAttack(MutantEndermanEntity.this);
             MutantEndermanEntity.this.setPosition(MutantEndermanEntity.this.prevPosX, MutantEndermanEntity.this.prevPosY, MutantEndermanEntity.this.prevPosZ);
@@ -935,7 +936,7 @@ implements IEntityAdditionalSpawnData {
 
         public void resetTask() {
             MutantEndermanEntity.this.fallDistance = 0.0f;
-            MutantEndermanEntity.this.setPosition((double)MutantEndermanEntity.this.getTeleportPosition().getX() + 0.5, MutantEndermanEntity.this.getTeleportPosition().getY(), (double)MutantEndermanEntity.this.getTeleportPosition().getZ() + 0.5);
+            MutantEndermanEntity.this.setPosition((double) MutantEndermanEntity.this.getTeleportPosition().getX() + 0.5, MutantEndermanEntity.this.getTeleportPosition().getY(), (double) MutantEndermanEntity.this.getTeleportPosition().getZ() + 0.5);
             MutantEndermanEntity.this.setAttackID(0);
             MutantEndermanEntity.this.dismountRidingEntity();
             MutantEndermanEntity.this.prevPosX = MutantEndermanEntity.this.posX;
@@ -945,7 +946,7 @@ implements IEntityAdditionalSpawnData {
     }
 
     class ScreamGoal
-    extends EntityAIBase {
+            extends EntityAIBase {
         public ScreamGoal() {
             this.setMutexBits(3);
         }
@@ -993,7 +994,7 @@ implements IEntityAdditionalSpawnData {
     }
 
     class CloneGoal
-    extends EntityAIBase {
+            extends EntityAIBase {
         private final List<EndersoulCloneEntity> cloneList = new ArrayList<EndersoulCloneEntity>();
         private EntityLivingBase attackTarget;
 
@@ -1075,7 +1076,7 @@ implements IEntityAdditionalSpawnData {
     }
 
     class MeleeGoal
-    extends EntityAIBase {
+            extends EntityAIBase {
         MeleeGoal() {
         }
 
@@ -1096,13 +1097,14 @@ implements IEntityAdditionalSpawnData {
                 MutantEndermanEntity.this.playSound(SoundEvents.ENTITY_PLAYER_ATTACK_STRONG, 1.0f, MutantEndermanEntity.this.getSoundPitch());
                 DamageSource damageSource = DamageSource.causeMobDamage(MutantEndermanEntity.this);
                 boolean lower = MutantEndermanEntity.this.getActiveArm() >= 3;
-                float attackDamage = (float)MutantEndermanEntity.this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
+                float attackDamage = (float) MutantEndermanEntity.this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
                 for (Entity entity : MutantEndermanEntity.this.world.getEntitiesWithinAABBExcludingEntity(MutantEndermanEntity.this, MutantEndermanEntity.this.getEntityBoundingBox().grow(4.0))) {
                     if (!entity.canBeCollidedWith() || entity instanceof MutantEndermanEntity) continue;
                     double dist = MutantEndermanEntity.this.getDistance(entity);
                     double x = MutantEndermanEntity.this.posX - entity.posX;
                     double z = MutantEndermanEntity.this.posZ - entity.posZ;
-                    if (!(MutantEndermanEntity.this.getEntityBoundingBox().minY <= entity.getEntityBoundingBox().maxY) || !(dist <= 4.0) || !(EntityUtil.getHeadAngle(MutantEndermanEntity.this, x, z) < 3.0f + (1.0f - (float)dist / 4.0f) * 40.0f)) continue;
+                    if (!(MutantEndermanEntity.this.getEntityBoundingBox().minY <= entity.getEntityBoundingBox().maxY) || !(dist <= 4.0) || !(EntityUtil.getHeadAngle(MutantEndermanEntity.this, x, z) < 3.0f + (1.0f - (float) dist / 4.0f) * 40.0f))
+                        continue;
                     if (entity.attackEntityFrom(damageSource, attackDamage > 0.0f ? attackDamage + (lower ? 1.0f : 3.0f) : 0.0f)) {
                         MutantEndermanEntity.this.applyEnchantments(MutantEndermanEntity.this, entity);
                     }
@@ -1110,9 +1112,9 @@ implements IEntityAdditionalSpawnData {
                     if (!lower) {
                         power += 0.2f;
                     }
-                    entity.motionX = -x / dist * (double)power;
+                    entity.motionX = -x / dist * (double) power;
                     entity.motionY = power * 0.6f;
-                    entity.motionZ = -z / dist * (double)power;
+                    entity.motionZ = -z / dist * (double) power;
                 }
             }
         }
@@ -1123,7 +1125,7 @@ implements IEntityAdditionalSpawnData {
     }
 
     class StareGoal
-    extends EntityAIBase {
+            extends EntityAIBase {
         private EntityLivingBase attackTarget;
 
         public StareGoal() {
@@ -1160,16 +1162,16 @@ implements IEntityAdditionalSpawnData {
             this.attackTarget.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 160 + MutantEndermanEntity.this.rand.nextInt(140)));
             double x = MutantEndermanEntity.this.posX - this.attackTarget.posX;
             double z = MutantEndermanEntity.this.posZ - this.attackTarget.posZ;
-            this.attackTarget.motionX = x * (double)0.1f;
+            this.attackTarget.motionX = x * (double) 0.1f;
             this.attackTarget.motionY = 0.3f;
-            this.attackTarget.motionZ = z * (double)0.1f;
+            this.attackTarget.motionZ = z * (double) 0.1f;
             EntityUtil.sendPlayerVelocityPacket(this.attackTarget);
             this.attackTarget = null;
         }
     }
 
     static class FindTargetGoal
-    extends EntityAINearestAttackableTarget<EntityPlayer> {
+            extends EntityAINearestAttackableTarget<EntityPlayer> {
         public FindTargetGoal(MutantEndermanEntity mutantEnderman) {
             super(mutantEnderman, EntityPlayer.class, 0, false, false, target -> {
                 if (mutantEnderman.isBeingLookedAtBy(target)) {
@@ -1181,7 +1183,7 @@ implements IEntityAdditionalSpawnData {
         }
 
         public boolean shouldExecute() {
-            return ((MutantEndermanEntity)this.taskOwner).attackID == 0 && super.shouldExecute();
+            return ((MutantEndermanEntity) this.taskOwner).attackID == 0 && super.shouldExecute();
         }
 
         public void resetTask() {
