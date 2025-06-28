@@ -76,7 +76,7 @@ public class MBConfig {
         public double mutantCreeperMovementSpeed = 0.26D;
 
         @Config.Name("Mutant Creeper Egg Spawn")
-        @Config.Comment("Allows Mutant Creepers to spawn a creeper egg on death")
+        @Config.Comment("Allows the Mutant Creeper to spawn a creeper egg on death")
         @Config.RequiresMcRestart
         public boolean mutantCreeperSpawnsEgg = true;
 
@@ -186,6 +186,27 @@ public class MBConfig {
         @Config.Comment("The amount of swim speed the Mutant Skeleton has")
         public double mutantSkeletonSwimSpeed = 5.0D;
 
+        @Config.Name("Mutant Snowman Armor")
+        @Config.Comment("The amount of armor the Mutant Snowman has")
+        public double mutantSnowmanArmor = 0.0D;
+
+        @Config.Name("Mutant Snowman Knockback Resistance")
+        @Config.Comment("The amount of knockback resistance the Mutant Snowman has")
+        @Config.RangeDouble(min = 0.0D, max = 1.0D)
+        public double mutantSnowmanKnockbackResistance = 1.0D;
+
+        @Config.Name("Mutant Snowman Max Health")
+        @Config.Comment("The amount of maximum health the Mutant Snowman has")
+        public double mutantSnowmanMaxHealth = 80.0D;
+
+        @Config.Name("Mutant Snowman Movement Speed")
+        @Config.Comment("The amount of movement speed the Mutant Snowman has")
+        public double mutantSnowmanMovementSpeed = 0.26D;
+
+        @Config.Name("Mutant Snowman Swim Speed")
+        @Config.Comment("The amount of swim speed the Mutant Snowman has")
+        public double mutantSnowmanSwimSpeed = 1.0D;
+
         @Config.Name("Mutant Zombie Armor")
         @Config.Comment("The amount of armor the Mutant Zombie has")
         public double mutantZombieArmor = 3.0D;
@@ -224,6 +245,31 @@ public class MBConfig {
         @Config.Name("Mutant Zombie Swim Speed")
         @Config.Comment("The amount of swim speed the Mutant Zombie has")
         public double mutantZombieSwimSpeed = 4.0D;
+
+        @Config.Name("Spider-Pig Armor")
+        @Config.Comment("The amount of armor the Spider-Pig has")
+        public double spiderPigArmor = 0.0D;
+
+        @Config.Name("Spider-Pig Attack Damage")
+        @Config.Comment("The amount of damage dealt by the Spider-Pig")
+        public double spiderPigAttackDamage = 3.0D;
+
+        @Config.Name("Spider-Pig Knockback Resistance")
+        @Config.Comment("The amount of knockback resistance the Spider-Pig has")
+        @Config.RangeDouble(min = 0.0D, max = 1.0D)
+        public double spiderPigKnockbackResistance = 0.0D;
+
+        @Config.Name("Spider-Pig Max Health")
+        @Config.Comment("The amount of maximum health the Spider-Pig has")
+        public double spiderPigMaxHealth = 40.0D;
+
+        @Config.Name("Spider-Pig Movement Speed")
+        @Config.Comment("The amount of movement speed the Spider-Pig has")
+        public double spiderPigMovementSpeed = 0.25D;
+
+        @Config.Name("Spider-Pig Swim Speed")
+        @Config.Comment("The amount of swim speed the Spider-Pig has")
+        public double spiderPigSwimSpeed = 1.0D;
 
         @Config.Name("Creeper Minion Allowed On Shoulder")
         @Config.Comment

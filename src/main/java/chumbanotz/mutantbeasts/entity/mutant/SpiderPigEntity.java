@@ -1,5 +1,6 @@
 package chumbanotz.mutantbeasts.entity.mutant;
 
+import chumbanotz.mutantbeasts.MBConfig;
 import chumbanotz.mutantbeasts.entity.CreeperMinionEntity;
 import chumbanotz.mutantbeasts.entity.ai.EntityAIAvoidDamage;
 import chumbanotz.mutantbeasts.entity.ai.EntityAIHurtByNearestTarget;
@@ -7,11 +8,13 @@ import chumbanotz.mutantbeasts.entity.ai.MBEntityAIAttackMelee;
 import chumbanotz.mutantbeasts.util.EntityUtil;
 import chumbanotz.mutantbeasts.util.MBSoundEvents;
 import com.google.common.collect.ImmutableSet;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import javax.annotation.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -65,10 +68,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 
-public class SpiderPigEntity
-extends EntityTameable
-implements IJumpingMount {
-    private static final DataParameter<Boolean> CLIMBING = EntityDataManager.createKey(SpiderPigEntity.class, (DataSerializer)DataSerializers.BOOLEAN);
+public class SpiderPigEntity extends EntityTameable implements IJumpingMount {
+    private static final DataParameter<Boolean> CLIMBING = EntityDataManager.createKey(SpiderPigEntity.class, (DataSerializer) DataSerializers.BOOLEAN);
     private static final Set<Item> TEMPTATION_ITEMS = ImmutableSet.of(Items.CARROT, Items.POTATO, Items.BEETROOT, Items.PORKCHOP, Items.SPIDER_EYE);
     private int leapCooldown;
     private int leapTick;
@@ -104,9 +105,12 @@ implements IJumpingMount {
 
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40.0);
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25);
-        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0);
+        this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(MBConfig.ENTITIES.spiderPigArmor);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(MBConfig.ENTITIES.spiderPigAttackDamage);
+        this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(MBConfig.ENTITIES.spiderPigKnockbackResistance);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(MBConfig.ENTITIES.spiderPigMaxHealth);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(MBConfig.ENTITIES.spiderPigMovementSpeed);
+        this.getEntityAttribute(SWIM_SPEED).setBaseValue(MBConfig.ENTITIES.spiderPigSwimSpeed);
     }
 
     protected void entityInit() {
@@ -128,7 +132,7 @@ implements IJumpingMount {
 
     private void setSaddled(boolean saddled) {
         byte b0 = this.dataManager.get(TAMED);
-        this.dataManager.set(TAMED, saddled ? (byte)(b0 | 2) : (byte)(b0 & 0xFFFFFFFD));
+        this.dataManager.set(TAMED, saddled ? (byte) (b0 | 2) : (byte) (b0 & 0xFFFFFFFD));
     }
 
     public EnumCreatureAttribute getCreatureAttribute() {
@@ -268,7 +272,7 @@ implements IJumpingMount {
         if (this.rand.nextInt(2) == 0 && ForgeEventFactory.getMobGriefingEvent(this.world, this)) {
             double dx = entityIn.posX - entityIn.prevPosX;
             double dz = entityIn.posZ - entityIn.prevPosZ;
-            BlockPos pos = new BlockPos((int)(entityIn.posX + dx * 0.5), MathHelper.floor(this.getEntityBoundingBox().minY), (int)(entityIn.posZ + dz * 0.5));
+            BlockPos pos = new BlockPos((int) (entityIn.posX + dx * 0.5), MathHelper.floor(this.getEntityBoundingBox().minY), (int) (entityIn.posZ + dz * 0.5));
             Material material = this.world.getBlockState(pos).getMaterial();
             if (!material.isSolid() && !material.isLiquid() && material != Material.WEB) {
                 this.world.setBlockState(pos, Blocks.WEB.getDefaultState());
@@ -278,7 +282,7 @@ implements IJumpingMount {
                 this.fallDistance = 0.0f;
             }
         }
-        float damage = (float)this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
+        float damage = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
         if (!(entityIn instanceof EntitySpider) && !(entityIn instanceof SpiderPigEntity) && this.world.isMaterialInBB(entityIn.getEntityBoundingBox(), Material.WEB)) {
             damage += 4.0f;
         }
@@ -319,7 +323,7 @@ implements IJumpingMount {
 
     public void travel(float strafe, float vertical, float forward) {
         if (this.isBeingRidden() && this.canBeSteered()) {
-            EntityLivingBase livingentity = (EntityLivingBase)this.getControllingPassenger();
+            EntityLivingBase livingentity = (EntityLivingBase) this.getControllingPassenger();
             this.stepHeight = 1.0f;
             this.rotationYaw = this.rotationYawHead = livingentity.rotationYaw;
             this.prevRotationYaw = this.rotationYawHead;
@@ -336,7 +340,7 @@ implements IJumpingMount {
                 this.rotationPitch = 0.0f;
                 this.rotationPitch = pitch;
                 Vec3d lookVec = this.getLookVec();
-                double power = (double)1.6f * (double)this.chargePower;
+                double power = (double) 1.6f * (double) this.chargePower;
                 this.motionX = lookVec.x * power;
                 this.motionY = 0.3f;
                 this.motionZ = lookVec.z * power;
@@ -348,7 +352,7 @@ implements IJumpingMount {
             if (this.canPassengerSteer()) {
                 strafe = livingentity.moveStrafing * 0.8f;
                 forward = livingentity.moveForward * 0.6f;
-                this.setAIMoveSpeed((float)this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue());
+                this.setAIMoveSpeed((float) this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue());
                 super.travel(strafe, vertical, forward);
             } else if (livingentity instanceof EntityPlayer) {
                 this.motionX = 0.0;
@@ -375,16 +379,16 @@ implements IJumpingMount {
     public void onKillEntity(EntityLivingBase entityLivingIn) {
         if (!this.world.isRemote) {
             if (entityLivingIn instanceof CreeperMinionEntity && !this.isTamed()) {
-                CreeperMinionEntity minion = (CreeperMinionEntity)entityLivingIn;
+                CreeperMinionEntity minion = (CreeperMinionEntity) entityLivingIn;
                 EntityLivingBase owner = minion.getOwner();
-                if (owner instanceof EntityPlayer && !ForgeEventFactory.onAnimalTame(this, (EntityPlayer)owner)) {
+                if (owner instanceof EntityPlayer && !ForgeEventFactory.onAnimalTame(this, (EntityPlayer) owner)) {
                     this.playTameEffect(true);
-                    this.world.setEntityState(this, (byte)7);
-                    this.setTamedBy((EntityPlayer)owner);
+                    this.world.setEntityState(this, (byte) 7);
+                    this.setTamedBy((EntityPlayer) owner);
                     minion.setDead();
                 } else {
                     this.playTameEffect(false);
-                    this.world.setEntityState(this, (byte)6);
+                    this.world.setEntityState(this, (byte) 6);
                 }
             }
             if (SpiderPigEntity.isPigOrSpider(entityLivingIn)) {
@@ -484,7 +488,7 @@ implements IJumpingMount {
     }
 
     static class WebPos
-    extends BlockPos {
+            extends BlockPos {
         private int timeLeft;
 
         public WebPos(BlockPos pos, int timeLeft) {
@@ -494,7 +498,7 @@ implements IJumpingMount {
     }
 
     class LeapAttackGoal
-    extends EntityAIBase {
+            extends EntityAIBase {
         LeapAttackGoal() {
         }
 

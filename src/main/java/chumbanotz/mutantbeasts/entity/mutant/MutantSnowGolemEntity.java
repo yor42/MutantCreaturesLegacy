@@ -1,5 +1,6 @@
 package chumbanotz.mutantbeasts.entity.mutant;
 
+import chumbanotz.mutantbeasts.MBConfig;
 import chumbanotz.mutantbeasts.entity.ai.EntityAIAvoidDamage;
 import chumbanotz.mutantbeasts.entity.ai.EntityAIFleeRain;
 import chumbanotz.mutantbeasts.entity.ai.EntityAIHurtByNearestTarget;
@@ -8,10 +9,12 @@ import chumbanotz.mutantbeasts.pathfinding.MBGroundPathNavigator;
 import chumbanotz.mutantbeasts.util.EntityUtil;
 import chumbanotz.mutantbeasts.util.MBSoundEvents;
 import com.google.common.base.Optional;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -56,13 +59,9 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.IShearable;
 import net.minecraftforge.event.ForgeEventFactory;
 
-public class MutantSnowGolemEntity
-extends EntityGolem
-implements IRangedAttackMob,
-IEntityOwnable,
-IShearable {
-    private static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(MutantSnowGolemEntity.class, (DataSerializer)DataSerializers.OPTIONAL_UNIQUE_ID);
-    private static final DataParameter<Byte> DATA_FLAGS = EntityDataManager.createKey(MutantSnowGolemEntity.class, (DataSerializer)DataSerializers.BYTE);
+public class MutantSnowGolemEntity extends EntityGolem implements IRangedAttackMob, IEntityOwnable, IShearable {
+    private static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(MutantSnowGolemEntity.class, (DataSerializer) DataSerializers.OPTIONAL_UNIQUE_ID);
+    private static final DataParameter<Byte> DATA_FLAGS = EntityDataManager.createKey(MutantSnowGolemEntity.class, (DataSerializer) DataSerializers.BYTE);
     private boolean isThrowing;
     private int throwingTick;
 
@@ -85,19 +84,22 @@ IShearable {
         this.tasks.addTask(9, new EntityAILookIdle(this));
         this.targetTasks.addTask(0, new EntityAIHurtByNearestTarget(this));
         this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityLiving.class, 0, true, false, entity ->
-                (IMob.MOB_SELECTOR.apply((Entity) entity) && (!(entity instanceof EntityCreeper) || ((EntityCreeper)entity).getAttackTarget() == this))));
+                (IMob.MOB_SELECTOR.apply((Entity) entity) && (!(entity instanceof EntityCreeper) || ((EntityCreeper) entity).getAttackTarget() == this))));
     }
 
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(80.0);
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.26);
+        this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(MBConfig.ENTITIES.mutantSnowmanArmor);
+        this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(MBConfig.ENTITIES.mutantSnowmanKnockbackResistance);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(MBConfig.ENTITIES.mutantSnowmanMaxHealth);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(MBConfig.ENTITIES.mutantSnowmanMovementSpeed);
+        this.getEntityAttribute(SWIM_SPEED).setBaseValue(MBConfig.ENTITIES.mutantSnowmanSwimSpeed);
     }
 
     protected void entityInit() {
         super.entityInit();
         this.dataManager.register(OWNER_UNIQUE_ID, Optional.absent());
-        this.dataManager.register(DATA_FLAGS, (byte)1);
+        this.dataManager.register(DATA_FLAGS, (byte) 1);
     }
 
     @Nullable
@@ -108,7 +110,7 @@ IShearable {
 
     @Nullable
     public UUID getOwnerId() {
-        return (UUID)((Optional)this.dataManager.get(OWNER_UNIQUE_ID)).orNull();
+        return (UUID) ((Optional) this.dataManager.get(OWNER_UNIQUE_ID)).orNull();
     }
 
     public void setOwnerId(@Nullable UUID uuid) {
@@ -116,21 +118,21 @@ IShearable {
     }
 
     public boolean isPumpkinEquipped() {
-        return ((Byte)this.dataManager.get(DATA_FLAGS) & 1) != 0;
+        return ((Byte) this.dataManager.get(DATA_FLAGS) & 1) != 0;
     }
 
     public void setPumpkinEquipped(boolean pumpkinEquipped) {
-        byte b0 = (Byte)this.dataManager.get(DATA_FLAGS);
-        this.dataManager.set(DATA_FLAGS, pumpkinEquipped ? (byte)(b0 | 1) : (byte)(b0 & 0xFFFFFFFE));
+        byte b0 = (Byte) this.dataManager.get(DATA_FLAGS);
+        this.dataManager.set(DATA_FLAGS, pumpkinEquipped ? (byte) (b0 | 1) : (byte) (b0 & 0xFFFFFFFE));
     }
 
     public boolean getSwimJump() {
-        return ((Byte)this.dataManager.get(DATA_FLAGS) & 4) != 0;
+        return ((Byte) this.dataManager.get(DATA_FLAGS) & 4) != 0;
     }
 
     public void setSwimJump(boolean swimJump) {
-        byte b0 = (Byte)this.dataManager.get(DATA_FLAGS);
-        this.dataManager.set(DATA_FLAGS, swimJump ? (byte)(b0 | 4) : (byte)(b0 & 0xFFFFFFFB));
+        byte b0 = (Byte) this.dataManager.get(DATA_FLAGS);
+        this.dataManager.set(DATA_FLAGS, swimJump ? (byte) (b0 | 4) : (byte) (b0 & 0xFFFFFFFB));
     }
 
     protected PathNavigate createNavigator(World worldIn) {
@@ -164,7 +166,7 @@ IShearable {
         }
         if (this.world.provider.isNether()) {
             if (this.rand.nextFloat() > Math.min(80.0f, this.getHealth()) * 0.01f) {
-                this.world.spawnParticle(EnumParticleTypes.WATER_DROP, this.posX + (double)(this.rand.nextFloat() * this.width * 1.5f) - (double)this.width, this.posY - 0.15 + (double)(this.rand.nextFloat() * this.height), this.posZ + (double)(this.rand.nextFloat() * this.width * 1.5f) - (double)this.width, 0.0, 0.0, 0.0, new int[0]);
+                this.world.spawnParticle(EnumParticleTypes.WATER_DROP, this.posX + (double) (this.rand.nextFloat() * this.width * 1.5f) - (double) this.width, this.posY - 0.15 + (double) (this.rand.nextFloat() * this.height), this.posZ + (double) (this.rand.nextFloat() * this.width * 1.5f) - (double) this.width, 0.0, 0.0, 0.0, new int[0]);
             }
             if (this.ticksExisted % 60 == 0) {
                 this.attackEntityFrom(DamageSource.ON_FIRE, 1.0f);
@@ -177,7 +179,7 @@ IShearable {
                 for (int j = -2; j <= 2; ++j) {
                     boolean placeIce;
                     if (Math.abs(i) == 2 && Math.abs(j) == 2) continue;
-                    pos.setPos(MathHelper.floor((double)this.posX) + i, MathHelper.floor((double)this.posY), MathHelper.floor((double)this.posZ) + j);
+                    pos.setPos(MathHelper.floor((double) this.posX) + i, MathHelper.floor((double) this.posY), MathHelper.floor((double) this.posZ) + j);
                     posDown.setPos(pos).setY(pos.getY() - 1);
                     posUp.setPos(pos).setY(pos.getY() + 1);
                     boolean placeSnow = this.world.getBiome(pos).getTemperature(pos) < 0.95f && this.world.isAirBlock(pos) && Blocks.SNOW_LAYER.canPlaceBlockAt(this.world, pos);
@@ -188,7 +190,8 @@ IShearable {
                     if (this.world.getBlockState(posUp).getBlock() == Blocks.FLOWING_WATER) {
                         this.world.setBlockState(posUp, Blocks.ICE.getDefaultState());
                     }
-                    if (placeSnow && ((Math.abs(i) == 2 || Math.abs(j) == 2) && this.rand.nextInt(20) != 0 || (Math.abs(i) == 1 || Math.abs(j) == 1) && this.rand.nextInt(10) != 0) || placeIce && ((Math.abs(i) == 2 || Math.abs(j) == 2) && this.rand.nextInt(14) != 0 || (Math.abs(i) == 1 || Math.abs(j) == 1) && this.rand.nextInt(6) != 0)) continue;
+                    if (placeSnow && ((Math.abs(i) == 2 || Math.abs(j) == 2) && this.rand.nextInt(20) != 0 || (Math.abs(i) == 1 || Math.abs(j) == 1) && this.rand.nextInt(10) != 0) || placeIce && ((Math.abs(i) == 2 || Math.abs(j) == 2) && this.rand.nextInt(14) != 0 || (Math.abs(i) == 1 || Math.abs(j) == 1) && this.rand.nextInt(6) != 0))
+                        continue;
                     if (placeSnow) {
                         this.world.setBlockState(pos, Blocks.SNOW_LAYER.getDefaultState());
                     }
@@ -240,7 +243,7 @@ IShearable {
         this.isThrowing = true;
         this.throwingTick = 0;
         if (!this.world.isRemote) {
-            this.world.setEntityState(this, (byte)0);
+            this.world.setEntityState(this, (byte) 0);
         }
     }
 
@@ -312,7 +315,7 @@ IShearable {
             return true;
         }
         if (!(entityIn instanceof IMob)) {
-            return this.getAttackTarget() != entityIn && (!(entityIn instanceof EntityLiving) || ((EntityLiving)entityIn).getAttackTarget() != this) && this.getTeam() == null && entityIn.getTeam() == null;
+            return this.getAttackTarget() != entityIn && (!(entityIn instanceof EntityLiving) || ((EntityLiving) entityIn).getAttackTarget() != this) && this.getTeam() == null && entityIn.getTeam() == null;
         }
         return false;
     }
@@ -352,7 +355,7 @@ IShearable {
     }
 
     class ThrowIceGoal
-    extends EntityAIBase {
+            extends EntityAIBase {
         private EntityLivingBase attackTarget;
 
         ThrowIceGoal() {
@@ -381,21 +384,21 @@ IShearable {
                 double y = this.attackTarget.posY - block.posY;
                 double z = this.attackTarget.posZ - block.posZ;
                 double xz = Math.sqrt(x * x + z * z);
-                block.shoot(x, y + xz * (double)0.4f, z, 0.9f, 1.0f);
+                block.shoot(x, y + xz * (double) 0.4f, z, 0.9f, 1.0f);
                 MutantSnowGolemEntity.this.world.spawnEntity(block);
             }
         }
     }
 
     class SwimJumpGoal
-    extends EntityAIBase {
+            extends EntityAIBase {
         private int jumpTick = 20;
         private boolean waterReplaced;
         private BlockPos.MutableBlockPos prevPos;
 
         public SwimJumpGoal() {
             this.setMutexBits(4);
-            ((MBGroundPathNavigator)MutantSnowGolemEntity.this.navigator).setCanSwim(true);
+            ((MBGroundPathNavigator) MutantSnowGolemEntity.this.navigator).setCanSwim(true);
         }
 
         public boolean shouldExecute() {
@@ -403,7 +406,7 @@ IShearable {
         }
 
         public void startExecuting() {
-            this.prevPos = new BlockPos.MutableBlockPos(MathHelper.floor((double)MutantSnowGolemEntity.this.posX), MathHelper.floor((double)MutantSnowGolemEntity.this.getEntityBoundingBox().minY) - 1, MathHelper.floor((double)MutantSnowGolemEntity.this.posZ));
+            this.prevPos = new BlockPos.MutableBlockPos(MathHelper.floor((double) MutantSnowGolemEntity.this.posX), MathHelper.floor((double) MutantSnowGolemEntity.this.getEntityBoundingBox().minY) - 1, MathHelper.floor((double) MutantSnowGolemEntity.this.posZ));
             MutantSnowGolemEntity.this.motionX = (MutantSnowGolemEntity.this.rand.nextFloat() - MutantSnowGolemEntity.this.rand.nextFloat()) * 0.9f;
             MutantSnowGolemEntity.this.motionY = 1.5;
             MutantSnowGolemEntity.this.motionZ = (MutantSnowGolemEntity.this.rand.nextFloat() - MutantSnowGolemEntity.this.rand.nextFloat()) * 0.9f;
@@ -419,7 +422,7 @@ IShearable {
             --this.jumpTick;
             if (!this.waterReplaced && !MutantSnowGolemEntity.this.isInWater() && this.jumpTick < 17 && ForgeEventFactory.getMobGriefingEvent(MutantSnowGolemEntity.this.world, MutantSnowGolemEntity.this)) {
                 this.prevPos.setY(this.getWaterSurfaceHeight(MutantSnowGolemEntity.this.world, this.prevPos));
-                if ((double)this.prevPos.getY() > MutantSnowGolemEntity.this.posY) {
+                if ((double) this.prevPos.getY() > MutantSnowGolemEntity.this.posY) {
                     return;
                 }
                 for (int x = -2; x <= 2; ++x) {
@@ -428,7 +431,8 @@ IShearable {
                             if (y != 0 && (Math.abs(x) == 2 || Math.abs(z) == 2)) continue;
                             BlockPos blockPos = this.prevPos.add(x, y, z);
                             Block block = MutantSnowGolemEntity.this.world.getBlockState(blockPos).getBlock();
-                            if (!MutantSnowGolemEntity.this.world.isAirBlock(blockPos) && block != Blocks.WATER && block != Blocks.FLOWING_WATER || (y != 0 ? (Math.abs(x) == 1 || Math.abs(z) == 1) && MutantSnowGolemEntity.this.rand.nextInt(4) == 0 : (Math.abs(x) == 2 || Math.abs(z) == 2) && MutantSnowGolemEntity.this.rand.nextInt(3) == 0)) continue;
+                            if (!MutantSnowGolemEntity.this.world.isAirBlock(blockPos) && block != Blocks.WATER && block != Blocks.FLOWING_WATER || (y != 0 ? (Math.abs(x) == 1 || Math.abs(z) == 1) && MutantSnowGolemEntity.this.rand.nextInt(4) == 0 : (Math.abs(x) == 2 || Math.abs(z) == 2) && MutantSnowGolemEntity.this.rand.nextInt(3) == 0))
+                                continue;
                             MutantSnowGolemEntity.this.world.setBlockState(blockPos, Blocks.ICE.getDefaultState());
                         }
                     }
