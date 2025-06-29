@@ -106,7 +106,7 @@ public class MutantZombieEntity extends EntityMob implements IEntityAdditionalSp
 
     protected void entityInit() {
         super.entityInit();
-        this.dataManager.register(LIVES, 3);
+        this.dataManager.register(LIVES, MBConfig.ENTITIES.mutantZombieLives);
         this.dataManager.register(THROW_ATTACK_STATE, (byte) 0);
     }
 

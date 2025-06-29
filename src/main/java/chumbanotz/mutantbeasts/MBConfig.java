@@ -224,6 +224,16 @@ public class MBConfig {
         @Config.RangeDouble(min = 0.0D, max = 1.0D)
         public double mutantZombieKnockbackResistance = 1.0D;
 
+        @Config.Name("Mutant Zombie Lives")
+        @Config.Comment
+                ({
+                        "The amount of lives the Mutant Zombie has",
+                        "Each time the Mutant Zombie is defeated it will lose one live",
+                        "It will keep reviving itself until it is out of lives or set on fire"
+                })
+        @Config.RangeInt(min = 1)
+        public int mutantZombieLives = 3;
+
         @Config.Name("Mutant Zombie Max Health")
         @Config.Comment("The amount of maximum health the Mutant Zombie has")
         public double mutantZombieMaxHealth = 150.0D;
