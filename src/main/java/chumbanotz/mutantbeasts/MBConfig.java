@@ -12,6 +12,10 @@ public class MBConfig {
     @Config.Name("Entities")
     public static final EntitySettings ENTITIES = new EntitySettings();
 
+    @Config.LangKey("cfg.mutantbeasts.items")
+    @Config.Name("Items")
+    public static final ItemSettings ITEMS = new ItemSettings();
+
     public static class GeneralSettings {
         // TODO: Are config options for particle IDs really needed?
         @Config.Name("Endersoul Particle ID")
@@ -290,5 +294,81 @@ public class MBConfig {
                 })
         @Config.RequiresMcRestart
         public boolean creeperMinionOnShoulder = true;
+    }
+
+    public static class ItemSettings {
+        @Config.Name("Creeper Shard Charges")
+        @Config.Comment
+                ({
+                        "The charges required for the Creeper Shard to fully charge",
+                        "One charge is always gained when hitting any mob with it",
+                        "Right-clicking with a fully charged Creeper Shard will cause an explosion and revert the shard back to zero"
+                })
+        @Config.RangeInt(min = 1)
+        public int creeperShardCharges = 32;
+
+        @Config.Name("Endersoul Hand Attack Speed")
+        @Config.Comment("The amount of attack speed the Endersoul Hand has")
+        public double endersoulHandAttackSpeed = 1.6D;
+
+        @Config.Name("Endersoul Hand Cooldown")
+        @Config.Comment("The cooldown of the Endersoul Hand's teleportation ability when sneaking and right-clicking with it")
+        public int endersoulHandCooldown = 40;
+
+        @Config.Name("Endersoul Hand Damage")
+        @Config.Comment("The amount of damage dealt by the Endersoul Hand")
+        public double endersoulHandDamage = 6.0D;
+
+        @Config.Name("Endersoul Hand Durability")
+        @Config.Comment("The amount of durability the Endersoul Hand has")
+        @Config.RangeInt(min = 1)
+        public int endersoulHandDurability = 240;
+
+        @Config.Name("Endersoul Hand Enchantability")
+        @Config.Comment("The amount of enchantability the Endersoul Hand has")
+        public int endersoulHandEnchantability = 20;
+
+        @Config.Name("Endersoul Hand Teleportation")
+        @Config.Comment
+                ({
+                        "Allows the Endersoul Hand to teleport you to any block within a radius when sneaking and right-clicking",
+                        "Setting to false will disable this ability completely"
+                })
+        @Config.RequiresMcRestart
+        public boolean endersoulHandTeleports = true;
+
+        @Config.Name("Endersoul Hand Teleportation Cost")
+        @Config.Comment("The cost in durability when teleporting with the Endersoul Hand")
+        public int endersoulHandTeleportationCost = 4;
+
+        @Config.Name("Endersoul Hand Teleportation Radius")
+        @Config.Comment("The maximum radius in blocks when teleporting with the Endersoul Hand")
+        public double endersoulHandTeleportationRadius = 128.0D;
+
+        @Config.Name("Hulk Hammer Attack Speed")
+        @Config.Comment("The amount of attack speed the Hulk Hammer has")
+        public double hulkHammerAttackSpeed = 1.0D;
+
+        @Config.Name("Hulk Hammer Cooldown")
+        @Config.Comment("The cooldown of the Hulk Hammer's ground pound attack when right-clicking with it")
+        public int hulkHammerCooldown = 25;
+
+        @Config.Name("Hulk Hammer Damage")
+        @Config.Comment("The amount of damage dealt by the Hulk Hammer (also affects the damage of the ground pound attack)")
+        public double hulkHammerDamage = 9.0D;
+
+        @Config.Name("Hulk Hammer Enchantability")
+        @Config.Comment("The amount of enchantability the Hulk Hammer has")
+        public int hulkHammerEnchantability = 10;
+
+        @Config.Name("Hulk Hammer Durability")
+        @Config.Comment("The amount of durability the Hulk Hammer has")
+        @Config.RangeInt(min = 1)
+        public int hulkHammerDurability = 64;
+
+        @Config.Name("Hulk Hammer Shield Disabling")
+        @Config.Comment("Allows the Hulk Hammer to disable shields")
+        @Config.RequiresMcRestart
+        public boolean hulkHammerDisablesShields = true;
     }
 }

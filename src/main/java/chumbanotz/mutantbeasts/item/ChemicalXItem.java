@@ -17,10 +17,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 
-public class ChemicalXItem
-extends Item {
+public class ChemicalXItem extends Item {
     public ChemicalXItem() {
-        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, (source, stack) -> new BehaviorProjectileDispense(){
+        BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, (source, stack) -> new BehaviorProjectileDispense() {
 
             protected IProjectile getProjectileEntity(World worldIn, IPosition position, ItemStack stackIn) {
                 return new ChemicalXEntity(worldIn, position.getX(), position.getY(), position.getZ());
@@ -51,7 +50,7 @@ extends Item {
         if (!playerIn.capabilities.isCreativeMode) {
             itemstack.shrink(1);
         }
-        playerIn.addStat(StatList.getObjectUseStats((Item)this));
+        playerIn.addStat(StatList.getObjectUseStats((Item) this));
         return new ActionResult(EnumActionResult.SUCCESS, itemstack);
     }
 }

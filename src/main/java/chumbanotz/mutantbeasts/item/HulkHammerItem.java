@@ -1,13 +1,16 @@
 package chumbanotz.mutantbeasts.item;
 
+import chumbanotz.mutantbeasts.MBConfig;
 import chumbanotz.mutantbeasts.util.SeismicWave;
 import com.google.common.collect.Multimap;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
@@ -33,8 +36,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class HulkHammerItem
-extends Item {
+public class HulkHammerItem extends Item {
     public static final Map<UUID, List<SeismicWave>> WAVES = new HashMap<UUID, List<SeismicWave>>();
 
     public EnumRarity getRarity(ItemStack stack) {
@@ -46,7 +48,7 @@ extends Item {
     }
 
     public boolean canDisableShield(ItemStack stack, ItemStack shield, EntityLivingBase entity, EntityLivingBase attacker) {
-        return true;
+        return MBConfig.ITEMS.hulkHammerDisablesShields;
     }
 
     public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
@@ -62,7 +64,7 @@ extends Item {
     }
 
     public int getItemEnchantability() {
-        return 10;
+        return MBConfig.ITEMS.hulkHammerEnchantability;
     }
 
     @Override
@@ -78,19 +80,20 @@ extends Item {
         }
         if (!worldIn.isRemote) {
             ArrayList<SeismicWave> list = new ArrayList<SeismicWave>();
-            Vec3d vec = Vec3d.fromPitchYaw((float)0.0f, (float)playerIn.rotationYaw);
-            int x = MathHelper.floor((double)(playerIn.posX + vec.x * 1.5));
-            int y = MathHelper.floor((double)playerIn.getEntityBoundingBox().minY);
-            int z = MathHelper.floor((double)(playerIn.posZ + vec.z * 1.5));
-            int x1 = MathHelper.floor((double)(playerIn.posX + vec.x * 8.0));
-            int z1 = MathHelper.floor((double)(playerIn.posZ + vec.z * 8.0));
+            Vec3d vec = Vec3d.fromPitchYaw((float) 0.0f, (float) playerIn.rotationYaw);
+            int x = MathHelper.floor((double) (playerIn.posX + vec.x * 1.5));
+            int y = MathHelper.floor((double) playerIn.getEntityBoundingBox().minY);
+            int z = MathHelper.floor((double) (playerIn.posZ + vec.z * 1.5));
+            int x1 = MathHelper.floor((double) (playerIn.posX + vec.x * 8.0));
+            int z1 = MathHelper.floor((double) (playerIn.posZ + vec.z * 8.0));
             SeismicWave.createWaves(worldIn, list, x, z, x1, z1, y);
             HulkHammerItem.addWave(playerIn.getUniqueID(), list);
         }
         worldIn.playSound(playerIn, playerIn.getPosition(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 0.8f, 0.8f + playerIn.getRNG().nextFloat() * 0.4f);
-        playerIn.getCooldownTracker().setCooldown(this, 25);
+        if (MBConfig.ITEMS.hulkHammerCooldown > 0)
+            playerIn.getCooldownTracker().setCooldown(this, MBConfig.ITEMS.hulkHammerCooldown);
         playerIn.swingArm(handIn);
-        playerIn.addStat(StatList.getObjectUseStats((Item)this));
+        playerIn.addStat(StatList.getObjectUseStats((Item) this));
         heldItemStack.damageItem(1, playerIn);
         return new ActionResult(EnumActionResult.SUCCESS, heldItemStack);
     }
@@ -99,8 +102,8 @@ extends Item {
     public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
         Multimap multimap = super.getAttributeModifiers(slot, stack);
         if (slot == EntityEquipmentSlot.MAINHAND) {
-            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 8.0, 0));
-            multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -3.0, 0));
+            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", MBConfig.ITEMS.hulkHammerDamage - 1.0D, 0));
+            multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", MBConfig.ITEMS.hulkHammerAttackSpeed - 4.0D, 0));
         }
         return multimap;
     }

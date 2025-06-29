@@ -1,7 +1,6 @@
 package chumbanotz.mutantbeasts.item;
 
 import chumbanotz.mutantbeasts.MutantBeasts;
-import chumbanotz.mutantbeasts.item.MBItems;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,8 +14,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.EnumHelper;
 
-public class MutantSkeletonArmorItem
-extends ItemArmor {
+public class MutantSkeletonArmorItem extends ItemArmor {
     private static final ItemArmor.ArmorMaterial MUTANT_SKELETON = EnumHelper.addArmorMaterial("mutant_skeleton", "mutantbeasts:mutant_skeleton", 15, new int[]{2, 5, 6, 2}, 9, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0f);
 
     public MutantSkeletonArmorItem(EntityEquipmentSlot equipmentSlotIn) {
@@ -25,7 +23,7 @@ extends ItemArmor {
 
     @Override
     public EnumRarity getRarity(ItemStack stack) {
-        return stack.getItem() == MBItems.MUTANT_SKELETON_SKULL ? EnumRarity.UNCOMMON : super.getRarity(stack);
+        return EnumRarity.UNCOMMON;
     }
 
     public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
@@ -38,6 +36,6 @@ extends ItemArmor {
     }
 
     public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, EntityEquipmentSlot armorSlot, ModelBiped _default) {
-        return armorSlot == EntityEquipmentSlot.HEAD ? (ModelBiped)MutantBeasts.PROXY.getMutantSkeletonArmorModel() : _default;
+        return armorSlot == EntityEquipmentSlot.HEAD ? (ModelBiped) MutantBeasts.PROXY.getMutantSkeletonArmorModel() : _default;
     }
 }

@@ -3,7 +3,7 @@ package chumbanotz.mutantbeasts.item;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-@GameRegistry.ObjectHolder(value="mutantbeasts")
+@GameRegistry.ObjectHolder(value = "mutantbeasts")
 public class MBItems {
     public static final Item CHEMICAL_X = null;
     public static final Item CREEPER_MINION_TRACKER = null;

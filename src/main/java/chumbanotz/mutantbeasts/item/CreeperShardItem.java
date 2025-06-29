@@ -21,10 +21,9 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class CreeperShardItem
-extends Item {
+public class CreeperShardItem extends Item {
     public boolean hasEffect(ItemStack stack) {
-        return super.hasEffect(stack) || stack.getItemDamage() == 0;
+        return super.hasEffect(stack) || stack.getItemDamage() <= 0;
     }
 
     public EnumRarity getRarity(ItemStack stack) {
@@ -36,7 +35,7 @@ extends Item {
     }
 
     public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
-        EntityPlayer player = (EntityPlayer)attacker;
+        EntityPlayer player = (EntityPlayer) attacker;
         int damage = stack.getItemDamage();
         if (damage > 0) {
             stack.setItemDamage(damage - 1);
@@ -54,7 +53,7 @@ extends Item {
         int maxDmg = stack.getMaxDamage();
         int dmg = stack.getItemDamage();
         if (!worldIn.isRemote) {
-            float damage = 5.0f * (float)(maxDmg - dmg) / 32.0f;
+            float damage = 5.0f * (float) (maxDmg - dmg) / 32.0f;
             if (dmg == 0) {
                 damage += 2.0f;
             }
@@ -65,7 +64,7 @@ extends Item {
         }
         playerIn.swingArm(handIn);
         playerIn.getCooldownTracker().setCooldown(this, (maxDmg - dmg) * 2);
-        playerIn.addStat(StatList.getObjectUseStats((Item)this));
+        playerIn.addStat(StatList.getObjectUseStats((Item) this));
         return new ActionResult(EnumActionResult.SUCCESS, stack);
     }
 

@@ -1,5 +1,6 @@
 package chumbanotz.mutantbeasts.item;
 
+import chumbanotz.mutantbeasts.MBConfig;
 import chumbanotz.mutantbeasts.entity.mutant.MutantEndermanEntity;
 import chumbanotz.mutantbeasts.entity.projectile.ThrowableBlockEntity;
 import chumbanotz.mutantbeasts.util.EntityUtil;
@@ -29,8 +30,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
-public class EndersoulHandItem
-extends Item {
+public class EndersoulHandItem extends Item {
     public EnumRarity getRarity(ItemStack stack) {
         return EnumRarity.EPIC;
     }
@@ -49,7 +49,7 @@ extends Item {
     }
 
     public int getItemEnchantability() {
-        return 20;
+        return MBConfig.ITEMS.endersoulHandEnchantability;
     }
 
     @Override
@@ -83,10 +83,10 @@ extends Item {
 
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
-        if (!playerIn.isSneaking()) {
+        if (!playerIn.isSneaking() || !MBConfig.ITEMS.endersoulHandTeleports) {
             return new ActionResult(EnumActionResult.PASS, stack);
         }
-        RayTraceResult result = EndersoulHandItem.rayTrace(playerIn, 128.0);
+        RayTraceResult result = EndersoulHandItem.rayTrace(playerIn, MBConfig.ITEMS.endersoulHandTeleportationRadius);
         if (result == null || result.typeOfHit != RayTraceResult.Type.BLOCK) {
             playerIn.sendStatusMessage(new TextComponentTranslation("Unable to teleport to location", new Object[0]), true);
             return new ActionResult(EnumActionResult.FAIL, stack);
@@ -104,16 +104,17 @@ extends Item {
                 }
             }
             worldIn.playSound(null, playerIn.prevPosX, playerIn.prevPosY, playerIn.prevPosZ, SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, playerIn.getSoundCategory(), 1.0f, 1.0f);
-            playerIn.setPositionAndUpdate((double)endPos.getX() + 0.5, endPos.getY(), (double)endPos.getZ() + 0.5);
+            playerIn.setPositionAndUpdate((double) endPos.getX() + 0.5, endPos.getY(), (double) endPos.getZ() + 0.5);
             worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT, playerIn.getSoundCategory(), 1.0f, 1.0f);
             MutantEndermanEntity.teleportAttack(playerIn);
             EntityUtil.sendParticlePacket(playerIn, MBParticles.ENDERSOUL, 256);
-            playerIn.getCooldownTracker().setCooldown(this, 40);
-            stack.damageItem(4, playerIn);
+            if (MBConfig.ITEMS.endersoulHandCooldown > 0)
+                playerIn.getCooldownTracker().setCooldown(this, MBConfig.ITEMS.endersoulHandCooldown);
+            stack.damageItem(MBConfig.ITEMS.endersoulHandTeleportationCost, playerIn);
         }
         playerIn.fallDistance = 0.0f;
         playerIn.swingArm(handIn);
-        playerIn.addStat(StatList.getObjectUseStats((Item)this));
+        playerIn.addStat(StatList.getObjectUseStats((Item) this));
         return new ActionResult(EnumActionResult.SUCCESS, stack);
     }
 
@@ -121,8 +122,8 @@ extends Item {
     public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
         Multimap multimap = super.getAttributeModifiers(slot, stack);
         if (slot == EntityEquipmentSlot.MAINHAND) {
-            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 5.0, 0));
-            multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2.4, 0));
+            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", MBConfig.ITEMS.endersoulHandDamage - 1.0D, 0));
+            multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", MBConfig.ITEMS.endersoulHandAttackSpeed - 4.0D, 0));
         }
         return multimap;
     }
