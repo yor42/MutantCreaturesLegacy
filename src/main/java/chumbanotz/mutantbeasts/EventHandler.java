@@ -9,7 +9,9 @@ import chumbanotz.mutantbeasts.item.MBItems;
 import chumbanotz.mutantbeasts.util.EntityUtil;
 import chumbanotz.mutantbeasts.util.MBParticles;
 import chumbanotz.mutantbeasts.util.SeismicWave;
+
 import java.util.List;
+
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -55,12 +57,12 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-@Mod.EventBusSubscriber(modid="mutantbeasts")
+@Mod.EventBusSubscriber(modid = "mutantbeasts")
 public class EventHandler {
     @SubscribeEvent
     public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (!event.getWorld().isRemote && event.getEntity() instanceof EntityCreature) {
-            EntityCreature creature = (EntityCreature)event.getEntity();
+            EntityCreature creature = (EntityCreature) event.getEntity();
             if (creature instanceof EntityOcelot) {
                 creature.tasks.addTask(2, new EntityAIAvoidEntity(creature, MutantCreeperEntity.class, 16.0f, 0.8, 1.33));
             }
@@ -92,9 +94,10 @@ public class EventHandler {
         }
     }
 
+    // TODO: Less 'invasive' way to do this
     @SubscribeEvent
     public static void onLivingUseItem(LivingEntityUseItemEvent.Tick event) {
-        if (event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem() == MBItems.MUTANT_SKELETON_CHESTPLATE && event.getItem().getItemUseAction() == EnumAction.BOW && event.getDuration() > 4) {
+        if (event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem() == MBItems.MUTANT_SKELETON_CHESTPLATE && MBConfig.ITEMS.mutantSkeletonChestplateBowCharging && event.getItem().getItemUseAction() == EnumAction.BOW && event.getDuration() > 4) {
             event.setDuration(event.getDuration() - 3);
         }
     }
@@ -111,7 +114,8 @@ public class EventHandler {
             wave.affectBlocks(player.world, player);
             AxisAlignedBB box = new AxisAlignedBB(wave.getX(), wave.getY() + 1, wave.getZ(), wave.getX() + 1, wave.getY() + 2, wave.getZ() + 1);
             for (Entity entity : player.world.getEntitiesWithinAABBExcludingEntity(player, box)) {
-                if (!entity.canBeCollidedWith() || player.getRidingEntity() == entity || !entity.attackEntityFrom(DamageSource.causePlayerDamage(player), 6 + player.getRNG().nextInt(3))) continue;
+                if (!entity.canBeCollidedWith() || player.getRidingEntity() == entity || !entity.attackEntityFrom(DamageSource.causePlayerDamage(player), 6 + player.getRNG().nextInt(3)))
+                    continue;
                 if (entity instanceof EntityLivingBase) {
                     EnchantmentHelper.applyThornEnchantments((EntityLivingBase) entity, player);
                 }
@@ -123,9 +127,10 @@ public class EventHandler {
         }
     }
 
+    // TODO: See how this interacts with bows from third party mods
     @SubscribeEvent
     public static void onPlayerShootArrow(ArrowLooseEvent event) {
-        if (!event.getWorld().isRemote && event.getEntityPlayer().getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == MBItems.MUTANT_SKELETON_SKULL && event.hasAmmo()) {
+        if (!event.getWorld().isRemote && event.getEntityPlayer().getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == MBItems.MUTANT_SKELETON_SKULL && MBConfig.ITEMS.mutantSkeletonHelmetArrow && event.hasAmmo()) {
             int k;
             int j;
             boolean inAir;
@@ -147,7 +152,7 @@ public class EventHandler {
                 entityarrow.setIsCritical(true);
             }
             if ((j = EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER, bow)) > 0) {
-                entityarrow.setDamage(entityarrow.getDamage() + (double)j * 0.5 + 0.5);
+                entityarrow.setDamage(entityarrow.getDamage() + (double) j * 0.5 + 0.5);
             }
             if ((k = EnchantmentHelper.getEnchantmentLevel(Enchantments.PUNCH, bow)) > 0) {
                 entityarrow.setKnockbackStrength(k);

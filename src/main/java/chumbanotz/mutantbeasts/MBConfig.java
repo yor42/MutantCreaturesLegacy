@@ -370,5 +370,71 @@ public class MBConfig {
         @Config.Comment("Allows the Hulk Hammer to disable shields")
         @Config.RequiresMcRestart
         public boolean hulkHammerDisablesShields = true;
+
+        @Config.Name("Mutant Skeleton Armor Durability")
+        @Config.Comment
+                ({
+                        "The amount of durability Mutant Skeleton Armor has (the number is calculated below)",
+                        "Helmet: X * 11",
+                        "Chestplate: X * 16",
+                        "Leggings: X * 15",
+                        "Boots: X * 13"
+                })
+        public int mutantSkeletonArmorDurability = 15;
+
+        @Config.Name("Mutant Skeleton Armor Enchantability")
+        @Config.Comment("The amount of enchantability Mutant Skeleton Armor has")
+        public int mutantSkeletonArmorEnchantability = 9;
+
+        @Config.Name("Mutant Skeleton Armor Protection (Boots)")
+        @Config.Comment("The amount of armor this piece of Mutant Skeleton Armor has")
+        public int mutantSkeletonArmorProtectionBoots = 2;
+
+        @Config.Name("Mutant Skeleton Armor Protection (Chestplate)")
+        @Config.Comment("The amount of armor this piece of Mutant Skeleton Armor has")
+        public int mutantSkeletonArmorProtectionChestplate = 6;
+
+        @Config.Name("Mutant Skeleton Armor Protection (Skull)")
+        @Config.Comment("The amount of armor this piece of Mutant Skeleton Armor has")
+        public int mutantSkeletonArmorProtectionHelmet = 2;
+
+        @Config.Name("Mutant Skeleton Armor Protection (Leggings)")
+        @Config.Comment("The amount of armor this piece of Mutant Skeleton Armor has")
+        public int mutantSkeletonArmorProtectionLeggings = 5;
+
+        @Config.Name("Mutant Skeleton Armor Toughness")
+        @Config.Comment("The amount of toughness Mutant Skeleton Armor has")
+        public double mutantSkeletonArmorToughness = 0.0D;
+
+        @Config.Name("Mutant Skeleton Boots Jump Boost Ability")
+        @Config.Comment
+                ({
+                        "Allows the Mutant Skeleton Boots to grant Jump Boost while worn",
+                        "While sprinting, it will grant Jump Boost II instead"
+                })
+        @Config.RequiresMcRestart
+        public boolean mutantSkeletonBootsJumpBoost = true;
+
+        @Config.Name("Mutant Skeleton Chestplate Bow Charging Ability")
+        @Config.Comment
+                ("Allows the Mutant Skeleton Chestplate to make bows charge at four times the original rate while worn")
+        @Config.RequiresMcRestart
+        public boolean mutantSkeletonChestplateBowCharging = true;
+
+        @Config.Name("Mutant Skeleton Leggings Speed Ability")
+        @Config.Comment
+                ("Allows the Mutant Skeleton Leggings to grant Speed II while worn")
+        @Config.RequiresMcRestart
+        public boolean mutantSkeletonLeggingsSpeed = true;
+
+        @Config.Name("Mutant Skeleton Skull Arrow Ability")
+        @Config.Comment
+                ({
+                        "Allows the Mutant Skeleton Skull to grant special bonuses (and negatives) to arrows fired from bows",
+                        "All critical mid-air arrow shots will deal double the damage, while non-airborne arrows will deal half the damage",
+                        "There is a 50% chance for fired arrows to not be depleted like the Infinity enchantment"
+                })
+        @Config.RequiresMcRestart
+        public boolean mutantSkeletonHelmetArrow = true;
     }
 }
