@@ -416,14 +416,12 @@ public class MBConfig {
         public boolean mutantSkeletonBootsJumpBoost = true;
 
         @Config.Name("Mutant Skeleton Chestplate Bow Charging Ability")
-        @Config.Comment
-                ("Allows the Mutant Skeleton Chestplate to make bows charge at four times the original rate while worn")
+        @Config.Comment("Allows the Mutant Skeleton Chestplate to make bows charge at four times the original rate while worn")
         @Config.RequiresMcRestart
         public boolean mutantSkeletonChestplateBowCharging = true;
 
         @Config.Name("Mutant Skeleton Leggings Speed Ability")
-        @Config.Comment
-                ("Allows the Mutant Skeleton Leggings to grant Speed II while worn")
+        @Config.Comment("Allows the Mutant Skeleton Leggings to grant Speed II while worn")
         @Config.RequiresMcRestart
         public boolean mutantSkeletonLeggingsSpeed = true;
 
