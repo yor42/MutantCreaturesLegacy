@@ -51,20 +51,41 @@ public class MBConfig {
 
         @Config.Name("Mutant Creeper Armor")
         @Config.Comment("The amount of armor the Mutant Creeper has")
-        public double mutantCreeperArmor = 0.0D;
+        public double mutantCreeperArmor = 10.0D;
 
         @Config.Name("Mutant Creeper Attack Damage")
         @Config.Comment("The amount of damage dealt by the Mutant Creeper")
         public double mutantCreeperAttackDamage = 5.0D;
 
-        @Config.Name("Mutant Creeper Explosions Destroy Terrain")
-        @Config.Comment("Allows the Mutant Creeper to destroy terrain when exploding")
+        @Config.Name("Mutant Creeper Death Explosion Destroys Terrain")
+        @Config.Comment("Allows the Mutant Creeper to destroy terrain when exploding from death")
         @Config.RequiresMcRestart
-        public boolean mutantCreeperDestroysTerrain = true;
+        public boolean mutantCreeperDeathDestroysTerrain = true;
+
+        @Config.Name("Mutant Creeper Death Explosion Strength")
+        @Config.Comment("The strength of the explosion caused by the Mutant Creeper's death")
+        public double mutantCreeperDeathStrength = 8.0D;
+
+        @Config.Name("Mutant Creeper Death Explosion Strength (Charged)")
+        @Config.Comment("The strength of the explosion caused by the Mutant Creeper's death while charged")
+        public double mutantCreeperDeathStrengthCharged = 12.0D;
 
         @Config.Name("Mutant Creeper Follow Range")
         @Config.Comment("The amount of blocks the Mutant Creeper follows entities")
-        public double mutantCreeperFollowRange = 16.0D;
+        public double mutantCreeperFollowRange = 35.0D;
+
+        @Config.Name("Mutant Creeper Jumping Explosion Destroys Terrain")
+        @Config.Comment("Allows the Mutant Creeper to destroy terrain when exploding from its jump attack")
+        @Config.RequiresMcRestart
+        public boolean mutantCreeperJumpingDestroysTerrain = true;
+
+        @Config.Name("Mutant Creeper Jumping Explosion Strength")
+        @Config.Comment("The strength of the explosion caused by the Mutant Creeper's jump attack")
+        public double mutantCreeperJumpingStrength = 4.0D;
+
+        @Config.Name("Mutant Creeper Jumping Explosion Strength (Charged)")
+        @Config.Comment("The strength of the explosion caused by the Mutant Creeper's jump attacks while charged")
+        public double mutantCreeperJumpingStrengthCharged = 6.0D;
 
         @Config.Name("Mutant Creeper Knockback Resistance")
         @Config.Comment("The amount of knockback resistance the Mutant Creeper has")
@@ -100,15 +121,27 @@ public class MBConfig {
 
         @Config.Name("Mutant Enderman Armor")
         @Config.Comment("The amount of armor the Mutant Enderman has")
-        public double mutantEndermanArmor = 0.0D;
+        public double mutantEndermanArmor = 10.0D;
 
         @Config.Name("Mutant Enderman Attack Damage")
         @Config.Comment("The amount of damage dealt by the Mutant Enderman")
         public double mutantEndermanAttackDamage = 7.0D;
 
+        @Config.Name("Mutant Enderman Block Damage")
+        @Config.Comment
+                ({
+                        "The amount of damage dealt by the Mutant Snowman's block throwing attack",
+                        "This also affects the damage dealt by blocks thrown from the Endersoul Hand"
+                })
+        public double mutantEndermanBlockDamage = 8.0D;
+
         @Config.Name("Mutant Enderman Follow Range")
         @Config.Comment("The amount of blocks the Mutant Enderman follows entities")
         public double mutantEndermanFollowRange = 96.0D;
+
+        @Config.Name("Mutant Enderman Forced Look (Stare) Damage")
+        @Config.Comment("The amount of damage dealt by the Mutant Enderman's forced look (stare) attack")
+        public double mutantEndermanStareDamage = 2.0D;
 
         @Config.Name("Mutant Enderman Knockback Resistance")
         @Config.Comment("The amount of knockback resistance the Mutant Enderman has")
@@ -132,6 +165,14 @@ public class MBConfig {
         @Config.RequiresMcRestart
         public boolean mutantEndermanRendersTeleport = true;
 
+        @Config.Name("Mutant Enderman Scream Damage")
+        @Config.Comment("The amount of damage dealt by the Mutant Enderman's scream attack")
+        public double mutantEndermanScreamDamage = 4.0D;
+
+        @Config.Name("Mutant Enderman Telesmash Damage")
+        @Config.Comment("The amount of damage dealt by the Mutant Enderman's telesmash attack")
+        public double mutantEndermanTelesmashDamage = 6.0D;
+
         @Config.Name("Mutant Enderman Fragments Spawn")
         @Config.Comment("Allows the Mutant Enderman to spawn endersoul fragments while dying")
         @Config.RequiresMcRestart
@@ -151,13 +192,30 @@ public class MBConfig {
         @Config.Comment("The amount of swim speed the Mutant Enderman has")
         public double mutantEndermanSwimSpeed = 1.0D;
 
+        @Config.Name("Mutant Enderman Water Weakness")
+        @Config.Comment("Allows the Mutant Enderman to take damage while in water or when exposed to rain")
+        @Config.RequiresMcRestart
+        public boolean mutantEndermanWaterWeakness = false;
+
         @Config.Name("Mutant Skeleton Armor")
         @Config.Comment("The amount of armor the Mutant Skeleton has")
-        public double mutantSkeletonArmor = 0.0D;
+        public double mutantSkeletonArmor = 10.0D;
+
+        @Config.Name("Mutant Skeleton Arrow Damage")
+        @Config.Comment("The amount of damage dealt by the Mutant Skeleton's arrows")
+        public double mutantSkeletonArrowDamage = 12.0D;
 
         @Config.Name("Mutant Skeleton Attack Damage")
         @Config.Comment("The amount of damage dealt by the Mutant Skeleton")
         public double mutantSkeletonAttackDamage = 4.0D;
+
+        @Config.Name("Mutant Skeleton Constrict Damage")
+        @Config.Comment("The amount of damage dealt by the Mutant Skeleton's constrict attack")
+        public double mutantSkeletonConstrictDamage = 9.0D;
+
+        @Config.Name("Mutant Skeleton Death Damage")
+        @Config.Comment("The amount of damage dealt by the Mutant Skeleton's death (getting hit by flying bones will hurt!)")
+        public double mutantSkeletonDeathDamage = 7.0D;
 
         @Config.Name("Mutant Skeleton Follow Range")
         @Config.Comment("The amount of blocks the Mutant Skeleton follows entities")
@@ -175,6 +233,10 @@ public class MBConfig {
         @Config.Name("Mutant Skeleton Movement Speed")
         @Config.Comment("The amount of movement speed the Mutant Skeleton has")
         public double mutantSkeletonMovementSpeed = 0.27D;
+
+        @Config.Name("Mutant Skeleton Multishot Damage")
+        @Config.Comment("The amount of damage dealt by the Mutant Skeleton's multishot arrows")
+        public double mutantSkeletonMultishotDamage = 9.0D;
 
         @Config.Name("Mutant Skeleton Spawn Probability")
         @Config.Comment
@@ -194,6 +256,10 @@ public class MBConfig {
         @Config.Comment("The amount of armor the Mutant Snowman has")
         public double mutantSnowmanArmor = 0.0D;
 
+        @Config.Name("Mutant Snowman Ice Chunk Damage")
+        @Config.Comment("The amount of damage dealt by the Mutant Snowman's ice chunk throwing attack")
+        public double mutantSnowmanIceChunkDamage = 6.0D;
+
         @Config.Name("Mutant Snowman Knockback Resistance")
         @Config.Comment("The amount of knockback resistance the Mutant Snowman has")
         @Config.RangeDouble(min = 0.0D, max = 1.0D)
@@ -207,16 +273,30 @@ public class MBConfig {
         @Config.Comment("The amount of movement speed the Mutant Snowman has")
         public double mutantSnowmanMovementSpeed = 0.26D;
 
+        @Config.Name("Mutant Snowman Nether Weakness")
+        @Config.Comment("Allows the Mutant Snowman to take damage while in the Nether")
+        @Config.RequiresMcRestart
+        public boolean mutantSnowmanNetherWeakness = false;
+
         @Config.Name("Mutant Snowman Swim Speed")
         @Config.Comment("The amount of swim speed the Mutant Snowman has")
         public double mutantSnowmanSwimSpeed = 1.0D;
 
+        @Config.Name("Mutant Snowman Water Weakness")
+        @Config.Comment("Allows the Mutant Snowman to take damage while in water or when exposed to rain")
+        @Config.RequiresMcRestart
+        public boolean mutantSnowmanWaterWeakness = false;
+
         @Config.Name("Mutant Zombie Armor")
         @Config.Comment("The amount of armor the Mutant Zombie has")
-        public double mutantZombieArmor = 3.0D;
+        public double mutantZombieArmor = 12.0D;
 
         @Config.Name("Mutant Zombie Attack Damage")
-        @Config.Comment("The amount of damage dealt by the Mutant Zombie")
+        @Config.Comment
+                ({
+                        "The amount of damage dealt by the Mutant Zombie",
+                        "This also affects the damage dealt by the Mutant Zombie's throw attack"
+                })
         public double mutantZombieAttackDamage = 12.0D;
 
         @Config.Name("Mutant Zombie Follow Range")
@@ -245,6 +325,10 @@ public class MBConfig {
         @Config.Name("Mutant Zombie Movement Speed")
         @Config.Comment("The amount of movement speed the Mutant Zombie has")
         public double mutantZombieMovementSpeed = 0.26D;
+
+        @Config.Name("Mutant Zombie Roar Damage")
+        @Config.Comment("The amount of damage dealt by the Mutant Zombie's roar attack")
+        public double mutantZombieRoarDamage = 3.0D;
 
         @Config.Name("Mutant Zombie Spawn Probability")
         @Config.Comment

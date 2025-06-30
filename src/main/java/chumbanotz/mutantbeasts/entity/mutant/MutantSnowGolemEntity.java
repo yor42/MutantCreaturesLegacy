@@ -161,10 +161,10 @@ public class MutantSnowGolemEntity extends EntityGolem implements IRangedAttackM
             this.isThrowing = false;
             this.throwingTick = 0;
         }
-        if (this.ticksExisted % 20 == 0 && this.isWet()) {
+        if (this.ticksExisted % 20 == 0 && this.isWet() && MBConfig.ENTITIES.mutantSnowmanWaterWeakness) {
             this.attackEntityFrom(DamageSource.DROWN, 1.0f);
         }
-        if (this.world.provider.isNether()) {
+        if (this.world.provider.isNether() && MBConfig.ENTITIES.mutantSnowmanNetherWeakness) {
             if (this.rand.nextFloat() > Math.min(80.0f, this.getHealth()) * 0.01f) {
                 this.world.spawnParticle(EnumParticleTypes.WATER_DROP, this.posX + (double) (this.rand.nextFloat() * this.width * 1.5f) - (double) this.width, this.posY - 0.15 + (double) (this.rand.nextFloat() * this.height), this.posZ + (double) (this.rand.nextFloat() * this.width * 1.5f) - (double) this.width, 0.0, 0.0, 0.0, new int[0]);
             }

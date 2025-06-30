@@ -12,9 +12,6 @@ import chumbanotz.mutantbeasts.util.MBSoundEvents;
 import chumbanotz.mutantbeasts.util.MutatedExplosion;
 import io.netty.buffer.ByteBuf;
 
-import java.lang.invoke.LambdaMetafactory;
-import java.util.function.Function;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -146,7 +143,7 @@ public class MutantCreeperEntity extends EntityCreeper implements IEntityAdditio
     protected void updateFallState(double y, boolean onGroundIn, IBlockState state, BlockPos pos) {
         super.updateFallState(y, onGroundIn, state, pos);
         if (!this.world.isRemote && this.isJumpAttacking() && (onGroundIn || state.getMaterial().isLiquid() || state.getMaterial() == Material.WEB)) {
-            MutatedExplosion.create(this, this.getPowered() ? 6.0f : 4.0f, false, MBConfig.ENTITIES.mutantCreeperDestroysTerrain);
+            MutatedExplosion.create(this, this.getPowered() ? (float) MBConfig.ENTITIES.mutantCreeperJumpingStrengthCharged : (float) MBConfig.ENTITIES.mutantCreeperJumpingStrength, false, MBConfig.ENTITIES.mutantCreeperJumpingDestroysTerrain);
             this.setJumpAttacking(false);
         }
     }
@@ -266,7 +263,7 @@ public class MutantCreeperEntity extends EntityCreeper implements IEntityAdditio
     @Override
     protected void onDeathUpdate() {
         ++this.deathTime;
-        float explosionPower = this.getPowered() ? 12.0f : 8.0f;
+        float explosionPower = this.getPowered() ? (float) MBConfig.ENTITIES.mutantCreeperDeathStrengthCharged : (float) MBConfig.ENTITIES.mutantCreeperDeathStrength;
         float radius = explosionPower * 1.5f;
         for (Entity entity : this.world.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox().grow(radius), EntitySelectors.CAN_AI_TARGET)) {
             double x = this.posX - entity.posX;
@@ -282,7 +279,7 @@ public class MutantCreeperEntity extends EntityCreeper implements IEntityAdditio
         this.posZ += (double) (this.rand.nextFloat() * 0.2f) - (double) 0.1f;
         if (this.deathTime >= 100) {
             if (!this.world.isRemote) {
-                MutatedExplosion.create(this, explosionPower, this.isBurning(), MBConfig.ENTITIES.mutantCreeperDestroysTerrain);
+                MutatedExplosion.create(this, explosionPower, this.isBurning(), MBConfig.ENTITIES.mutantCreeperDeathDestroysTerrain);
                 EntityUtil.spawnLingeringCloud(this);
                 EntityUtil.dropExperience(this, this.recentlyHit, this::getExperiencePoints, this.attackingPlayer);
                 super.onDeath(this.deathCause != null ? this.deathCause : DamageSource.GENERIC);

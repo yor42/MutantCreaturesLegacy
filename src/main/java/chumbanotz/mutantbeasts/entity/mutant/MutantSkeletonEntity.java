@@ -168,7 +168,7 @@ public class MutantSkeletonEntity extends EntityMob implements IAnimatedEntity {
         super.onDeath(cause);
         if (!this.world.isRemote) {
             for (EntityLivingBase entityLivingBase : this.world.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().grow(3.0, 2.0, 3.0))) {
-                entityLivingBase.attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) this), 7.0f);
+                entityLivingBase.attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) this), (float) MBConfig.ENTITIES.mutantSkeletonDeathDamage);
             }
             for (int i = 0; i < 18; ++i) {
                 int j = i;
@@ -310,7 +310,7 @@ public class MutantSkeletonEntity extends EntityMob implements IAnimatedEntity {
                     shot.setSpeed(1.2f - MutantSkeletonEntity.this.rand.nextFloat() * 0.1f);
                     shot.setClones(2);
                     shot.randomize(3.0f);
-                    shot.setDamage(5 + MutantSkeletonEntity.this.rand.nextInt(5));
+                    shot.setDamage((float) MBConfig.ENTITIES.mutantSkeletonMultishotDamage);
                     this.shots.add(shot);
                 }
                 MutantSkeletonEntity.this.playSound(SoundEvents.ENTITY_ARROW_SHOOT, 1.0f, 1.0f / (MutantSkeletonEntity.this.rand.nextFloat() * 0.4f + 1.2f) + 0.25f);
@@ -402,8 +402,7 @@ public class MutantSkeletonEntity extends EntityMob implements IAnimatedEntity {
                 this.attackTarget.dismountRidingEntity();
             }
             if (MutantSkeletonEntity.this.attackTick == 6) {
-                float damage = (float) MutantSkeletonEntity.this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
-                this.attackTarget.attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) MutantSkeletonEntity.this), damage > 0.0f ? damage + 5.0f : 0.0f);
+                this.attackTarget.attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) MutantSkeletonEntity.this), (float) MBConfig.ENTITIES.mutantSkeletonConstrictDamage);
                 this.attackTarget.motionX = (1.0f + MutantSkeletonEntity.this.getRNG().nextFloat() * 0.4f) * (float) (MutantSkeletonEntity.this.getRNG().nextBoolean() ? 1 : -1);
                 this.attackTarget.motionY = 0.4f + MutantSkeletonEntity.this.getRNG().nextFloat() * 0.8f;
                 this.attackTarget.motionZ = (1.0f + MutantSkeletonEntity.this.getRNG().nextFloat() * 0.4f) * (float) (MutantSkeletonEntity.this.getRNG().nextBoolean() ? 1 : -1);

@@ -618,7 +618,7 @@ public class MutantZombieEntity extends EntityMob implements IEntityAdditionalSp
                     entity.motionX = x / d * (double) 0.7f;
                     entity.motionY = 0.3f;
                     entity.motionZ = z / d * (double) 0.7f;
-                    entity.attackEntityFrom(DamageSource.causeMobDamage(MutantZombieEntity.this).setDamageBypassesArmor().setDamageIsAbsolute(), 2 + MutantZombieEntity.this.rand.nextInt(2));
+                    entity.attackEntityFrom(DamageSource.causeMobDamage(MutantZombieEntity.this).setDamageBypassesArmor().setDamageIsAbsolute(), (float) MBConfig.ENTITIES.mutantZombieRoarDamage);
                     EntityUtil.sendPlayerVelocityPacket(entity);
                 }
             }

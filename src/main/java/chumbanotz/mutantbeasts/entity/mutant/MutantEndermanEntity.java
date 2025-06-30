@@ -278,7 +278,7 @@ public class MutantEndermanEntity extends EntityMob implements IEntityAdditional
                     continue;
                 }
                 if (this.attackTick == 40) {
-                    entity.attackEntityFrom(DamageSource.causeMobDamage(this).setDamageBypassesArmor().setMagicDamage(), 4.0f);
+                    entity.attackEntityFrom(DamageSource.causeMobDamage(this).setDamageBypassesArmor().setMagicDamage(), (float) MBConfig.ENTITIES.mutantEndermanScreamDamage);
                     if (entity instanceof EntityLiving) {
                         EntityLiving living = (EntityLiving) entity;
                         living.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 120, 3));
@@ -364,13 +364,13 @@ public class MutantEndermanEntity extends EntityMob implements IEntityAdditional
     private void updateTeleport() {
         EntityLivingBase entity = this.getAttackTarget();
         this.teleportByChance(entity == null ? 1600 : 800, entity);
-        if (this.isInWater() || this.fallDistance > 3.0f || entity != null && (this.isRidingSameEntity(entity) || this.getDistanceSq(entity) > 1024.0 || !this.hasPath() && !this.getEntitySenses().canSee(entity))) {
+        if ((this.isInWater() && MBConfig.ENTITIES.mutantEndermanWaterWeakness) || this.fallDistance > 3.0f || entity != null && (this.isRidingSameEntity(entity) || this.getDistanceSq(entity) > 1024.0 || !this.hasPath() && !this.getEntitySenses().canSee(entity))) {
             this.teleportByChance(10, entity);
         }
     }
 
     protected void updateAITasks() {
-        if (this.ticksExisted % 100 == 0 && !this.isClone() && this.isWet()) {
+        if (this.ticksExisted % 100 == 0 && !this.isClone() && this.isWet() && MBConfig.ENTITIES.mutantEndermanWaterWeakness) {
             this.attackEntityFrom(DamageSource.DROWN, 1.0f);
         }
         if (this.dirty >= 0) {
@@ -896,7 +896,7 @@ public class MutantEndermanEntity extends EntityMob implements IEntityAdditional
                 EntityUtil.sendParticlePacket(this.attackTarget, MBParticles.ENDERSOUL, 256);
                 this.attackTarget.setPositionAndUpdate(x, y, z);
                 this.attackTarget.world.playSound(null, x, y, z, SoundEvents.ENTITY_GENERIC_EXPLODE, this.attackTarget.getSoundCategory(), 1.2f, 0.9f + this.attackTarget.getRNG().nextFloat() * 0.2f);
-                this.attackTarget.attackEntityFrom(DamageSource.causeMobDamage(MutantEndermanEntity.this).setDamageBypassesArmor().setMagicDamage(), 6.0f);
+                this.attackTarget.attackEntityFrom(DamageSource.causeMobDamage(MutantEndermanEntity.this).setDamageBypassesArmor().setMagicDamage(), (float) MBConfig.ENTITIES.mutantEndermanTelesmashDamage);
             }
         }
 
@@ -1158,7 +1158,7 @@ public class MutantEndermanEntity extends EntityMob implements IEntityAdditional
         public void resetTask() {
             MutantEndermanEntity.this.setAttackID(0);
             this.attackTarget.dismountRidingEntity();
-            this.attackTarget.attackEntityFrom(DamageSource.causeMobDamage(MutantEndermanEntity.this).setDamageBypassesArmor().setMagicDamage(), 2.0f);
+            this.attackTarget.attackEntityFrom(DamageSource.causeMobDamage(MutantEndermanEntity.this).setDamageBypassesArmor().setMagicDamage(), (float) MBConfig.ENTITIES.mutantEndermanStareDamage);
             this.attackTarget.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 160 + MutantEndermanEntity.this.rand.nextInt(140)));
             double x = MutantEndermanEntity.this.posX - this.attackTarget.posX;
             double z = MutantEndermanEntity.this.posZ - this.attackTarget.posZ;

@@ -1,5 +1,6 @@
 package chumbanotz.mutantbeasts.entity.projectile;
 
+import chumbanotz.mutantbeasts.MBConfig;
 import chumbanotz.mutantbeasts.entity.mutant.MutantSkeletonEntity;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,14 +28,14 @@ extends Entity {
     private static final DataParameter<Float> TARGET_Z = EntityDataManager.createKey(MutantArrowEntity.class, (DataSerializer)DataSerializers.FLOAT);
     private static final DataParameter<Float> SPEED = EntityDataManager.createKey(MutantArrowEntity.class, (DataSerializer)DataSerializers.FLOAT);
     private static final DataParameter<Integer> CLONES = EntityDataManager.createKey(MutantArrowEntity.class, (DataSerializer)DataSerializers.VARINT);
-    private int damage;
+    private float damage;
     private final List<Entity> pointedEntities;
     private PotionEffect potionEffect;
     private EntityLivingBase shooter;
 
     public MutantArrowEntity(World world) {
         super(world);
-        this.damage = 10 + this.rand.nextInt(3);
+        this.damage = (float) MBConfig.ENTITIES.mutantSkeletonArrowDamage;
         this.pointedEntities = new ArrayList<Entity>();
         this.noClip = true;
     }
@@ -114,7 +115,7 @@ extends Entity {
         this.setTargetZ(this.getTargetZ() + (double)((this.rand.nextFloat() - 0.5f) * scale * 2.0f));
     }
 
-    public void setDamage(int damage) {
+    public void setDamage(float damage) {
         this.damage = damage;
     }
 

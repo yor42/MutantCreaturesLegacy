@@ -1,5 +1,6 @@
 package chumbanotz.mutantbeasts.entity.projectile;
 
+import chumbanotz.mutantbeasts.MBConfig;
 import chumbanotz.mutantbeasts.entity.EndersoulFragmentEntity;
 import chumbanotz.mutantbeasts.entity.mutant.MutantEndermanEntity;
 import chumbanotz.mutantbeasts.entity.mutant.MutantSnowGolemEntity;
@@ -231,7 +232,7 @@ IThrowableEntity {
             }
             for (Entity entity : this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().grow(2.5, 2.0, 2.5))) {
                 if (!entity.canBeCollidedWith() || this.thrower.isOnSameTeam(entity) || !(this.getDistanceSq(entity) <= 6.25)) continue;
-                entity.attackEntityFrom(DamageSource.causeIndirectDamage(this, this.thrower), 4.0f + (float)this.rand.nextInt(3));
+                entity.attackEntityFrom(DamageSource.causeIndirectDamage(this, this.thrower), 4.0f + (float) MBConfig.ENTITIES.mutantSnowmanIceChunkDamage);
             }
             if (!this.world.isRemote) {
                 this.playSound(this.blockState.getBlock().getSoundType(this.blockState, this.world, this.getPosition(), this).getBreakSound(), 0.8f, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2f + 0.8f);
@@ -266,7 +267,7 @@ IThrowableEntity {
             }
             for (Entity entity : this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().grow(2.0))) {
                 if (!entity.canBeCollidedWith() || entity.isEntityEqual(this.thrower) || !(this.getDistanceSq(entity) <= 4.0)) continue;
-                entity.attackEntityFrom(DamageSource.causeIndirectDamage(this, this.thrower), 6 + this.rand.nextInt(3));
+                entity.attackEntityFrom(DamageSource.causeIndirectDamage(this, this.thrower), (float) MBConfig.ENTITIES.mutantEndermanBlockDamage);
             }
             this.setDead();
         }
