@@ -1,5 +1,6 @@
 package chumbanotz.mutantbeasts.entity;
 
+import chumbanotz.mutantbeasts.MBConfig;
 import chumbanotz.mutantbeasts.entity.mutant.MutantSkeletonEntity;
 import chumbanotz.mutantbeasts.item.MBItems;
 import chumbanotz.mutantbeasts.util.EntityUtil;
@@ -20,8 +21,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 public class BodyPartEntity
-extends Entity
-implements IEntityAdditionalSpawnData {
+        extends Entity
+        implements IEntityAdditionalSpawnData {
     private int part;
     private final boolean yawPositive;
     private final boolean pitchPositive;
@@ -41,7 +42,7 @@ implements IEntityAdditionalSpawnData {
 
     public BodyPartEntity(World world, EntityLiving owner, int bodyPart) {
         this(world);
-        this.setPosition(owner.posX, owner.posY + (double)(3.2f * (0.25f + this.rand.nextFloat() * 0.5f)), owner.posZ);
+        this.setPosition(owner.posX, owner.posY + (double) (3.2f * (0.25f + this.rand.nextFloat() * 0.5f)), owner.posZ);
         this.part = bodyPart;
         if (owner.isBurning()) {
             this.setFire(EntityUtil.getFire(owner) / 20);
@@ -101,13 +102,13 @@ implements IEntityAdditionalSpawnData {
             this.motionZ *= 0.7;
         }
         if (!this.onGround && !this.isInWeb) {
-            this.rotationYaw += 10.0f * (float)(this.yawPositive ? 1 : -1);
-            this.rotationPitch += 15.0f * (float)(this.pitchPositive ? 1 : -1);
+            this.rotationYaw += 10.0f * (float) (this.yawPositive ? 1 : -1);
+            this.rotationPitch += 15.0f * (float) (this.pitchPositive ? 1 : -1);
             for (Entity entity : this.world.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox(), this::canHarm)) {
                 if (this.isBurning()) {
                     entity.setFire(EntityUtil.getFire(this) / 20);
                 }
-                entity.attackEntityFrom(DamageSource.causeThrownDamage((Entity)this, (Entity)this), 4.0f + (float)this.rand.nextInt(4));
+                entity.attackEntityFrom(DamageSource.causeThrownDamage((Entity) this, (Entity) this), 4.0f + (float) this.rand.nextInt(4));
             }
             if (this.despawnTimer > 0) {
                 --this.despawnTimer;
@@ -115,17 +116,20 @@ implements IEntityAdditionalSpawnData {
         } else {
             ++this.despawnTimer;
         }
-        if (!this.world.isRemote && this.despawnTimer >= 6000) {
+        if (!this.world.isRemote && this.despawnTimer >= (MBConfig.ENTITIES.mutantSkeletonBoneDrops ? 6000 : 100)) {
             this.setDead();
         }
     }
 
     public boolean processInitialInteract(EntityPlayer player, EnumHand hand) {
-        if (!this.world.isRemote && this.world.getGameRules().getBoolean("doEntityDrops")) {
-            this.dropItem(this.getItemByPart(), 1).setNoPickupDelay();
+        if (MBConfig.ENTITIES.mutantSkeletonBoneDrops) {
+            if (!this.world.isRemote && this.world.getGameRules().getBoolean("doEntityDrops")) {
+                this.dropItem(this.getItemByPart(), 1).setNoPickupDelay();
+            }
+            player.swingArm(hand);
+            this.setDead();
         }
-        player.swingArm(hand);
-        this.setDead();
+
         return true;
     }
 
@@ -153,12 +157,12 @@ implements IEntityAdditionalSpawnData {
     }
 
     public String getName() {
-        return this.hasCustomName() ? this.getCustomNameTag() : I18n.translateToLocal((String)(this.getItemByPart().getTranslationKey() + ".name"));
+        return this.hasCustomName() ? this.getCustomNameTag() : I18n.translateToLocal((String) (this.getItemByPart().getTranslationKey() + ".name"));
     }
 
     protected void writeEntityToNBT(NBTTagCompound compound) {
-        compound.setByte("Part", (byte)this.part);
-        compound.setShort("DespawnTimer", (short)this.despawnTimer);
+        compound.setByte("Part", (byte) this.part);
+        compound.setShort("DespawnTimer", (short) this.despawnTimer);
     }
 
     protected void readEntityFromNBT(NBTTagCompound compound) {

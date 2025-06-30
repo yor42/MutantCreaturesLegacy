@@ -209,6 +209,14 @@ public class MBConfig {
         @Config.Comment("The amount of damage dealt by the Mutant Skeleton")
         public double mutantSkeletonAttackDamage = 4.0D;
 
+        @Config.Name("Mutant Skeleton Bone Drops")
+        @Config.Comment
+                ({
+                        "Allows you to pick up the bones dropped by the Mutant Skeleton",
+                        "While disabled, the parts spawned during death will be decorative and despawn quickly"
+                })
+        public boolean mutantSkeletonBoneDrops = true;
+
         @Config.Name("Mutant Skeleton Constrict (Ribcage) Damage")
         @Config.Comment("The amount of damage dealt by the Mutant Skeleton's constrict (ribcage) attack")
         public double mutantSkeletonConstrictDamage = 9.0D;
