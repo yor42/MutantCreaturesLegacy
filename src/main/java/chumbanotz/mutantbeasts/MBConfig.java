@@ -84,7 +84,7 @@ public class MBConfig {
         public double mutantCreeperJumpingStrength = 4.0D;
 
         @Config.Name("Mutant Creeper Jumping Explosion Strength (Charged)")
-        @Config.Comment("The strength of the explosion caused by the Mutant Creeper's jump attacks while charged")
+        @Config.Comment("The strength of the explosion caused by the Mutant Creeper's jump attack while charged")
         public double mutantCreeperJumpingStrengthCharged = 6.0D;
 
         @Config.Name("Mutant Creeper Knockback Resistance")
@@ -209,8 +209,8 @@ public class MBConfig {
         @Config.Comment("The amount of damage dealt by the Mutant Skeleton")
         public double mutantSkeletonAttackDamage = 4.0D;
 
-        @Config.Name("Mutant Skeleton Constrict Damage")
-        @Config.Comment("The amount of damage dealt by the Mutant Skeleton's constrict attack")
+        @Config.Name("Mutant Skeleton Constrict (Ribcage) Damage")
+        @Config.Comment("The amount of damage dealt by the Mutant Skeleton's constrict (ribcage) attack")
         public double mutantSkeletonConstrictDamage = 9.0D;
 
         @Config.Name("Mutant Skeleton Death Damage")
