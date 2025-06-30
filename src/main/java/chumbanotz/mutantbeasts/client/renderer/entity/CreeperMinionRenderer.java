@@ -1,5 +1,6 @@
 package chumbanotz.mutantbeasts.client.renderer.entity;
 
+import chumbanotz.mutantbeasts.MutantBeasts;
 import chumbanotz.mutantbeasts.client.model.CreeperMinionModel;
 import chumbanotz.mutantbeasts.client.renderer.entity.layers.LayerCreeperCharge;
 import chumbanotz.mutantbeasts.entity.CreeperMinionEntity;
@@ -11,7 +12,7 @@ import net.minecraft.util.math.MathHelper;
 
 public class CreeperMinionRenderer
 extends RenderLiving<CreeperMinionEntity> {
-    public static final ResourceLocation TEXTURE = new ResourceLocation("textures/entity/creeper/creeper.png");
+    public static final ResourceLocation TEXTURE = MutantBeasts.getEntityTexture("creeper_minion");
 
     public CreeperMinionRenderer(RenderManager renderManagerIn) {
         super(renderManagerIn, new CreeperMinionModel(), 0.25f);
