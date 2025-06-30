@@ -313,7 +313,8 @@ public class MBConfig {
                 ({
                         "The amount of lives the Mutant Zombie has",
                         "Each time the Mutant Zombie is defeated it will lose one live",
-                        "It will keep reviving itself until it is out of lives or set on fire"
+                        "It will keep reviving itself until it is out of lives or set on fire",
+                        "Set to 1 to disable extra lives and have the Mutant Zombie die normally"
                 })
         @Config.RangeInt(min = 1)
         public int mutantZombieLives = 3;
