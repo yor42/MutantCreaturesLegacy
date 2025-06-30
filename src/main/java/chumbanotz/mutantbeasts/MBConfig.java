@@ -205,6 +205,14 @@ public class MBConfig {
         @Config.Comment("The amount of damage dealt by the Mutant Skeleton's arrows")
         public double mutantSkeletonArrowDamage = 12.0D;
 
+        @Config.Name("Mutant Skeleton Arrow Phasing")
+        @Config.Comment
+                ({
+                        "Allows arrows fired by the Mutant Skeleton to hit through multiple mobs",
+                        "Setting to false will only make their arrows hit one mob at a time"
+                })
+        public boolean mutantSkeletonArrowPhasing = true;
+
         @Config.Name("Mutant Skeleton Attack Damage")
         @Config.Comment("The amount of damage dealt by the Mutant Skeleton")
         public double mutantSkeletonAttackDamage = 4.0D;

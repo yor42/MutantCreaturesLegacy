@@ -2,8 +2,10 @@ package chumbanotz.mutantbeasts.entity.projectile;
 
 import chumbanotz.mutantbeasts.MBConfig;
 import chumbanotz.mutantbeasts.entity.mutant.MutantSkeletonEntity;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MultiPartEntityPart;
@@ -21,13 +23,12 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class MutantArrowEntity
-extends Entity {
-    private static final DataParameter<Float> TARGET_X = EntityDataManager.createKey(MutantArrowEntity.class, (DataSerializer)DataSerializers.FLOAT);
-    private static final DataParameter<Float> TARGET_Y = EntityDataManager.createKey(MutantArrowEntity.class, (DataSerializer)DataSerializers.FLOAT);
-    private static final DataParameter<Float> TARGET_Z = EntityDataManager.createKey(MutantArrowEntity.class, (DataSerializer)DataSerializers.FLOAT);
-    private static final DataParameter<Float> SPEED = EntityDataManager.createKey(MutantArrowEntity.class, (DataSerializer)DataSerializers.FLOAT);
-    private static final DataParameter<Integer> CLONES = EntityDataManager.createKey(MutantArrowEntity.class, (DataSerializer)DataSerializers.VARINT);
+public class MutantArrowEntity extends Entity {
+    private static final DataParameter<Float> TARGET_X = EntityDataManager.createKey(MutantArrowEntity.class, (DataSerializer) DataSerializers.FLOAT);
+    private static final DataParameter<Float> TARGET_Y = EntityDataManager.createKey(MutantArrowEntity.class, (DataSerializer) DataSerializers.FLOAT);
+    private static final DataParameter<Float> TARGET_Z = EntityDataManager.createKey(MutantArrowEntity.class, (DataSerializer) DataSerializers.FLOAT);
+    private static final DataParameter<Float> SPEED = EntityDataManager.createKey(MutantArrowEntity.class, (DataSerializer) DataSerializers.FLOAT);
+    private static final DataParameter<Integer> CLONES = EntityDataManager.createKey(MutantArrowEntity.class, (DataSerializer) DataSerializers.VARINT);
     private float damage;
     private final List<Entity> pointedEntities;
     private PotionEffect potionEffect;
@@ -48,7 +49,7 @@ extends Entity {
             this.setTargetY(target.posY);
             this.setTargetZ(target.posZ);
         }
-        double yPos = shooter.posY + (double)shooter.getEyeHeight();
+        double yPos = shooter.posY + (double) shooter.getEyeHeight();
         if (shooter instanceof MutantSkeletonEntity) {
             yPos = shooter.posY + 1.28;
         }
@@ -57,8 +58,8 @@ extends Entity {
         double y = this.getTargetY() - this.posY;
         double z = this.getTargetZ() - this.posZ;
         double d = Math.sqrt(x * x + z * z);
-        this.rotationYaw = 180.0f + (float)Math.toDegrees(Math.atan2(x, z));
-        this.rotationPitch = (float)Math.toDegrees(Math.atan2(y, d));
+        this.rotationYaw = 180.0f + (float) Math.toDegrees(Math.atan2(x, z));
+        this.rotationPitch = (float) Math.toDegrees(Math.atan2(y, d));
     }
 
     protected void entityInit() {
@@ -74,7 +75,7 @@ extends Entity {
     }
 
     public void setTargetX(double x) {
-        this.dataManager.set(TARGET_X, Float.valueOf((float)x));
+        this.dataManager.set(TARGET_X, Float.valueOf((float) x));
     }
 
     public double getTargetY() {
@@ -82,7 +83,7 @@ extends Entity {
     }
 
     public void setTargetY(double y) {
-        this.dataManager.set(TARGET_Y, Float.valueOf((float)y));
+        this.dataManager.set(TARGET_Y, Float.valueOf((float) y));
     }
 
     public double getTargetZ() {
@@ -90,7 +91,7 @@ extends Entity {
     }
 
     public void setTargetZ(double z) {
-        this.dataManager.set(TARGET_Z, Float.valueOf((float)z));
+        this.dataManager.set(TARGET_Z, Float.valueOf((float) z));
     }
 
     public float getSpeed() {
@@ -110,9 +111,9 @@ extends Entity {
     }
 
     public void randomize(float scale) {
-        this.setTargetX(this.getTargetX() + (double)((this.rand.nextFloat() - 0.5f) * scale * 2.0f));
-        this.setTargetY(this.getTargetY() + (double)((this.rand.nextFloat() - 0.5f) * scale * 2.0f));
-        this.setTargetZ(this.getTargetZ() + (double)((this.rand.nextFloat() - 0.5f) * scale * 2.0f));
+        this.setTargetX(this.getTargetX() + (double) ((this.rand.nextFloat() - 0.5f) * scale * 2.0f));
+        this.setTargetY(this.getTargetY() + (double) ((this.rand.nextFloat() - 0.5f) * scale * 2.0f));
+        this.setTargetZ(this.getTargetZ() + (double) ((this.rand.nextFloat() - 0.5f) * scale * 2.0f));
     }
 
     public void setDamage(float damage) {
@@ -129,11 +130,11 @@ extends Entity {
         double y = this.getTargetY() - this.posY;
         double z = this.getTargetZ() - this.posZ;
         double d = Math.sqrt(x * x + z * z);
-        this.rotationYaw = 180.0f + (float)Math.toDegrees(Math.atan2(x, z));
+        this.rotationYaw = 180.0f + (float) Math.toDegrees(Math.atan2(x, z));
         if (this.rotationYaw > 360.0f) {
             this.rotationYaw -= 360.0f;
         }
-        this.rotationPitch = (float)Math.toDegrees(Math.atan2(y, d));
+        this.rotationPitch = (float) Math.toDegrees(Math.atan2(y, d));
         if (!this.world.isRemote) {
             if (this.ticksExisted == 2) {
                 this.hitEntities(0);
@@ -162,9 +163,9 @@ extends Entity {
         double dy = (targetY - this.posY) / dist;
         double dz = (targetZ - this.posZ) / dist;
         for (int i = offset; i < offset + 64; ++i) {
-            double x = this.posX + dx * (double)i * 0.5;
-            double y = this.posY + dy * (double)i * 0.5;
-            double z = this.posZ + dz * (double)i * 0.5;
+            double x = this.posX + dx * (double) i * 0.5;
+            double y = this.posY + dy * (double) i * 0.5;
+            double z = this.posZ + dz * (double) i * 0.5;
             AxisAlignedBB box = new AxisAlignedBB(x, y, z, x, y, z).grow(0.3);
             this.pointedEntities.addAll(this.world.getEntitiesWithinAABBExcludingEntity(this.shooter, box));
         }
@@ -172,18 +173,20 @@ extends Entity {
 
     private void handleEntities() {
         this.pointedEntities.remove(this);
-        DamageSource damageSource = new EntityDamageSourceIndirect("arrow", this, this.shooter){
+        DamageSource damageSource = new EntityDamageSourceIndirect("arrow", this, this.shooter) {
 
             public Vec3d getDamageLocation() {
                 return null;
             }
         }.setProjectile();
         for (Entity entity : this.pointedEntities) {
-            if ((!(entity instanceof MultiPartEntityPart) || !entity.attackEntityFrom(DamageSource.GENERIC.setExplosion(), this.damage)) && (!entity.canBeCollidedWith() || !entity.attackEntityFrom(damageSource, this.damage))) continue;
+            if ((!(entity instanceof MultiPartEntityPart) || !entity.attackEntityFrom(DamageSource.GENERIC.setExplosion(), this.damage)) && (!entity.canBeCollidedWith() || !entity.attackEntityFrom(damageSource, this.damage)))
+                continue;
             this.applyEnchantments(this.shooter, entity);
             this.world.playSound(null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_ARROW_HIT, this.getSoundCategory(), 1.0f, 1.2f / (this.rand.nextFloat() * 0.2f + 0.9f));
             if (this.potionEffect == null || !(entity instanceof EntityLivingBase)) continue;
-            ((EntityLivingBase)entity).addPotionEffect(this.potionEffect);
+            ((EntityLivingBase) entity).addPotionEffect(this.potionEffect);
+            if (!MBConfig.ENTITIES.mutantSkeletonArrowPhasing) this.setDead();
         }
         this.pointedEntities.clear();
     }

@@ -35,8 +35,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
-public class ChemicalXEntity
-extends EntityThrowable {
+public class ChemicalXEntity extends EntityThrowable {
     private static final Map<Class<? extends EntityLiving>, Class<? extends EntityLiving>> MUTATIONS = (Map<Class<? extends EntityLiving>, Class<? extends EntityLiving>>)
             (new ImmutableMap.Builder())
                     .put(EntityCreeper.class, MutantCreeperEntity.class)

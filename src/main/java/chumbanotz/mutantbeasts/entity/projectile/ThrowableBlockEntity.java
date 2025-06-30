@@ -42,8 +42,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.common.registry.IThrowableEntity;
 
-public class ThrowableBlockEntity
-extends EntityThrowable
+public class ThrowableBlockEntity extends EntityThrowable
 implements IEntityAdditionalSpawnData,
 IThrowableEntity {
     private static final DataParameter<Boolean> HELD = EntityDataManager.createKey(ThrowableBlockEntity.class, (DataSerializer)DataSerializers.BOOLEAN);
