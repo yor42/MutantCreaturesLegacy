@@ -232,7 +232,7 @@ IThrowableEntity {
             }
             for (Entity entity : this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().grow(2.5, 2.0, 2.5))) {
                 if (!entity.canBeCollidedWith() || this.thrower.isOnSameTeam(entity) || !(this.getDistanceSq(entity) <= 6.25)) continue;
-                entity.attackEntityFrom(DamageSource.causeIndirectDamage(this, this.thrower), 4.0f + (float) MBConfig.ENTITIES.mutantSnowmanIceChunkDamage);
+                entity.attackEntityFrom(DamageSource.causeIndirectDamage(this, this.thrower), 4.0f + (float) MBConfig.ENTITIES.mutantSnowGolemIceChunkDamage);
             }
             if (!this.world.isRemote) {
                 this.playSound(this.blockState.getBlock().getSoundType(this.blockState, this.world, this.getPosition(), this).getBreakSound(), 0.8f, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2f + 0.8f);

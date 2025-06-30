@@ -89,11 +89,11 @@ public class MutantSnowGolemEntity extends EntityGolem implements IRangedAttackM
 
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(MBConfig.ENTITIES.mutantSnowmanArmor);
-        this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(MBConfig.ENTITIES.mutantSnowmanKnockbackResistance);
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(MBConfig.ENTITIES.mutantSnowmanMaxHealth);
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(MBConfig.ENTITIES.mutantSnowmanMovementSpeed);
-        this.getEntityAttribute(SWIM_SPEED).setBaseValue(MBConfig.ENTITIES.mutantSnowmanSwimSpeed);
+        this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(MBConfig.ENTITIES.mutantSnowGolemArmor);
+        this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(MBConfig.ENTITIES.mutantSnowGolemKnockbackResistance);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(MBConfig.ENTITIES.mutantSnowGolemMaxHealth);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(MBConfig.ENTITIES.mutantSnowGolemMovementSpeed);
+        this.getEntityAttribute(SWIM_SPEED).setBaseValue(MBConfig.ENTITIES.mutantSnowGolemSwimSpeed);
     }
 
     protected void entityInit() {
@@ -161,10 +161,10 @@ public class MutantSnowGolemEntity extends EntityGolem implements IRangedAttackM
             this.isThrowing = false;
             this.throwingTick = 0;
         }
-        if (this.ticksExisted % 20 == 0 && this.isWet() && MBConfig.ENTITIES.mutantSnowmanWaterWeakness) {
+        if (this.ticksExisted % 20 == 0 && this.isWet() && MBConfig.ENTITIES.mutantSnowGolemWaterWeakness) {
             this.attackEntityFrom(DamageSource.DROWN, 1.0f);
         }
-        if (this.world.provider.isNether() && MBConfig.ENTITIES.mutantSnowmanNetherWeakness) {
+        if (this.world.provider.isNether() && MBConfig.ENTITIES.mutantSnowGolemNetherWeakness) {
             if (this.rand.nextFloat() > Math.min(80.0f, this.getHealth()) * 0.01f) {
                 this.world.spawnParticle(EnumParticleTypes.WATER_DROP, this.posX + (double) (this.rand.nextFloat() * this.width * 1.5f) - (double) this.width, this.posY - 0.15 + (double) (this.rand.nextFloat() * this.height), this.posZ + (double) (this.rand.nextFloat() * this.width * 1.5f) - (double) this.width, 0.0, 0.0, 0.0, new int[0]);
             }

@@ -252,40 +252,40 @@ public class MBConfig {
         @Config.Comment("The amount of swim speed the Mutant Skeleton has")
         public double mutantSkeletonSwimSpeed = 5.0D;
 
-        @Config.Name("Mutant Snowman Armor")
-        @Config.Comment("The amount of armor the Mutant Snowman has")
-        public double mutantSnowmanArmor = 0.0D;
+        @Config.Name("Mutant Snow Golem Armor")
+        @Config.Comment("The amount of armor the Mutant Snow Golem has")
+        public double mutantSnowGolemArmor = 0.0D;
 
-        @Config.Name("Mutant Snowman Ice Chunk Damage")
-        @Config.Comment("The amount of damage dealt by the Mutant Snowman's ice chunk throwing attack")
-        public double mutantSnowmanIceChunkDamage = 6.0D;
+        @Config.Name("Mutant Snow Golem Ice Chunk Damage")
+        @Config.Comment("The amount of damage dealt by the Mutant Snow Golem's ice chunk throwing attack")
+        public double mutantSnowGolemIceChunkDamage = 6.0D;
 
-        @Config.Name("Mutant Snowman Knockback Resistance")
-        @Config.Comment("The amount of knockback resistance the Mutant Snowman has")
+        @Config.Name("Mutant Snow Golem Knockback Resistance")
+        @Config.Comment("The amount of knockback resistance the Mutant Snow Golem has")
         @Config.RangeDouble(min = 0.0D, max = 1.0D)
-        public double mutantSnowmanKnockbackResistance = 1.0D;
+        public double mutantSnowGolemKnockbackResistance = 1.0D;
 
-        @Config.Name("Mutant Snowman Max Health")
-        @Config.Comment("The amount of maximum health the Mutant Snowman has")
-        public double mutantSnowmanMaxHealth = 80.0D;
+        @Config.Name("Mutant Snow Golem Max Health")
+        @Config.Comment("The amount of maximum health the Mutant Snow Golem has")
+        public double mutantSnowGolemMaxHealth = 80.0D;
 
-        @Config.Name("Mutant Snowman Movement Speed")
-        @Config.Comment("The amount of movement speed the Mutant Snowman has")
-        public double mutantSnowmanMovementSpeed = 0.26D;
+        @Config.Name("Mutant Snow Golem Movement Speed")
+        @Config.Comment("The amount of movement speed the Mutant Snow Golem has")
+        public double mutantSnowGolemMovementSpeed = 0.26D;
 
-        @Config.Name("Mutant Snowman Nether Weakness")
-        @Config.Comment("Allows the Mutant Snowman to take damage while in the Nether")
+        @Config.Name("Mutant Snow Golem Nether Weakness")
+        @Config.Comment("Allows the Mutant Snow Golem to take damage while in the Nether")
         @Config.RequiresMcRestart
-        public boolean mutantSnowmanNetherWeakness = false;
+        public boolean mutantSnowGolemNetherWeakness = false;
 
-        @Config.Name("Mutant Snowman Swim Speed")
-        @Config.Comment("The amount of swim speed the Mutant Snowman has")
-        public double mutantSnowmanSwimSpeed = 1.0D;
+        @Config.Name("Mutant Snow Golem Swim Speed")
+        @Config.Comment("The amount of swim speed the Mutant Snow Golem has")
+        public double mutantSnowGolemSwimSpeed = 1.0D;
 
-        @Config.Name("Mutant Snowman Water Weakness")
-        @Config.Comment("Allows the Mutant Snowman to take damage while in water or when exposed to rain")
+        @Config.Name("Mutant Snow Golem Water Weakness")
+        @Config.Comment("Allows the Mutant Snow Golem to take damage while in water or when exposed to rain")
         @Config.RequiresMcRestart
-        public boolean mutantSnowmanWaterWeakness = false;
+        public boolean mutantSnowGolemWaterWeakness = false;
 
         @Config.Name("Mutant Zombie Armor")
         @Config.Comment("The amount of armor the Mutant Zombie has")
