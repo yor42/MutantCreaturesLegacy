@@ -100,6 +100,15 @@ public class MBConfig {
         @Config.Comment("The amount of movement speed the Mutant Creeper has")
         public double mutantCreeperMovementSpeed = 0.26D;
 
+        @Config.Name("Mutant Creeper Out of Combat Health Regen")
+        @Config.Comment
+                ({
+                        "Makes the Mutant Creeper regenerate health quickly when it has no target",
+                        "This will not happen to players in Creative mode"
+                })
+        @Config.RequiresMcRestart
+        public boolean mutantCreeperNoCombatRegen = true;
+
         @Config.Name("Mutant Creeper Egg Spawn")
         @Config.Comment("Allows the Mutant Creeper to spawn a creeper egg on death")
         @Config.RequiresMcRestart
@@ -155,6 +164,15 @@ public class MBConfig {
         @Config.Name("Mutant Enderman Movement Speed")
         @Config.Comment("The amount of movement speed the Mutant Enderman has")
         public double mutantEndermanMovementSpeed = 0.3D;
+
+        @Config.Name("Mutant Enderman Out of Combat Health Regen")
+        @Config.Comment
+                ({
+                        "Makes the Mutant Enderman regenerate health quickly when it has no target",
+                        "This will not happen to players in Creative mode"
+                })
+        @Config.RequiresMcRestart
+        public boolean mutantEndermanNoCombatRegen = true;
 
         @Config.Name("Mutant Enderman Renders Teleport")
         @Config.Comment
@@ -254,6 +272,15 @@ public class MBConfig {
         @Config.Comment("The amount of damage dealt by the Mutant Skeleton's multishot arrows")
         public double mutantSkeletonMultishotDamage = 9.0D;
 
+        @Config.Name("Mutant Skeleton Out of Combat Health Regen")
+        @Config.Comment
+                ({
+                        "Makes the Mutant Skeleton regenerate health quickly when it has no target",
+                        "This will not happen to players in Creative mode"
+                })
+        @Config.RequiresMcRestart
+        public boolean mutantSkeletonNoCombatRegen = true;
+
         @Config.Name("Mutant Skeleton Spawn Probability")
         @Config.Comment
                 ({
@@ -342,6 +369,15 @@ public class MBConfig {
         @Config.Name("Mutant Zombie Movement Speed")
         @Config.Comment("The amount of movement speed the Mutant Zombie has")
         public double mutantZombieMovementSpeed = 0.26D;
+
+        @Config.Name("Mutant Zombie Out of Combat Health Regen")
+        @Config.Comment
+                ({
+                        "Makes the Mutant Zombie regenerate health quickly when it has no target",
+                        "This will not happen to players in Creative mode"
+                })
+        @Config.RequiresMcRestart
+        public boolean mutantZombieNoCombatRegen = true;
 
         @Config.Name("Mutant Zombie Roar Damage")
         @Config.Comment("The amount of damage dealt by the Mutant Zombie's roar attack")

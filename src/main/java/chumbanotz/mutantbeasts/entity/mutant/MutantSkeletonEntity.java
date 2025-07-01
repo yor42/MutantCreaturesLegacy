@@ -106,6 +106,19 @@ public class MutantSkeletonEntity extends EntityMob implements IAnimatedEntity {
     public void fall(float distance, float damageMultiplier) {
     }
 
+    @Override
+    protected void updateAITasks() {
+        super.updateAITasks();
+
+        // Regenerate health when target is lost except when player is in Creative
+        if (this.getAttackTarget() == null && this.getHealth() < this.getMaxHealth() && MBConfig.ENTITIES.mutantSkeletonNoCombatRegen) {
+            if (this.attackingPlayer != null && this.attackingPlayer.isCreative()) {
+            } else if (this.ticksExisted % 20 == 0) {
+                this.heal(this.getMaxHealth() * 0.2F);
+            }
+        }
+    }
+
     public void handleStatusUpdate(byte id) {
         if (id <= 0) {
             this.attackID = Math.abs(id);

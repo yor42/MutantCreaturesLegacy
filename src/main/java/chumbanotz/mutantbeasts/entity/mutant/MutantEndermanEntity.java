@@ -369,13 +369,18 @@ public class MutantEndermanEntity extends EntityMob implements IEntityAdditional
         }
     }
 
+    @Override
     protected void updateAITasks() {
+        super.updateAITasks();
+
         if (this.ticksExisted % 100 == 0 && !this.isClone() && this.isWet() && MBConfig.ENTITIES.mutantEndermanWaterWeakness) {
             this.attackEntityFrom(DamageSource.DROWN, 1.0f);
         }
+
         if (this.dirty >= 0) {
             ++this.dirty;
         }
+
         if (this.dirty >= 8) {
             this.dirty = -1;
             for (int i = 1; i < this.heldBlock.length; ++i) {
@@ -383,6 +388,15 @@ public class MutantEndermanEntity extends EntityMob implements IEntityAdditional
                 this.sendHoldBlock(i, this.heldBlock[i]);
             }
         }
+
+        // Regenerate health when target is lost except when player is in Creative
+        if (this.getAttackTarget() == null && this.getHealth() < this.getMaxHealth() && MBConfig.ENTITIES.mutantEndermanNoCombatRegen) {
+            if (this.attackingPlayer != null && this.attackingPlayer.isCreative()) {
+            } else if (this.ticksExisted % 20 == 0) {
+                this.heal(this.getMaxHealth() * 0.2F);
+            }
+        }
+
         this.updateBlockFrenzy();
         this.updateTeleport();
     }

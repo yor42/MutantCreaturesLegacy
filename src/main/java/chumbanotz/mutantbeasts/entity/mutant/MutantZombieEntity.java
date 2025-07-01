@@ -231,13 +231,25 @@ public class MutantZombieEntity extends EntityMob implements IEntityAdditionalSp
         }
     }
 
+    @Override
     protected void updateAITasks() {
+        super.updateAITasks();
+
         if (this.getAttackTarget() != null && this.getDistanceSq(this.getAttackTarget()) < 49.0 && Math.abs(this.posY - this.getAttackTarget().posY) <= 4.0) {
             if (this.attackID == 0 && (this.onGround || this.world.containsAnyLiquid(this.getEntityBoundingBox())) && this.rand.nextInt(20) == 0) {
                 this.attackID = 1;
             }
+
             if (this.attackID == 0 && this.getDistanceSq(this.getAttackTarget()) < 1.0 && this.rand.nextInt(125) == 0) {
                 this.attackID = 2;
+            }
+
+            // Regenerate health when target is lost except when player is in Creative
+            if (this.getAttackTarget() == null && this.getHealth() < this.getMaxHealth() && MBConfig.ENTITIES.mutantZombieNoCombatRegen) {
+                if (this.attackingPlayer != null && this.attackingPlayer.isCreative()) {
+                } else if (this.ticksExisted % 20 == 0) {
+                    this.heal(this.getMaxHealth() * 0.2F);
+                }
             }
         }
     }

@@ -149,6 +149,19 @@ public class MutantCreeperEntity extends EntityCreeper implements IEntityAdditio
     }
 
     @Override
+    protected void updateAITasks() {
+        super.updateAITasks();
+
+        // Regenerate health when target is lost except when player is in Creative
+        if (this.getAttackTarget() == null && this.getHealth() < this.getMaxHealth() && MBConfig.ENTITIES.mutantCreeperNoCombatRegen) {
+            if (this.attackingPlayer != null && this.attackingPlayer.isCreative()) {
+            } else if (this.ticksExisted % 20 == 0) {
+                this.heal(this.getMaxHealth() * 0.2F);
+            }
+        }
+    }
+
+    @Override
     public boolean attackEntityAsMob(Entity entityIn) {
         boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue());
         double x = entityIn.posX - this.posX;
