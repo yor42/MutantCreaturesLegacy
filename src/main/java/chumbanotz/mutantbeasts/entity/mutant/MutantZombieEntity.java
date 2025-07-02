@@ -74,7 +74,7 @@ public class MutantZombieEntity extends EntityMob implements IEntityAdditionalSp
         this.stepHeight = 1.0f;
         this.experienceValue = 30;
         this.setSize(1.8f, 3.2f);
-        this.bossInfo = new BossInfoServer(this.getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS);
+        this.bossInfo = new BossInfoServer(this.getDisplayName(), BossInfo.Color.BLUE, BossInfo.Overlay.PROGRESS);
     }
 
     protected void initEntityAI() {
