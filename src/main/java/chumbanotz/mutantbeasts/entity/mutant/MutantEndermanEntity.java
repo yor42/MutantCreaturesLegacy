@@ -48,7 +48,9 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 import javax.annotation.Nullable;
@@ -578,11 +580,13 @@ public class MutantEndermanEntity extends EntityMob implements IEntityAdditional
     }
 
     private boolean teleportTo(double targetX, double targetY, double targetZ) {
+        EnderTeleportEvent event = new EnderTeleportEvent(this, targetX, targetY, targetZ, 0);
+        if (MinecraftForge.EVENT_BUS.post(event)) return false;
         if (!this.isServerWorld()) {
             return false;
         }
         if (this.isClone()) {
-            boolean flag = EntityUtil.teleportTo(this, targetX, targetY, targetZ);
+            boolean flag = EntityUtil.teleportTo(this, event.getTargetX(), event.getTargetY(), event.getTargetZ());
             if (flag) {
                 this.dismountRidingEntity();
                 if (!this.isSilent()) {
@@ -594,7 +598,7 @@ public class MutantEndermanEntity extends EntityMob implements IEntityAdditional
         }
         if (this.attackID == 0) {
             this.attackID = 4;
-            BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos().setPos(targetX, targetY, targetZ);
+            BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos().setPos(event.getTargetX(), event.getTargetY(), event.getTargetZ());
             if (this.world.isBlockLoaded(pos)) {
                 do {
                     pos.move(EnumFacing.DOWN);
