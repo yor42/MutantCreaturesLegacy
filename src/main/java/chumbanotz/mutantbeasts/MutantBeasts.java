@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid="mutantbeasts", name="Mutant Creatures Legacy", version="1.12.2-1.0.0", acceptedMinecraftVersions="[1.12.2]", dependencies="required-after:minecraft;required-after:forge@[14.23.5.2779,);")
+@Mod(modid="mutantbeasts", name="Mutant Creatures Legacy", version="1.12.2-1.0.1", acceptedMinecraftVersions="[1.12.2]", dependencies="required-after:minecraft;required-after:forge@[14.23.5.2779,);")
 public class MutantBeasts {
     public static final String MOD_ID = "mutantbeasts";
     @Mod.Instance(value="mutantbeasts")
