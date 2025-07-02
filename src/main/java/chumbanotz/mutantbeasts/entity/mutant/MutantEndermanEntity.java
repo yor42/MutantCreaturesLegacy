@@ -29,6 +29,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityEndermite;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -45,6 +46,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraft.world.BossInfo;
+import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
@@ -58,6 +61,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MutantEndermanEntity extends EntityMob implements IEntityAdditionalSpawnData {
+    protected final BossInfoServer bossInfo;
     private static final DataParameter<Byte> ACTIVE_ARM = EntityDataManager.createKey(MutantEndermanEntity.class, (DataSerializer) DataSerializers.BYTE);
     private static final DataParameter<Boolean> CLONE = EntityDataManager.createKey(MutantEndermanEntity.class, (DataSerializer) DataSerializers.BOOLEAN);
     public static final int MAX_DEATH_TIME = 280;
@@ -90,6 +94,7 @@ public class MutantEndermanEntity extends EntityMob implements IEntityAdditional
         this.experienceValue = 40;
         this.stepHeight = 1.5f;
         this.setSize(1.2f, 4.2f);
+        this.bossInfo = new BossInfoServer(this.getDisplayName(), BossInfo.Color.PINK, BossInfo.Overlay.PROGRESS);
     }
 
     protected void initEntityAI() {
@@ -401,6 +406,26 @@ public class MutantEndermanEntity extends EntityMob implements IEntityAdditional
 
         this.updateBlockFrenzy();
         this.updateTeleport();
+
+        this.bossInfo.setPercent(this.getHealth() / this.getMaxHealth());
+    }
+
+    @Override
+    public void setCustomNameTag(String name) {
+        super.setCustomNameTag(name);
+        this.bossInfo.setName(this.getDisplayName());
+    }
+
+    @Override
+    public void addTrackingPlayer(EntityPlayerMP player) {
+        super.addTrackingPlayer(player);
+        if (MBConfig.ENTITIES.mutantEndermanBossBar) this.bossInfo.addPlayer(player);
+    }
+
+    @Override
+    public void removeTrackingPlayer(EntityPlayerMP player) {
+        super.removeTrackingPlayer(player);
+        if (MBConfig.ENTITIES.mutantEndermanBossBar) this.bossInfo.removePlayer(player);
     }
 
     protected void collideWithNearbyEntities() {
@@ -762,15 +787,21 @@ public class MutantEndermanEntity extends EntityMob implements IEntityAdditional
         compound.setShort("DeathTime", (short) this.deathTime);
     }
 
+    @Override
     public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
         this.screamDelayTick = compound.getInteger("ScreamDelay");
         this.blockFrenzy = compound.getInteger("BlockFrenzy");
         this.deathTime = ((EntityMob) this).deathTime;
+
         if (this.deathTime > 0) {
             this.attackID = 8;
             this.attackTick = this.deathTime;
             ((EntityMob) this).deathTime = 0;
+        }
+
+        if (this.hasCustomName()) {
+            this.bossInfo.setName(this.getDisplayName());
         }
     }
 
@@ -786,7 +817,7 @@ public class MutantEndermanEntity extends EntityMob implements IEntityAdditional
 
     @Override
     public boolean isNonBoss() {
-        return MBConfig.ENTITIES.mutantEndermanBoss ? false : true;
+        return MBConfig.ENTITIES.mutantEndermanBossClassification ? false : true;
     }
 
     protected SoundEvent getAmbientSound() {

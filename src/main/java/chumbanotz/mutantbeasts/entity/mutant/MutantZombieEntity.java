@@ -21,6 +21,7 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntityZombieVillager;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
@@ -40,6 +41,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.BossInfo;
+import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -48,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MutantZombieEntity extends EntityMob implements IEntityAdditionalSpawnData {
+    protected final BossInfoServer bossInfo;
     private static final DataParameter<Integer> LIVES = EntityDataManager.createKey(MutantZombieEntity.class, (DataSerializer) DataSerializers.VARINT);
     private static final DataParameter<Byte> THROW_ATTACK_STATE = EntityDataManager.createKey(MutantZombieEntity.class, (DataSerializer) DataSerializers.BYTE);
     public static final int MAX_DEATH_TIME = 140;
@@ -70,6 +74,7 @@ public class MutantZombieEntity extends EntityMob implements IEntityAdditionalSp
         this.stepHeight = 1.0f;
         this.experienceValue = 30;
         this.setSize(1.8f, 3.2f);
+        this.bossInfo = new BossInfoServer(this.getDisplayName(), BossInfo.Color.RED, BossInfo.Overlay.PROGRESS);
     }
 
     protected void initEntityAI() {
@@ -243,15 +248,35 @@ public class MutantZombieEntity extends EntityMob implements IEntityAdditionalSp
             if (this.attackID == 0 && this.getDistanceSq(this.getAttackTarget()) < 1.0 && this.rand.nextInt(125) == 0) {
                 this.attackID = 2;
             }
+        }
 
-            // Regenerate health when target is lost except when player is in Creative
-            if (this.getAttackTarget() == null && this.getHealth() < this.getMaxHealth() && MBConfig.ENTITIES.mutantZombieNoCombatRegen) {
-                if (this.attackingPlayer != null && this.attackingPlayer.isCreative()) {
-                } else if (this.ticksExisted % 20 == 0) {
-                    this.heal(this.getMaxHealth() * 0.2F);
-                }
+        // Regenerate health when target is lost except when player is in Creative
+        if (this.getAttackTarget() == null && this.getHealth() < this.getMaxHealth() && MBConfig.ENTITIES.mutantZombieNoCombatRegen) {
+            if (this.attackingPlayer != null && this.attackingPlayer.isCreative()) {
+            } else if (this.ticksExisted % 20 == 0) {
+                this.heal(this.getMaxHealth() * 0.2F);
             }
         }
+
+        this.bossInfo.setPercent(this.getHealth() / this.getMaxHealth());
+    }
+
+    @Override
+    public void setCustomNameTag(String name) {
+        super.setCustomNameTag(name);
+        this.bossInfo.setName(this.getDisplayName());
+    }
+
+    @Override
+    public void addTrackingPlayer(EntityPlayerMP player) {
+        super.addTrackingPlayer(player);
+        if (MBConfig.ENTITIES.mutantZombieBossBar) this.bossInfo.addPlayer(player);
+    }
+
+    @Override
+    public void removeTrackingPlayer(EntityPlayerMP player) {
+        super.removeTrackingPlayer(player);
+        if (MBConfig.ENTITIES.mutantZombieBossBar) this.bossInfo.removePlayer(player);
     }
 
     public void onUpdate() {
@@ -455,23 +480,31 @@ public class MutantZombieEntity extends EntityMob implements IEntityAdditionalSp
         }
     }
 
+    @Override
     public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
         this.deathTime = ((EntityMob) this).deathTime;
+
         if (compound.hasKey("Lives")) {
             this.setLives(compound.getInteger("Lives"));
         }
+
         this.vanishTime = compound.getShort("VanishTime");
         NBTTagList nbtTagList = compound.getTagList("Resurrections", 10);
+
         for (int i = 0; i < nbtTagList.tagCount(); ++i) {
             NBTTagCompound compound1 = nbtTagList.getCompoundTagAt(i);
             this.resurrections.add(i, new ZombieResurrection(this.world, NBTUtil.getPosFromTag(compound1), compound1.getInteger("Tick")));
+        }
+
+        if (this.hasCustomName()) {
+            this.bossInfo.setName(this.getDisplayName());
         }
     }
 
     @Override
     public boolean isNonBoss() {
-        return MBConfig.ENTITIES.mutantZombieBoss ? false : true;
+        return MBConfig.ENTITIES.mutantZombieBossClassification ? false : true;
     }
 
     protected SoundEvent getAmbientSound() {

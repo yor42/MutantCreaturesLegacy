@@ -26,6 +26,7 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -40,12 +41,15 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BossInfo;
+import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 public class MutantCreeperEntity extends EntityCreeper implements IEntityAdditionalSpawnData {
+    protected final BossInfoServer bossInfo;
     private static final DataParameter<Byte> STATUS = EntityDataManager.createKey(MutantCreeperEntity.class, (DataSerializer) DataSerializers.BYTE);
     public static final int MAX_CHARGE_TIME = 100;
     public static final int MAX_DEATH_TIME = 100;
@@ -63,6 +67,7 @@ public class MutantCreeperEntity extends EntityCreeper implements IEntityAdditio
         this.stepHeight = 1.0f;
         this.experienceValue = 30;
         this.setSize(1.98f, 2.8f);
+        this.bossInfo = new BossInfoServer(this.getDisplayName(), BossInfo.Color.GREEN, BossInfo.Overlay.PROGRESS);
     }
 
     protected void initEntityAI() {
@@ -159,6 +164,26 @@ public class MutantCreeperEntity extends EntityCreeper implements IEntityAdditio
                 this.heal(this.getMaxHealth() * 0.2F);
             }
         }
+
+        this.bossInfo.setPercent(this.getHealth() / this.getMaxHealth());
+    }
+
+    @Override
+    public void setCustomNameTag(String name) {
+        super.setCustomNameTag(name);
+        this.bossInfo.setName(this.getDisplayName());
+    }
+
+    @Override
+    public void addTrackingPlayer(EntityPlayerMP player) {
+        super.addTrackingPlayer(player);
+        if (MBConfig.ENTITIES.mutantCreeperBossBar) this.bossInfo.addPlayer(player);
+    }
+
+    @Override
+    public void removeTrackingPlayer(EntityPlayerMP player) {
+        super.removeTrackingPlayer(player);
+        if (MBConfig.ENTITIES.mutantCreeperBossBar) this.bossInfo.removePlayer(player);
     }
 
     @Override
@@ -346,7 +371,7 @@ public class MutantCreeperEntity extends EntityCreeper implements IEntityAdditio
 
     @Override
     public boolean isNonBoss() {
-        return MBConfig.ENTITIES.mutantCreeperBoss ? false : true;
+        return MBConfig.ENTITIES.mutantCreeperBossClassification ? false : true;
     }
 
     @Override
@@ -391,6 +416,10 @@ public class MutantCreeperEntity extends EntityCreeper implements IEntityAdditio
         this.chargeHits = compound.getInteger("ChargeHits");
         this.summonLightning = compound.getBoolean("SummonLightning");
         this.deathTime = ((EntityCreeper) this).deathTime;
+
+        if (this.hasCustomName()) {
+            this.bossInfo.setName(this.getDisplayName());
+        }
     }
 
     @Override

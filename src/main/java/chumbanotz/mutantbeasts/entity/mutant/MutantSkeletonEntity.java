@@ -30,17 +30,22 @@ import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BossInfo;
+import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.World;
 
 public class MutantSkeletonEntity extends EntityMob implements IAnimatedEntity {
+    protected final BossInfoServer bossInfo;
     public static final byte MELEE_ATTACK = 1;
     public static final byte SHOOT_ATTACK = 2;
     public static final byte MULTI_SHOT_ATTACK = 3;
@@ -53,6 +58,7 @@ public class MutantSkeletonEntity extends EntityMob implements IAnimatedEntity {
         this.stepHeight = 1.0f;
         this.experienceValue = 30;
         this.setSize(1.2f, 3.6f);
+        this.bossInfo = new BossInfoServer(this.getDisplayName(), BossInfo.Color.WHITE, BossInfo.Overlay.PROGRESS);
     }
 
     public boolean getCanSpawnHere() {
@@ -116,6 +122,35 @@ public class MutantSkeletonEntity extends EntityMob implements IAnimatedEntity {
             } else if (this.ticksExisted % 20 == 0) {
                 this.heal(this.getMaxHealth() * 0.2F);
             }
+        }
+
+        this.bossInfo.setPercent(this.getHealth() / this.getMaxHealth());
+    }
+
+    @Override
+    public void setCustomNameTag(String name) {
+        super.setCustomNameTag(name);
+        this.bossInfo.setName(this.getDisplayName());
+    }
+
+    @Override
+    public void addTrackingPlayer(EntityPlayerMP player) {
+        super.addTrackingPlayer(player);
+        if (MBConfig.ENTITIES.mutantSkeletonBossBar) this.bossInfo.addPlayer(player);
+    }
+
+    @Override
+    public void removeTrackingPlayer(EntityPlayerMP player) {
+        super.removeTrackingPlayer(player);
+        if (MBConfig.ENTITIES.mutantSkeletonBossBar) this.bossInfo.removePlayer(player);
+    }
+
+    @Override
+    public void readEntityFromNBT(NBTTagCompound compound) {
+        super.readEntityFromNBT(compound);
+
+        if (this.hasCustomName()) {
+            this.bossInfo.setName(this.getDisplayName());
         }
     }
 
@@ -244,7 +279,7 @@ public class MutantSkeletonEntity extends EntityMob implements IAnimatedEntity {
 
     @Override
     public boolean isNonBoss() {
-        return MBConfig.ENTITIES.mutantSkeletonBoss ? false : true;
+        return MBConfig.ENTITIES.mutantSkeletonBossClassification ? false : true;
     }
 
     protected SoundEvent getAmbientSound() {

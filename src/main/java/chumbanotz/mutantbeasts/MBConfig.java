@@ -57,6 +57,11 @@ public class MBConfig {
         @Config.Comment("The amount of damage dealt by the Mutant Creeper")
         public double mutantCreeperAttackDamage = 5.0D;
 
+        @Config.Name("Mutant Creeper Boss Bar")
+        @Config.Comment("Displays a boss bar on the top of the screen when the Mutant Creeper is present")
+        @Config.RequiresMcRestart
+        public boolean mutantCreeperBossBar = true;
+
         @Config.Name("Mutant Creeper Boss Classification")
         @Config.Comment
                 ({
@@ -64,7 +69,7 @@ public class MBConfig {
                         "This will be affected by anything checking for boss mobs specifically"
                 })
         @Config.RequiresMcRestart
-        public boolean mutantCreeperBoss = true;
+        public boolean mutantCreeperBossClassification = true;
 
         @Config.Name("Mutant Creeper Death Explosion Destroys Terrain")
         @Config.Comment("Allows the Mutant Creeper to destroy terrain when exploding from death")
@@ -153,6 +158,11 @@ public class MBConfig {
                 })
         public double mutantEndermanBlockDamage = 8.0D;
 
+        @Config.Name("Mutant Enderman Boss Bar")
+        @Config.Comment("Displays a boss bar on the top of the screen when the Mutant Enderman is present")
+        @Config.RequiresMcRestart
+        public boolean mutantEndermanBossBar = true;
+
         @Config.Name("Mutant Enderman Boss Classification")
         @Config.Comment
                 ({
@@ -160,7 +170,7 @@ public class MBConfig {
                         "This will be affected by anything checking for boss mobs specifically"
                 })
         @Config.RequiresMcRestart
-        public boolean mutantEndermanBoss = true;
+        public boolean mutantEndermanBossClassification = true;
 
         @Config.Name("Mutant Enderman Follow Range")
         @Config.Comment("The amount of blocks the Mutant Enderman follows entities")
@@ -261,6 +271,11 @@ public class MBConfig {
                 })
         public boolean mutantSkeletonBoneDrops = true;
 
+        @Config.Name("Mutant Skeleton Boss Bar")
+        @Config.Comment("Displays a boss bar on the top of the screen when the Mutant Skeleton is present")
+        @Config.RequiresMcRestart
+        public boolean mutantSkeletonBossBar = true;
+
         @Config.Name("Mutant Skeleton Boss Classification")
         @Config.Comment
                 ({
@@ -268,7 +283,7 @@ public class MBConfig {
                         "This will be affected by anything checking for boss mobs specifically"
                 })
         @Config.RequiresMcRestart
-        public boolean mutantSkeletonBoss = true;
+        public boolean mutantSkeletonBossClassification = true;
 
         @Config.Name("Mutant Skeleton Constrict (Ribcage) Damage")
         @Config.Comment("The amount of damage dealt by the Mutant Skeleton's constrict (ribcage) attack")
@@ -369,6 +384,11 @@ public class MBConfig {
                 })
         public double mutantZombieAttackDamage = 12.0D;
 
+        @Config.Name("Mutant Zombie Boss Bar")
+        @Config.Comment("Displays a boss bar on the top of the screen when the Mutant Zombie is present")
+        @Config.RequiresMcRestart
+        public boolean mutantZombieBossBar = true;
+
         @Config.Name("Mutant Zombie Boss Classification")
         @Config.Comment
                 ({
@@ -376,7 +396,7 @@ public class MBConfig {
                         "This will be affected by anything checking for boss mobs specifically"
                 })
         @Config.RequiresMcRestart
-        public boolean mutantZombieBoss = true;
+        public boolean mutantZombieBossClassification = true;
 
         @Config.Name("Mutant Zombie Follow Range")
         @Config.Comment("The amount of blocks the Mutant Zombie follows entities")
