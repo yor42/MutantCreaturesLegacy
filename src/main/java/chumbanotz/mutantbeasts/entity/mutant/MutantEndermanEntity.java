@@ -780,6 +780,11 @@ public class MutantEndermanEntity extends EntityMob implements IEntityAdditional
         }
     }
 
+    @Override
+    public boolean isNonBoss() {
+        return MBConfig.ENTITIES.mutantEndermanBoss ? false : true;
+    }
+
     protected SoundEvent getAmbientSound() {
         return MBSoundEvents.ENTITY_MUTANT_ENDERMAN_AMBIENT;
     }

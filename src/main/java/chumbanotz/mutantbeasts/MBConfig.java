@@ -57,6 +57,15 @@ public class MBConfig {
         @Config.Comment("The amount of damage dealt by the Mutant Creeper")
         public double mutantCreeperAttackDamage = 5.0D;
 
+        @Config.Name("Mutant Creeper Boss Classification")
+        @Config.Comment
+                ({
+                        "Determines the Mutant Creeper as a boss mob",
+                        "This will be affected by anything checking for boss mobs specifically"
+                })
+        @Config.RequiresMcRestart
+        public boolean mutantCreeperBoss = true;
+
         @Config.Name("Mutant Creeper Death Explosion Destroys Terrain")
         @Config.Comment("Allows the Mutant Creeper to destroy terrain when exploding from death")
         @Config.RequiresMcRestart
@@ -143,6 +152,15 @@ public class MBConfig {
                         "This also affects the damage dealt by blocks thrown from the Endersoul Hand"
                 })
         public double mutantEndermanBlockDamage = 8.0D;
+
+        @Config.Name("Mutant Enderman Boss Classification")
+        @Config.Comment
+                ({
+                        "Determines the Mutant Enderman as a boss mob",
+                        "This will be affected by anything checking for boss mobs specifically"
+                })
+        @Config.RequiresMcRestart
+        public boolean mutantEndermanBoss = true;
 
         @Config.Name("Mutant Enderman Follow Range")
         @Config.Comment("The amount of blocks the Mutant Enderman follows entities")
@@ -243,6 +261,15 @@ public class MBConfig {
                 })
         public boolean mutantSkeletonBoneDrops = true;
 
+        @Config.Name("Mutant Skeleton Boss Classification")
+        @Config.Comment
+                ({
+                        "Determines the Mutant Skeleton as a boss mob",
+                        "This will be affected by anything checking for boss mobs specifically"
+                })
+        @Config.RequiresMcRestart
+        public boolean mutantSkeletonBoss = true;
+
         @Config.Name("Mutant Skeleton Constrict (Ribcage) Damage")
         @Config.Comment("The amount of damage dealt by the Mutant Skeleton's constrict (ribcage) attack")
         public double mutantSkeletonConstrictDamage = 9.0D;
@@ -341,6 +368,15 @@ public class MBConfig {
                         "This also affects the damage dealt by the Mutant Zombie's throw attack"
                 })
         public double mutantZombieAttackDamage = 12.0D;
+
+        @Config.Name("Mutant Zombie Boss Classification")
+        @Config.Comment
+                ({
+                        "Determines the Mutant Zombie as a boss mob",
+                        "This will be affected by anything checking for boss mobs specifically"
+                })
+        @Config.RequiresMcRestart
+        public boolean mutantZombieBoss = true;
 
         @Config.Name("Mutant Zombie Follow Range")
         @Config.Comment("The amount of blocks the Mutant Zombie follows entities")

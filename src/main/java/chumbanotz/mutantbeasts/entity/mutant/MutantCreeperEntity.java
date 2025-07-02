@@ -345,6 +345,11 @@ public class MutantCreeperEntity extends EntityCreeper implements IEntityAdditio
     }
 
     @Override
+    public boolean isNonBoss() {
+        return MBConfig.ENTITIES.mutantCreeperBoss ? false : true;
+    }
+
+    @Override
     protected SoundEvent getAmbientSound() {
         return MBSoundEvents.ENTITY_MUTANT_CREEPER_AMBIENT;
     }

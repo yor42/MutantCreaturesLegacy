@@ -242,6 +242,11 @@ public class MutantSkeletonEntity extends EntityMob implements IAnimatedEntity {
         this.handleJumpWater();
     }
 
+    @Override
+    public boolean isNonBoss() {
+        return MBConfig.ENTITIES.mutantSkeletonBoss ? false : true;
+    }
+
     protected SoundEvent getAmbientSound() {
         return MBSoundEvents.ENTITY_MUTANT_SKELETON_AMBIENT;
     }

@@ -469,6 +469,11 @@ public class MutantZombieEntity extends EntityMob implements IEntityAdditionalSp
         }
     }
 
+    @Override
+    public boolean isNonBoss() {
+        return MBConfig.ENTITIES.mutantZombieBoss ? false : true;
+    }
+
     protected SoundEvent getAmbientSound() {
         return MBSoundEvents.ENTITY_MUTANT_ZOMBIE_AMBIENT;
     }
