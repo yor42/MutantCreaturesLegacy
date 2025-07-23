@@ -65,4 +65,14 @@ dependencies {
     // implementation ('com.google.code.gson:gson:2.8.6') {
     //     transitive = false
     // }
+
+    // Had Enough Items
+    implementation rfg.deobf('curse.maven:had-enough-items-557549:5471944')
+
+    // Just Enough Resources
+    implementation rfg.deobf('curse.maven:just-enough-resources-jer-240630:4440936')
+
+    // Thaumcraft
+    implementation rfg.deobf('curse.maven:baubles-227083:2518667')
+    implementation rfg.deobf('curse.maven:thaumcraft-223628:2629023')
 }
