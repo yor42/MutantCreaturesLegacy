@@ -37,5 +37,14 @@ public class MBThaumcraftPlugin {
         ThaumcraftApi.registerEntityTag(MutantBeasts.MOD_ID + "." + "mutant_snow_golem", new AspectList().add(Aspect.ALCHEMY, 20).add(Aspect.COLD, 20).add(Aspect.MAN, 15).add(Aspect.MECHANISM, 15).add(Aspect.MAGIC, 15));
         ThaumcraftApi.registerEntityTag(MutantBeasts.MOD_ID + "." + "mutant_zombie", new AspectList().add(Aspect.ALCHEMY, 25).add(Aspect.UNDEAD, 25).add(Aspect.MAN, 25).add(Aspect.ENTROPY, 25));
         ThaumcraftApi.registerEntityTag(MutantBeasts.MOD_ID + "." + "spider_pig", new AspectList().add(Aspect.ALCHEMY, 20).add(Aspect.MOTION, 15).add(Aspect.TRAP, 15).add(Aspect.BEAST, 20));
+
+        // Entities - Misc
+        ThaumcraftApi.registerEntityTag(MutantBeasts.MOD_ID + "." + "body_part", new AspectList().add(Aspect.UNDEAD, 5).add(Aspect.LIFE, 5).add(Aspect.ENTROPY, 5));
+        ThaumcraftApi.registerEntityTag(MutantBeasts.MOD_ID + "." + "chemical_x", new AspectList().add(Aspect.ALCHEMY, 15).add(Aspect.MOTION, 15).add(Aspect.DEATH, 10));
+        ThaumcraftApi.registerEntityTag(MutantBeasts.MOD_ID + "." + "creeper_minion_egg", new AspectList().add(Aspect.PLANT, 5).add(Aspect.LIFE, 5));
+        ThaumcraftApi.registerEntityTag(MutantBeasts.MOD_ID + "." + "endersoul_fragment", new AspectList().add(Aspect.ELDRITCH, 15).add(Aspect.SOUL, 10).add(Aspect.MAGIC, 10));
+        ThaumcraftApi.registerEntityTag(MutantBeasts.MOD_ID + "." + "mutant_arrow", new AspectList().add(Aspect.AVERSION, 15).add(Aspect.FLIGHT, 10).add(Aspect.AIR, 10));
+        ThaumcraftApi.registerEntityTag(MutantBeasts.MOD_ID + "." + "skull_spirit", new AspectList().add(Aspect.ALCHEMY, 15).add(Aspect.SOUL, 10).add(Aspect.DEATH, 10));
+        ThaumcraftApi.registerEntityTag(MutantBeasts.MOD_ID + "." + "throwable_block", new AspectList().add(Aspect.MOTION, 10).add(Aspect.EARTH, 10));
     }
 }
