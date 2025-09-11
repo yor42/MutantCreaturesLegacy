@@ -154,9 +154,48 @@
     ],
     "subtitle": "subtitles.mutantbeasts.entity.mutant_skeleton.ambient"
   },
+  "entity.mutant_skeleton.ambient.legacy": {
+    "sounds": [
+      "mutantbeasts:entity/mutant_skeleton/legacy/ambient1",
+      "mutantbeasts:entity/mutant_skeleton/legacy/ambient2",
+      "mutantbeasts:entity/mutant_skeleton/legacy/ambient3"
+    ],
+    "subtitle": "subtitles.mutantbeasts.entity.mutant_skeleton.ambient"
+  },
+  "entity.mutant_skeleton.bite": {
+    "sounds": [
+      "mutantbeasts:entity/mutant_skeleton/bite1",
+      "mutantbeasts:entity/mutant_skeleton/bite2",
+      "mutantbeasts:entity/mutant_skeleton/bite3"
+    ],
+    "subtitle": "subtitles.mutantbeasts.entity.mutant_skeleton.bite"
+  },
+  "entity.mutant_skeleton.bow_draw": {
+    "sounds": [
+      "mutantbeasts:entity/mutant_skeleton/bow_draw1",
+      "mutantbeasts:entity/mutant_skeleton/bow_draw2",
+      "mutantbeasts:entity/mutant_skeleton/bow_draw3"
+    ],
+    "subtitle": "subtitles.mutantbeasts.entity.mutant_skeleton.bow_draw"
+  },
+  "entity.mutant_skeleton.bow_shoot": {
+    "sounds": [
+      "mutantbeasts:entity/mutant_skeleton/bow_shoot1",
+      "mutantbeasts:entity/mutant_skeleton/bow_shoot2",
+      "mutantbeasts:entity/mutant_skeleton/bow_shoot3"
+    ],
+    "subtitle": "subtitles.mutantbeasts.entity.mutant_skeleton.bow_shoot"
+  },
   "entity.mutant_skeleton.death": {
     "sounds": [
-      "mutantbeasts:entity/mutant_skeleton/death"
+      "mutantbeasts:entity/mutant_skeleton/death1",
+      "mutantbeasts:entity/mutant_skeleton/death2"
+    ],
+    "subtitle": "subtitles.mutantbeasts.entity.mutant_skeleton.death"
+  },
+  "entity.mutant_skeleton.death.legacy": {
+    "sounds": [
+      "mutantbeasts:entity/mutant_skeleton/legacy/death"
     ],
     "subtitle": "subtitles.mutantbeasts.entity.mutant_skeleton.death"
   },
@@ -169,6 +208,31 @@
     ],
     "subtitle": "subtitles.mutantbeasts.entity.mutant_skeleton.hurt"
   },
+  "entity.mutant_skeleton.hurt.legacy": {
+    "sounds": [
+      "mutantbeasts:entity/mutant_skeleton/legacy/hurt1",
+      "mutantbeasts:entity/mutant_skeleton/legacy/hurt2",
+      "mutantbeasts:entity/mutant_skeleton/legacy/hurt3",
+      "mutantbeasts:entity/mutant_skeleton/legacy/hurt4"
+    ],
+    "subtitle": "subtitles.mutantbeasts.entity.mutant_skeleton.hurt"
+  },
+  "entity.mutant_skeleton.jump": {
+    "sounds": [
+      "mutantbeasts:entity/mutant_skeleton/jump1",
+      "mutantbeasts:entity/mutant_skeleton/jump2",
+      "mutantbeasts:entity/mutant_skeleton/jump3"
+    ],
+    "subtitle": "subtitles.mutantbeasts.entity.mutant_skeleton.jump"
+  },
+  "entity.mutant_skeleton.punch": {
+    "sounds": [
+      "mutantbeasts:entity/mutant_skeleton/punch1",
+      "mutantbeasts:entity/mutant_skeleton/punch2",
+      "mutantbeasts:entity/mutant_skeleton/punch3"
+    ],
+    "subtitle": "subtitles.mutantbeasts.entity.mutant_skeleton.punch"
+  },
   "entity.mutant_skeleton.step": {
     "sounds": [
       "mutantbeasts:entity/mutant_skeleton/step1",
@@ -176,7 +240,16 @@
       "mutantbeasts:entity/mutant_skeleton/step3",
       "mutantbeasts:entity/mutant_skeleton/step4"
     ],
-    "subtitle": "subtitles.mutantbeasts.entity.mutant_skeleton.step"
+    "subtitle": "subtitles.block.generic.footsteps"
+  },
+  "entity.mutant_skeleton.step.legacy": {
+    "sounds": [
+      "mutantbeasts:entity/mutant_skeleton/legacy/step1",
+      "mutantbeasts:entity/mutant_skeleton/legacy/step2",
+      "mutantbeasts:entity/mutant_skeleton/legacy/step3",
+      "mutantbeasts:entity/mutant_skeleton/legacy/step4"
+    ],
+    "subtitle": "subtitles.block.generic.footsteps"
   },
   "entity.mutant_snow_golem.death": {
     "sounds": [
