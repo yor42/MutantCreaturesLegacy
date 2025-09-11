@@ -333,31 +333,44 @@ public class MutantSkeletonEntity extends EntityMob implements IAnimatedEntity {
         public void updateTask() {
             MutantSkeletonEntity.this.getNavigator().clearPath();
             MutantSkeletonEntity.this.getLookHelper().setLookPositionWithEntity(this.attackTarget, 30.0f, 30.0f);
+
+            if (MutantSkeletonEntity.this.attackTick == 0) {
+                MutantSkeletonEntity.this.playSound(MBSoundEvents.ENTITY_MUTANT_SKELETON_JUMP, 1.0F, 1.0F);
+            }
+
             if (MutantSkeletonEntity.this.attackTick == 10) {
                 MutantSkeletonEntity.this.dismountRidingEntity();
                 double x = this.attackTarget.posX - MutantSkeletonEntity.this.posX;
                 double z = this.attackTarget.posZ - MutantSkeletonEntity.this.posZ;
-                float scale = 0.06f + MutantSkeletonEntity.this.rand.nextFloat() * 0.03f;
-                if (MutantSkeletonEntity.this.getDistanceSq(this.attackTarget) < 16.0) {
+                float scale = 0.06f + MutantSkeletonEntity.this.rand.nextFloat() * 0.03F;
+
+                if (MutantSkeletonEntity.this.getDistanceSq(this.attackTarget) < 16.0D) {
                     x *= -1.0;
                     z *= -1.0;
                     scale *= 5.0f;
                 }
+
                 MutantSkeletonEntity.this.isInWeb = false;
                 MutantSkeletonEntity.this.motionX = x * (double) scale;
                 MutantSkeletonEntity.this.motionY = 1.1f;
                 MutantSkeletonEntity.this.motionZ = z * (double) scale;
+
+                MutantSkeletonEntity.this.playSound(MBSoundEvents.ENTITY_MUTANT_SKELETON_BOW_DRAW, 1.0F, 1.0F);
             }
+
             if (MutantSkeletonEntity.this.attackTick >= 24 && MutantSkeletonEntity.this.attackTick < 28) {
                 if (!this.shots.isEmpty()) {
                     Iterator<MutantArrowEntity> iterator = this.shots.iterator();
+
                     while (iterator.hasNext()) {
                         MutantArrowEntity arrowEntity;
                         MutantArrowEntity shot = arrowEntity = iterator.next();
                         MutantSkeletonEntity.this.world.spawnEntity(arrowEntity);
                     }
+
                     this.shots.clear();
                 }
+
                 for (int i = 0; i < 6; ++i) {
                     MutantArrowEntity shot = new MutantArrowEntity(MutantSkeletonEntity.this.world, MutantSkeletonEntity.this, this.attackTarget);
                     shot.setSpeed(1.2f - MutantSkeletonEntity.this.rand.nextFloat() * 0.1f);
@@ -366,7 +379,8 @@ public class MutantSkeletonEntity extends EntityMob implements IAnimatedEntity {
                     shot.setDamage((float) MBConfig.ENTITIES.mutantSkeletonMultishotDamage);
                     this.shots.add(shot);
                 }
-                MutantSkeletonEntity.this.playSound(SoundEvents.ENTITY_ARROW_SHOOT, 1.0f, 1.0f / (MutantSkeletonEntity.this.rand.nextFloat() * 0.4f + 1.2f) + 0.25f);
+
+                MutantSkeletonEntity.this.playSound(MBSoundEvents.ENTITY_MUTANT_SKELETON_BOW_SHOOT, 1.0F, 1.0F / (MutantSkeletonEntity.this.rand.nextFloat() * 0.4F + 1.2F) + 0.25F);
             }
         }
 
@@ -400,25 +414,35 @@ public class MutantSkeletonEntity extends EntityMob implements IAnimatedEntity {
 
         public void updateTask() {
             MutantSkeletonEntity.this.getNavigator().clearPath();
-            MutantSkeletonEntity.this.getLookHelper().setLookPositionWithEntity(this.attackTarget, 30.0f, 30.0f);
+            MutantSkeletonEntity.this.getLookHelper().setLookPositionWithEntity(this.attackTarget, 30.0F, 30.0F);
+
+            if (MutantSkeletonEntity.this.attackTick == 0) {
+                MutantSkeletonEntity.this.playSound(MBSoundEvents.ENTITY_MUTANT_SKELETON_BOW_DRAW, 1.0F, 1.0F);
+            }
+
             if (MutantSkeletonEntity.this.attackTick == 26 && this.attackTarget.isEntityAlive()) {
                 MutantArrowEntity arrowEntity = new MutantArrowEntity(MutantSkeletonEntity.this.world, MutantSkeletonEntity.this, this.attackTarget);
+
                 if (MutantSkeletonEntity.this.hurtTime > 0) {
                     arrowEntity.randomize((float) MutantSkeletonEntity.this.hurtTime / 2.0f);
                 } else if (!MutantSkeletonEntity.this.getEntitySenses().canSee(this.attackTarget)) {
                     arrowEntity.randomize((float) MutantSkeletonEntity.this.getDistanceSq(this.attackTarget));
                 }
+
                 if (MutantSkeletonEntity.this.rand.nextInt(4) == 0) {
                     arrowEntity.setPotionEffect(new PotionEffect(MobEffects.POISON, 80 + MutantSkeletonEntity.this.rand.nextInt(60), 0));
                 }
+
                 if (MutantSkeletonEntity.this.rand.nextInt(4) == 0) {
                     arrowEntity.setPotionEffect(new PotionEffect(MobEffects.HUNGER, 120 + MutantSkeletonEntity.this.rand.nextInt(60), 1));
                 }
+
                 if (MutantSkeletonEntity.this.rand.nextInt(4) == 0) {
                     arrowEntity.setPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 120 + MutantSkeletonEntity.this.rand.nextInt(60), 1));
                 }
+
                 MutantSkeletonEntity.this.world.spawnEntity(arrowEntity);
-                MutantSkeletonEntity.this.playSound(SoundEvents.ENTITY_ARROW_SHOOT, 1.0f, 1.0f / (MutantSkeletonEntity.this.rand.nextFloat() * 0.4f + 1.2f) + 0.25f);
+                MutantSkeletonEntity.this.playSound(MBSoundEvents.ENTITY_MUTANT_SKELETON_BOW_SHOOT, 1.0F, 1.0F / (MutantSkeletonEntity.this.rand.nextFloat() * 0.4F + 1.2F) + 0.25F);
             }
         }
 
@@ -451,15 +475,21 @@ public class MutantSkeletonEntity extends EntityMob implements IAnimatedEntity {
 
         public void updateTask() {
             MutantSkeletonEntity.this.getNavigator().clearPath();
+
+            if (MutantSkeletonEntity.this.attackTick == 0) {
+                MutantSkeletonEntity.this.playSound(MBSoundEvents.ENTITY_MUTANT_SKELETON_BITE, 1.0F, 1.0F);
+            }
+
             if (MutantSkeletonEntity.this.attackTick == 5) {
                 this.attackTarget.dismountRidingEntity();
             }
+
             if (MutantSkeletonEntity.this.attackTick == 6) {
                 this.attackTarget.attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) MutantSkeletonEntity.this), (float) MBConfig.ENTITIES.mutantSkeletonConstrictDamage);
                 this.attackTarget.motionX = (1.0f + MutantSkeletonEntity.this.getRNG().nextFloat() * 0.4f) * (float) (MutantSkeletonEntity.this.getRNG().nextBoolean() ? 1 : -1);
                 this.attackTarget.motionY = 0.4f + MutantSkeletonEntity.this.getRNG().nextFloat() * 0.8f;
                 this.attackTarget.motionZ = (1.0f + MutantSkeletonEntity.this.getRNG().nextFloat() * 0.4f) * (float) (MutantSkeletonEntity.this.getRNG().nextBoolean() ? 1 : -1);
-                MutantSkeletonEntity.this.playSound(SoundEvents.ENTITY_GENERIC_EXPLODE, 0.5f, 0.8f + MutantSkeletonEntity.this.rand.nextFloat() * 0.4f);
+                MutantSkeletonEntity.this.playSound(SoundEvents.EVOCATION_FANGS_ATTACK, 1.0F, 2.0F);
                 EntityUtil.sendPlayerVelocityPacket(this.attackTarget);
                 EntityUtil.disableShield(this.attackTarget, 100);
             }
@@ -491,11 +521,18 @@ public class MutantSkeletonEntity extends EntityMob implements IAnimatedEntity {
 
         public void updateTask() {
             MutantSkeletonEntity.this.getNavigator().clearPath();
+
             if (MutantSkeletonEntity.this.getAttackTarget() != null && MutantSkeletonEntity.this.getAttackTarget().isEntityAlive()) {
                 MutantSkeletonEntity.this.getLookHelper().setLookPositionWithEntity(MutantSkeletonEntity.this.getAttackTarget(), 30.0f, 30.0f);
             }
+
+            if (MutantSkeletonEntity.this.attackTick == 0) {
+                MutantSkeletonEntity.this.playSound(MBSoundEvents.ENTITY_MUTANT_SKELETON_PUNCH, 1.0f, 1.0f / (MutantSkeletonEntity.this.rand.nextFloat() * 0.4f + 1.2f));
+            }
+
             if (MutantSkeletonEntity.this.attackTick == 3) {
                 DamageSource damageSource = DamageSource.causeMobDamage((EntityLivingBase) MutantSkeletonEntity.this);
+
                 for (Entity entity : MutantSkeletonEntity.this.world.getEntitiesWithinAABBExcludingEntity(MutantSkeletonEntity.this, MutantSkeletonEntity.this.getEntityBoundingBox().grow(4.0))) {
                     if (!entity.canBeCollidedWith() || entity instanceof MutantSkeletonEntity) continue;
                     double dist = MutantSkeletonEntity.this.getDistance(entity);
@@ -511,7 +548,6 @@ public class MutantSkeletonEntity extends EntityMob implements IAnimatedEntity {
                     entity.motionY = Math.max((double) 0.28f, entity.motionY);
                     entity.motionZ = -z / dist * (double) power;
                 }
-                MutantSkeletonEntity.this.playSound(SoundEvents.ENTITY_PLAYER_ATTACK_KNOCKBACK, 1.0f, 1.0f / (MutantSkeletonEntity.this.rand.nextFloat() * 0.4f + 1.2f));
             }
         }
 
