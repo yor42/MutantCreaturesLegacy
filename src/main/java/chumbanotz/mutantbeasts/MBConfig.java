@@ -29,14 +29,14 @@ public class MBConfig {
         public int skullSpiritParticleID = 101;
 
         // TODO: This does nothing currently
-        @Config.Name("Custom Spawn Egg Texture")
+        /*@Config.Name("Custom Spawn Egg Texture")
         @Config.Comment
                 ({
                         "Gives the spawn eggs from this mod the texture they had from Mutant Creatures",
                         "Disable this if your game crashes with the mod 'CodeChickenLib' installed"
                 })
         @Config.RequiresMcRestart
-        public boolean useCustomSpawnEggTexture = true;
+        public boolean useCustomSpawnEggTexture = true;*/
     }
 
     public static class EntitySettings {
@@ -301,6 +301,22 @@ public class MBConfig {
         @Config.Comment("The amount of knockback resistance the Mutant Skeleton has")
         @Config.RangeDouble(min = 0.0D, max = 1.0D)
         public double mutantSkeletonKnockbackResistance = 1.0D;
+
+        @Config.Name("Mutant Skeleton Legacy Ambient Sound")
+        @Config.Comment("Enables the original Mutant Skeleton ambient sound from older versions")
+        public boolean mutantSkeletonLegacyAmbientSound = false;
+
+        @Config.Name("Mutant Skeleton Legacy Death Sound")
+        @Config.Comment("Enables the original Mutant Skeleton death sound from older versions")
+        public boolean mutantSkeletonLegacyDeathSound = false;
+
+        @Config.Name("Mutant Skeleton Legacy Hurt Sound")
+        @Config.Comment("Enables the original Mutant Skeleton hurt sound from older versions")
+        public boolean mutantSkeletonLegacyHurtSound = false;
+
+        @Config.Name("Mutant Skeleton Legacy Step Sound")
+        @Config.Comment("Enables the original Mutant Skeleton step sound from older versions")
+        public boolean mutantSkeletonLegacyStepSound = false;
 
         @Config.Name("Mutant Skeleton Max Health")
         @Config.Comment("The amount of maximum health the Mutant Skeleton has")

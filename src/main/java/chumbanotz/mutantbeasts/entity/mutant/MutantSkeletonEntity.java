@@ -215,6 +215,9 @@ public class MutantSkeletonEntity extends EntityMob implements IAnimatedEntity {
     public void onDeath(DamageSource cause) {
         super.onDeath(cause);
         if (!this.world.isRemote) {
+            if (!MBConfig.ENTITIES.mutantSkeletonLegacyDeathSound)
+                MutantSkeletonEntity.this.playSound(MBSoundEvents.ENTITY_MUTANT_SKELETON_DEATH_LEGACY, 0.5F, 1.0F);
+
             for (EntityLivingBase entityLivingBase : this.world.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().grow(3.0, 2.0, 3.0))) {
                 entityLivingBase.attackEntityFrom(DamageSource.causeMobDamage((EntityLivingBase) this), (float) MBConfig.ENTITIES.mutantSkeletonDeathDamage);
             }
@@ -283,19 +286,19 @@ public class MutantSkeletonEntity extends EntityMob implements IAnimatedEntity {
     }
 
     protected SoundEvent getAmbientSound() {
-        return MBSoundEvents.ENTITY_MUTANT_SKELETON_AMBIENT;
+        return MBConfig.ENTITIES.mutantSkeletonLegacyAmbientSound ? MBSoundEvents.ENTITY_MUTANT_SKELETON_AMBIENT_LEGACY : MBSoundEvents.ENTITY_MUTANT_SKELETON_AMBIENT;
     }
 
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        return MBSoundEvents.ENTITY_MUTANT_SKELETON_HURT;
+        return MBConfig.ENTITIES.mutantSkeletonLegacyHurtSound ? MBSoundEvents.ENTITY_MUTANT_SKELETON_HURT_LEGACY : MBSoundEvents.ENTITY_MUTANT_SKELETON_HURT;
     }
 
     protected SoundEvent getDeathSound() {
-        return MBSoundEvents.ENTITY_MUTANT_SKELETON_DEATH;
+        return MBConfig.ENTITIES.mutantSkeletonLegacyDeathSound ? MBSoundEvents.ENTITY_MUTANT_SKELETON_DEATH_LEGACY : MBSoundEvents.ENTITY_MUTANT_SKELETON_DEATH;
     }
 
     protected void playStepSound(BlockPos pos, Block blockIn) {
-        this.playSound(MBSoundEvents.ENTITY_MUTANT_SKELETON_STEP, 0.15f, 1.0f);
+        this.playSound(MBConfig.ENTITIES.mutantSkeletonLegacyStepSound ? MBSoundEvents.ENTITY_MUTANT_SKELETON_STEP_LEGACY : MBSoundEvents.ENTITY_MUTANT_SKELETON_STEP, 0.15F, 1.0F);
     }
 
     protected ResourceLocation getLootTable() {
